@@ -3,6 +3,7 @@
 data
 old
 ref
+repos
 
 # hosted on huggingface spaces:
 photo-checker
