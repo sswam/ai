@@ -1,0 +1,4 @@
+#!/bin/sh
+cd ~/ai
+rs data/ /media/e/sam/ai/data/
+rs models/ /media/e/sam/ai/models/

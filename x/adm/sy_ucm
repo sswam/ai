@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eu
 for H in opal pi; do
-	git pull $H `git-branch-current`
 	git push $H
+	git pull $H `git-branch-current`
 done
