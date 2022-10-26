@@ -1,0 +1,5 @@
+#!/bin/bash
+cd ~/ai/repos
+pull_all_main
+cd ~/ai/ref
+pull_all
