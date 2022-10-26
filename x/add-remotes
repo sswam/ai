@@ -1,0 +1,9 @@
+#!/bin/bash
+dir=$PWD
+rel=`home-rel "$dir"`
+remote_add() {
+	hostname=$1 domainname=$2
+	v git remote add $hostname $USER@$domainname:$rel
+}
+remote_add opal ucm.dev
+remote_add pi pi.ucm.dev

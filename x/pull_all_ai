@@ -1,4 +1,6 @@
 #!/bin/bash
+cd ~/ai
+git pull
 cd ~/ai/repos
 pull_all_main
 cd ~/ai/ref

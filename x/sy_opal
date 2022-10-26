@@ -1,9 +1,0 @@
-#!/bin/bash
-set -eu
-for D in ~/ai; do
-	echo
-	echo "$D ----------------"
-	echo
-	git pull opal main
-	git push opal
-done

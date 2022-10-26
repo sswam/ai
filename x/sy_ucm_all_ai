@@ -1,0 +1,5 @@
+#!/bin/bash
+cd ~/ai
+sy_ucm
+cd ~/ai/repos
+sy_ucm_all
