@@ -1,0 +1,6 @@
+data
+*.pkl
+*.zip
+
+# hosted on huggingface spaces:
+photo-checker
