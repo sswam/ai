@@ -1,7 +1,4 @@
 #!/bin/sh
-cd ~/ai
-git pull
-cd ~/ai/repos
-pull_all_main
-cd ~/ai/ref
-pull_all
+v i ~/ai git pull
+v i ~/ai/repos pull_all_main
+v i ~/ai/ref pull_all

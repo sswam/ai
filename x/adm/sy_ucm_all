@@ -2,7 +2,5 @@
 for A in */.git; do (
 	D=$(dirname "$A")
 	echo
-	echo "$D"
-	cd "$D"
-	i "$D" sy_ucm
+	v i "$D" sy_ucm
 ) done

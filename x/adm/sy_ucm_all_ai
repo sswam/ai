@@ -1,5 +1,3 @@
 #!/bin/sh
-cd ~/ai
-sy_ucm
-cd ~/ai/repos
-sy_ucm_all
+v i ~/ai sy_ucm
+v i ~/ai/repos sy_ucm_all
