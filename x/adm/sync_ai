@@ -1,4 +1,5 @@
 #!/bin/sh
 pull_all_ai
 sy_ucm_all_ai
+cd ~/ai ; git push
 backup
