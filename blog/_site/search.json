@@ -2,72 +2,72 @@
   {
     "objectID": "posts/blogging/blogging.html",
     "href": "posts/blogging/blogging.html",
-    "title": "Blogging about AI with Jupyter and Quarto",
+    "title": "Blogging AI with Jupyter and Quarto",
     "section": "",
     "text": "I am starting this blog to record my AI studies, particularly with the fast.ai book and courses.\nIn this first post, I’ll detail why and how I’m setting up this blog."
   },
   {
     "objectID": "posts/blogging/blogging.html#why-write-a-blog",
     "href": "posts/blogging/blogging.html#why-write-a-blog",
-    "title": "Blogging about AI with Jupyter and Quarto",
+    "title": "Blogging AI with Jupyter and Quarto",
     "section": "Why write a blog?",
     "text": "Why write a blog?\nIt’s important for me to record what I’m learning. If I publish these notes as a blog, I can get feedback and possibly help other people too.\nSee also:\n\nThis previous post of mine on dev.to: Why Write a Dev Log?\nRachael Thomas’s post: Why you (yes, you) should blog\nAnother post from Rachael: Advice for Better Blog Posts"
   },
   {
     "objectID": "posts/blogging/blogging.html#why-use-jupyter-and-quarto",
     "href": "posts/blogging/blogging.html#why-use-jupyter-and-quarto",
-    "title": "Blogging about AI with Jupyter and Quarto",
+    "title": "Blogging AI with Jupyter and Quarto",
     "section": "Why use Jupyter and Quarto?",
     "text": "Why use Jupyter and Quarto?\nThe fast.ai team recommends to work in Jupyter and blog using Quarto. Their nbdev2 tool also makes use of Quarto. We can work on a notebooks in Jupyter, then run them through nbdev2 and Quarto to produce software libraries, documentation, apps, blog posts, papers, and even books.\nSee also:\n\nnbdev+Quarto: A new secret weapon for productivity"
   },
   {
     "objectID": "posts/blogging/blogging.html#installing-the-software",
     "href": "posts/blogging/blogging.html#installing-the-software",
-    "title": "Blogging about AI with Jupyter and Quarto",
+    "title": "Blogging AI with Jupyter and Quarto",
     "section": "Installing the software",
     "text": "Installing the software\nI am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU. I’ll write more about my setup in another post.\nI downloaded Quarto from their Get Started page, and installed it.\nThis command installs or upgrades the other software we need:\n\n!pip install -U jupyter fastbook nbdev"
   },
   {
     "objectID": "posts/blogging/blogging.html#setting-up-the-blog",
     "href": "posts/blogging/blogging.html#setting-up-the-blog",
-    "title": "Blogging about AI with Jupyter and Quarto",
+    "title": "Blogging AI with Jupyter and Quarto",
     "section": "Setting up the blog",
     "text": "Setting up the blog\nI already had a git repo called ai in my home directory. The following commands would create it, and don’t do any harm if it’s already there.\n\n%cd\n!mkdir -p ai\n%cd ai\n!git init\n\n/home/sam\n/home/sam/ai\nReinitialized existing Git repository in /home/sam/ai/.git/\n\n\n\n!quarto create-project blog --type website:blog\n\nCreating project at /home/sam/ai/blog:\n  - Created _quarto.yml\n  - Created .gitignore\n  - Created index.qmd\n  - Created posts/welcome/index.qmd\n  - Created posts/post-with-code/index.qmd\n  - Created about.qmd\n  - Created styles.css\n  - Created posts/_metadata.yml\n\n\nSee also:\n\nQuarto - Creating a Blog"
   },
   {
     "objectID": "posts/blogging/blogging.html#adding-this-post-to-the-blog",
     "href": "posts/blogging/blogging.html#adding-this-post-to-the-blog",
-    "title": "Blogging about AI with Jupyter and Quarto",
+    "title": "Blogging AI with Jupyter and Quarto",
     "section": "Adding this post to the blog",
     "text": "Adding this post to the blog\nI had already started writing this post in a Jupyter Lab notebook blogging.ipynb. Now I needed to put it in the right place, so I made a directory for it:\n\n!mkdir -pv blog/posts/blogging\n\nmkdir: created directory 'blog/posts/blogging'\n\n\nI then moved this notebook blogging.ipynb into that new blog/posts/blogging directory, directly in Jupyter Lab. There was no need to close the notebook."
   },
   {
     "objectID": "posts/blogging/blogging.html#previewing-the-blog",
     "href": "posts/blogging/blogging.html#previewing-the-blog",
-    "title": "Blogging about AI with Jupyter and Quarto",
+    "title": "Blogging AI with Jupyter and Quarto",
     "section": "Previewing the blog",
     "text": "Previewing the blog\nWe can preview the blog, by running this in a terminal:\nquarto preview blog\nDon’t run it in a Jupyter cell, because it doesn’t exit and will hang Jupyter!\nI’m using a few extra options that suit my setup:\nquarto preview blog --no-browser --port 4242"
   },
   {
     "objectID": "posts/blogging/blogging.html#cleaning-up",
     "href": "posts/blogging/blogging.html#cleaning-up",
-    "title": "Blogging about AI with Jupyter and Quarto",
+    "title": "Blogging AI with Jupyter and Quarto",
     "section": "Cleaning up",
     "text": "Cleaning up\nI looked over the sample posts and removed them, changed the about page and other settings, added links, and added my profile picture.\nI enabled comments using Hypothesis, by adding these lines to _quarto.yml:\ncomments:\n  hypothesis: true\nSee also:\n\nQuarto - Commenting"
   },
   {
     "objectID": "posts/blogging/blogging.html#committing-to-git",
     "href": "posts/blogging/blogging.html#committing-to-git",
-    "title": "Blogging about AI with Jupyter and Quarto",
+    "title": "Blogging AI with Jupyter and Quarto",
     "section": "Committing to git",
-    "text": "Committing to git\nI ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nThe Quarto doc says “you should always fully quarto render your site before deploying it”, so let’s do it, and commit to git:\n\n!quarto render blog\n!git add blog\n!git commit -m 'add blog'\n!git push\n!git push opal\n!git push pi\n\nI pushed to github, and my two servers opal and pi.\nSee also:\n\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter\nQuarto - Websites"
+    "text": "Committing to git\nI ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nThe Quarto doc says “you should always fully quarto render your site before deploying it”, so let’s do it, and commit to git:\n\n%cd ~/ai\n!quarto render blog\n!git add blog\n!git commit -m 'update blog'\n!git push\n!git push opal\n!git push pi\n\n/home/sam/ai/blog\nERROR: No valid input files passed to render\nfatal: pathspec 'blog' did not match any files\nOn branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   _site/index.html\n    modified:   _site/posts/blogging/blogging.html\n    modified:   _site/search.json\n    modified:   posts/blogging/blogging.ipynb\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    ../projects/dupes\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\nEverything up-to-date\nEverything up-to-date\nEverything up-to-date\n\n\nI pushed to github, and my two servers opal and pi.\nSee also:\n\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter\nQuarto - Websites"
   },
   {
     "objectID": "posts/blogging/blogging.html#publishing-the-blog",
     "href": "posts/blogging/blogging.html#publishing-the-blog",
-    "title": "Blogging about AI with Jupyter and Quarto",
+    "title": "Blogging AI with Jupyter and Quarto",
     "section": "Publishing the blog",
-    "text": "Publishing the blog\nI pushed the git repo to my webserver, and used a symlink to put the rendered blog into my website at sam.ucm.dev/blog:\nln -s ~/ai/blog/_site ~/www/sam.ucm.dev/blog\nSee also:\n\nQuarto - Publishing"
+    "text": "Publishing the blog\nI used a symlink to put the rendered blog into my website at sam.ucm.dev/blog:\nln -s ~/ai/blog/_site ~/www/sam.ucm.dev/blog\nSee also:\n\nQuarto - Publishing"
   },
   {
     "objectID": "about.html",
@@ -81,6 +81,6 @@
     "href": "index.html",
     "title": "Sam’s AI Blog",
     "section": "",
-    "text": "Blogging about AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
+    "text": "Blogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
   }
 ]
