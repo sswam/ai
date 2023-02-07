@@ -60,14 +60,7 @@
     "href": "posts/blogging/blogging.html#committing-to-git",
     "title": "Blogging about AI with Jupyter and Quarto",
     "section": "Committing to git",
-    "text": "Committing to git\nNext, I ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nThe Quarto doc says “you should always fully quarto render your site before deploying it”, so let’s do it.\n\n!quarto render blog\n\n[1/4] posts/setup/setup.ipynb\n[2/4] posts/blogging/blogging.ipynb\n[3/4] about.qmd\n[4/4] index.qmd\nWARNING: File /home/sam/ai/blog/posts/blogging/blogging.ipynb in the listing 'listing' contains no metadata.\n\nOutput created: _site/index.html\n\n\n\nAnd let’s commit it to git:\n\n!git add blog\n\n\n!git commit -m 'add blog'\n\n[main 675ff90] add blog\n 8 files changed, 106 insertions(+), 761 deletions(-)\n delete mode 100644 blog/_site/posts/post-with-code/image.jpg\n delete mode 100644 blog/_site/posts/post-with-code/index.html\n delete mode 100644 blog/_site/posts/welcome/index.html\n delete mode 100644 blog/_site/posts/welcome/thumbnail.jpg\n\n\nSee also:\n\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter"
-  },
-  {
-    "objectID": "posts/blogging/blogging.html#polar-line-plot",
-    "href": "posts/blogging/blogging.html#polar-line-plot",
-    "title": "Blogging about AI with Jupyter and Quarto",
-    "section": "Polar Line Plot",
-    "text": "Polar Line Plot\nFor a demonstration of a line plot on a polar axis, see Figure 1.\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\ndef myrange(start, stop, step=1):\n    n = round((stop-start)/step) + 1\n    return np.linspace(start, stop, n)\n\nr = myrange(0, 4, 0.01)\ntheta = 3 * np.pi * r\nfig, ax = plt.subplots(\n  subplot_kw = {'projection': 'polar'} \n)\nax.plot(theta, r)\nax.set_rticks(myrange(1, 4))\nax.grid(True)\nplt.show()\n\n\n\n\nFigure 1: A line plot on a polar axis\n\n\n\n\n\na = 1\nb = 2"
+    "text": "Committing to git\nNext, I ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nThe Quarto doc says “you should always fully quarto render your site before deploying it”, so let’s do it.\n\n!quarto render blog\n\n[1/4] posts/setup/setup.ipynb\n[2/4] posts/blogging/blogging.ipynb\n[3/4] about.qmd\n[4/4] index.qmd\nWARNING: File /home/sam/ai/blog/posts/blogging/blogging.ipynb in the listing 'listing' contains no metadata.\n\nOutput created: _site/index.html\n\n\n\nAnd let’s commit it to git:\n\n!git add blog\n\n\n!git commit -q -m 'add blog'\n\nSee also:\n\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter"
   },
   {
     "objectID": "about.html",

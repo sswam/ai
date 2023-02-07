@@ -246,7 +246,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="setting-up-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="setting-up-the-blog">Setting up the blog</h2>
 <p>I already had a git repo called <code>ai</code> in my home directory. The following commands would create it, and don’t do any harm if it’s already there.</p>
-<div class="cell" data-execution_count="29">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>cd</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mkdir <span class="op">-</span>p ai</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>cd ai</span>
@@ -257,7 +257,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="12">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>quarto create<span class="op">-</span>project blog <span class="op">--</span><span class="bu">type</span> website:blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Creating project at /home/sam/ai/blog:
@@ -279,7 +279,7 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 <section id="adding-this-post-to-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="adding-this-post-to-the-blog">Adding this post to the blog</h2>
 <p>I had already started writing this post in a Jupyter Lab notebook <code>blogging.ipynb</code>. Now I needed to put it in the right place, so I made a directory for it:</p>
-<div class="cell" data-execution_count="15">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mkdir <span class="op">-</span>pv blog<span class="op">/</span>posts<span class="op">/</span>blogging</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>mkdir: created directory 'blog/posts/blogging'</code></pre>
@@ -302,14 +302,14 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 <section id="committing-to-git" class="level2">
 <h2 class="anchored" data-anchor-id="committing-to-git">Committing to git</h2>
 <p>Next, I ran <code>nbdev_install_hooks</code>, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.</p>
-<div class="cell" data-execution_count="25">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>nbdev_install_hooks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Hooks are installed.</code></pre>
 </div>
 </div>
 <p>The Quarto doc says “you should always fully <code>quarto render</code> your site before deploying it”, so let’s do it.</p>
-<div class="cell" data-execution_count="38">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>quarto render blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1/4] posts/setup/setup.ipynb
@@ -323,59 +323,17 @@ Output created: _site/index.html
 </div>
 </div>
 <p>And let’s commit it to git:</p>
-<div class="cell" data-execution_count="39">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git add blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git commit <span class="op">-</span>m <span class="st">'add blog'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[main 675ff90] add blog
- 8 files changed, 106 insertions(+), 761 deletions(-)
- delete mode 100644 blog/_site/posts/post-with-code/image.jpg
- delete mode 100644 blog/_site/posts/post-with-code/index.html
- delete mode 100644 blog/_site/posts/welcome/index.html
- delete mode 100644 blog/_site/posts/welcome/thumbnail.jpg</code></pre>
-</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git commit <span class="op">-</span>q <span class="op">-</span>m <span class="st">'add blog'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>See also:</p>
 <ul>
 <li><a href="https://www.fast.ai/posts/2022-08-25-jupyter-git.html">The Jupyter+git problem is now solved</a></li>
 <li><a href="https://nbdev.fast.ai/tutorials/git_friendly_jupyter.html">Git-Friendly Jupyter</a></li>
 </ul>
-</section>
-<section id="polar-line-plot" class="level2">
-<h2 class="anchored" data-anchor-id="polar-line-plot">Polar Line Plot</h2>
-<p>For a demonstration of a line plot on a polar axis, see <a href="#fig-polar">Figure&nbsp;1</a>.</p>
-<div class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> myrange(start, stop, step<span class="op">=</span><span class="dv">1</span>):</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">round</span>((stop<span class="op">-</span>start)<span class="op">/</span>step) <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.linspace(start, stop, n)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> myrange(<span class="dv">0</span>, <span class="dv">4</span>, <span class="fl">0.01</span>)</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="dv">3</span> <span class="op">*</span> np.pi <span class="op">*</span> r</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  subplot_kw <span class="op">=</span> {<span class="st">'projection'</span>: <span class="st">'polar'</span>} </span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>ax.plot(theta, r)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>ax.set_rticks(myrange(<span class="dv">1</span>, <span class="dv">4</span>))</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>)</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="fig-polar" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="blogging_files/figure-html/fig-polar-output-1.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;1: A line plot on a polar axis</figcaption><p></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 
 
 </section>
