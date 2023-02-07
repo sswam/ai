@@ -53,14 +53,14 @@
     "href": "posts/blogging/blogging.html#cleaning-up",
     "title": "Blogging about AI with Jupyter and Quarto",
     "section": "Cleaning up",
-    "text": "Cleaning up\nI looked over the sample posts and removed them, changed the about page and other settings, added links, and added my profile picture."
+    "text": "Cleaning up\nI looked over the sample posts and removed them, changed the about page and other settings, added links, and added my profile picture.\nI enabled comments using Hypothesis, by adding these lines to _quarto.yml:\ncomments:\n  hypothesis: true\nSee also:\n\nQuarto - Commenting"
   },
   {
     "objectID": "posts/blogging/blogging.html#committing-to-git",
     "href": "posts/blogging/blogging.html#committing-to-git",
     "title": "Blogging about AI with Jupyter and Quarto",
     "section": "Committing to git",
-    "text": "Committing to git\nNext, I ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nThe Quarto doc says “you should always fully quarto render your site before deploying it”, so let’s do it, and commit to git:\n\n!quarto render blog\n!git add blog\n!git commit -m 'add blog'\n!git push\n!git push opal\n!git push pi\n\nSee also:\n\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter\nQuarto - Websites"
+    "text": "Committing to git\nI ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nThe Quarto doc says “you should always fully quarto render your site before deploying it”, so let’s do it, and commit to git:\n\n!quarto render blog\n!git add blog\n!git commit -m 'add blog'\n!git push\n!git push opal\n!git push pi\n\nSee also:\n\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter\nQuarto - Websites"
   },
   {
     "objectID": "posts/blogging/blogging.html#publishing-the-blog",

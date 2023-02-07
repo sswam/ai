@@ -123,6 +123,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -298,24 +299,31 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 <section id="cleaning-up" class="level2">
 <h2 class="anchored" data-anchor-id="cleaning-up">Cleaning up</h2>
 <p>I looked over the sample posts and removed them, changed the about page and other settings, added links, and added my profile picture.</p>
+<p>I enabled comments using Hypothesis, by adding these lines to <code>_quarto.yml</code>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comments</span><span class="kw">:</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hypothesis</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>See also:</p>
+<ul>
+<li><a href="https://quarto.org/docs/output-formats/html-basics.html#commenting">Quarto - Commenting</a></li>
+</ul>
 </section>
 <section id="committing-to-git" class="level2">
 <h2 class="anchored" data-anchor-id="committing-to-git">Committing to git</h2>
-<p>Next, I ran <code>nbdev_install_hooks</code>, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.</p>
+<p>I ran <code>nbdev_install_hooks</code>, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>nbdev_install_hooks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>nbdev_install_hooks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Hooks are installed.</code></pre>
 </div>
 </div>
 <p>The Quarto doc says “you should always fully <code>quarto render</code> your site before deploying it”, so let’s do it, and commit to git:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>quarto render blog</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git add blog</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git commit <span class="op">-</span>m <span class="st">'add blog'</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git push</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git push opal</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git push pi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>quarto render blog</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git add blog</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git commit <span class="op">-</span>m <span class="st">'add blog'</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git push</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git push opal</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git push pi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>See also:</p>
 <ul>
@@ -327,7 +335,7 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 <section id="publishing-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="publishing-the-blog">Publishing the blog</h2>
 <p>I pushed the git repo to my webserver, and used a symlink to put the rendered blog into my website at <a href="https://sam.ucm.dev/blog">sam.ucm.dev/blog</a>:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ~/ai/blog/_site ~/www/sam.ucm.dev/blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ~/ai/blog/_site ~/www/sam.ucm.dev/blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>See also:</p>
 <ul>
 <li><a href="https://quarto.org/docs/publishing/">Quarto - Publishing</a></li>
