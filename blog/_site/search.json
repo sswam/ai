@@ -67,7 +67,7 @@
     "href": "index.html",
     "title": "Sam’s AI Blog",
     "section": "",
-    "text": "My setup for AI work on my Linux PC\n\n\n\n\n\n\n\nfastai\n\n\nsetup\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\n\n\nBlogging about AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
+    "text": "Blogging about AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/blogging/blogging.html#installing-required-software",
@@ -98,20 +98,6 @@
     "text": "Installing the software\nI am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU. I’ll write more about my setup in another post.\nI downloaded Quarto from their Get Started page, and installed it.\nThis command installs or upgrades the other software we need:\n\n!pip install -U jupyter fastbook nbdev"
   },
   {
-    "objectID": "posts/setup/setup.html",
-    "href": "posts/setup/setup.html",
-    "title": "My setup for AI work on my Linux PC",
-    "section": "",
-    "text": "I am using my home PC, with Debian 12 “bookworm” (testing) and an NVIDIA GPU.\nThe following setup is not recommended unless you know what you’re doing with Linux, and probably not even then, but it’s working okay for me.\nI decided not to use conda, virtualenv, or docker. Instead, I installed the necessary Python modules under /usr/local with pip. This way I can use my AI tools directly from the command line and other scripts, like any other tools.\nIt’s not safe to run pip install -U as root. It will merrily remove files from Debian-packaged Python modules under /usr/lib, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under /usr/local via the staff group:\nThis is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.\nIn order to upgrade a pip package where the same package was also installed in /usr/lib by dpkg, I need to use pip -IU packagename. The -I flag tells it to ignore installed packages, i.e. don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.\nThis setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet."
-  },
-  {
-    "objectID": "posts/setup/setup.html#this-post-is-not-complete-yet",
-    "href": "posts/setup/setup.html#this-post-is-not-complete-yet",
-    "title": "My setup for AI work on my Linux PC",
-    "section": "This post is not complete yet!",
-    "text": "This post is not complete yet!"
-  },
-  {
     "objectID": "posts/blogging/blogging.html#adding-this-post-to-the-blog",
     "href": "posts/blogging/blogging.html#adding-this-post-to-the-blog",
     "title": "Blogging about AI with Jupyter and Quarto",
@@ -130,7 +116,7 @@
     "href": "posts/blogging/blogging.html#committing-to-git",
     "title": "Blogging about AI with Jupyter and Quarto",
     "section": "Committing to git",
-    "text": "Committing to git\nNext, I ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nAnd let’s commit it to git:\n\n!git status\n\nOn branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   !notes.ipynb\n    modified:   !plan.ipynb\n    modified:   .gitignore\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    Walk-with-fastai-revisited/\n    blog/\n    experiments/\n    projects/dupes\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n\n\nSee also:\n\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter"
+    "text": "Committing to git\nNext, I ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nAnd let’s commit it to git:\n\n!git add blog\n\n\n!git commit -m 'add blog'\n\n[main a0d99d5] add blog\n 40 files changed, 7066 insertions(+)\n create mode 100644 blog/.gitignore\n create mode 100644 blog/_quarto.yml\n create mode 100644 blog/_site/about.html\n create mode 100644 blog/_site/index.html\n create mode 100644 blog/_site/listings.json\n create mode 100644 blog/_site/posts/blogging/blogging.html\n create mode 100644 blog/_site/posts/blogging/blogging_files/figure-html/fig-polar-output-1.png\n create mode 100644 blog/_site/posts/post-with-code/image.jpg\n create mode 100644 blog/_site/posts/post-with-code/index.html\n create mode 100644 blog/_site/posts/setup/setup.html\n create mode 100644 blog/_site/posts/welcome/index.html\n create mode 100644 blog/_site/posts/welcome/thumbnail.jpg\n create mode 100644 blog/_site/profile.jpg\n create mode 100644 blog/_site/search.json\n create mode 100644 blog/_site/site_libs/bootstrap/bootstrap-icons.css\n create mode 100644 blog/_site/site_libs/bootstrap/bootstrap-icons.woff\n create mode 100644 blog/_site/site_libs/bootstrap/bootstrap.min.css\n create mode 100644 blog/_site/site_libs/bootstrap/bootstrap.min.js\n create mode 100644 blog/_site/site_libs/clipboard/clipboard.min.js\n create mode 100644 blog/_site/site_libs/quarto-html/anchor.min.js\n create mode 100644 blog/_site/site_libs/quarto-html/popper.min.js\n create mode 100644 blog/_site/site_libs/quarto-html/quarto-syntax-highlighting.css\n create mode 100644 blog/_site/site_libs/quarto-html/quarto.js\n create mode 100644 blog/_site/site_libs/quarto-html/tippy.css\n create mode 100644 blog/_site/site_libs/quarto-html/tippy.umd.min.js\n create mode 100644 blog/_site/site_libs/quarto-listing/list.min.js\n create mode 100644 blog/_site/site_libs/quarto-listing/quarto-listing.js\n create mode 100644 blog/_site/site_libs/quarto-nav/headroom.min.js\n create mode 100644 blog/_site/site_libs/quarto-nav/quarto-nav.js\n create mode 100644 blog/_site/site_libs/quarto-search/autocomplete.umd.js\n create mode 100644 blog/_site/site_libs/quarto-search/fuse.min.js\n create mode 100644 blog/_site/site_libs/quarto-search/quarto-search.js\n create mode 100644 blog/_site/styles.css\n create mode 100644 blog/about.qmd\n create mode 100644 blog/index.qmd\n create mode 100644 blog/posts/_metadata.yml\n create mode 100644 blog/posts/blogging/blogging.ipynb\n create mode 100644 blog/posts/setup/setup.ipynb\n create mode 100644 blog/profile.jpg\n create mode 100644 blog/styles.css\n\n\nSee also:\n\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter"
   },
   {
     "objectID": "posts/blogging/blogging.html#cleaning-up",
