@@ -308,55 +308,29 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 <pre><code>Hooks are installed.</code></pre>
 </div>
 </div>
-<p>And let’s commit it to git:</p>
-<div class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git add blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git commit <span class="op">-</span>m <span class="st">'add blog'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The Quarto doc says “you should always fully <code>quarto render</code> your site before deploying it”, so let’s do it.</p>
+<div class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>quarto render blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[main a0d99d5] add blog
- 40 files changed, 7066 insertions(+)
- create mode 100644 blog/.gitignore
- create mode 100644 blog/_quarto.yml
- create mode 100644 blog/_site/about.html
- create mode 100644 blog/_site/index.html
- create mode 100644 blog/_site/listings.json
- create mode 100644 blog/_site/posts/blogging/blogging.html
- create mode 100644 blog/_site/posts/blogging/blogging_files/figure-html/fig-polar-output-1.png
- create mode 100644 blog/_site/posts/post-with-code/image.jpg
- create mode 100644 blog/_site/posts/post-with-code/index.html
- create mode 100644 blog/_site/posts/setup/setup.html
- create mode 100644 blog/_site/posts/welcome/index.html
- create mode 100644 blog/_site/posts/welcome/thumbnail.jpg
- create mode 100644 blog/_site/profile.jpg
- create mode 100644 blog/_site/search.json
- create mode 100644 blog/_site/site_libs/bootstrap/bootstrap-icons.css
- create mode 100644 blog/_site/site_libs/bootstrap/bootstrap-icons.woff
- create mode 100644 blog/_site/site_libs/bootstrap/bootstrap.min.css
- create mode 100644 blog/_site/site_libs/bootstrap/bootstrap.min.js
- create mode 100644 blog/_site/site_libs/clipboard/clipboard.min.js
- create mode 100644 blog/_site/site_libs/quarto-html/anchor.min.js
- create mode 100644 blog/_site/site_libs/quarto-html/popper.min.js
- create mode 100644 blog/_site/site_libs/quarto-html/quarto-syntax-highlighting.css
- create mode 100644 blog/_site/site_libs/quarto-html/quarto.js
- create mode 100644 blog/_site/site_libs/quarto-html/tippy.css
- create mode 100644 blog/_site/site_libs/quarto-html/tippy.umd.min.js
- create mode 100644 blog/_site/site_libs/quarto-listing/list.min.js
- create mode 100644 blog/_site/site_libs/quarto-listing/quarto-listing.js
- create mode 100644 blog/_site/site_libs/quarto-nav/headroom.min.js
- create mode 100644 blog/_site/site_libs/quarto-nav/quarto-nav.js
- create mode 100644 blog/_site/site_libs/quarto-search/autocomplete.umd.js
- create mode 100644 blog/_site/site_libs/quarto-search/fuse.min.js
- create mode 100644 blog/_site/site_libs/quarto-search/quarto-search.js
- create mode 100644 blog/_site/styles.css
- create mode 100644 blog/about.qmd
- create mode 100644 blog/index.qmd
- create mode 100644 blog/posts/_metadata.yml
- create mode 100644 blog/posts/blogging/blogging.ipynb
- create mode 100644 blog/posts/setup/setup.ipynb
- create mode 100644 blog/profile.jpg
- create mode 100644 blog/styles.css</code></pre>
+<pre><code>[1/4] posts/setup/setup.ipynb
+[2/4] posts/blogging/blogging.ipynb
+[3/4] about.qmd
+[4/4] index.qmd
+WARNING: File /home/sam/ai/blog/posts/blogging/blogging.ipynb in the listing 'listing' contains no metadata.
+
+Output created: _site/index.html
+</code></pre>
+</div>
+</div>
+<p>And let’s commit it to git:</p>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git add blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git commit <span class="op">-</span>m <span class="st">'add blog'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[main 8923179] add blog
+ 7 files changed, 131 insertions(+), 114 deletions(-)</code></pre>
 </div>
 </div>
 <p>See also:</p>
@@ -369,22 +343,22 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 <h2 class="anchored" data-anchor-id="polar-line-plot">Polar Line Plot</h2>
 <p>For a demonstration of a line plot on a polar axis, see <a href="#fig-polar">Figure&nbsp;1</a>.</p>
 <div class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> myrange(start, stop, step<span class="op">=</span><span class="dv">1</span>):</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">round</span>((stop<span class="op">-</span>start)<span class="op">/</span>step) <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.linspace(start, stop, n)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> myrange(<span class="dv">0</span>, <span class="dv">4</span>, <span class="fl">0.01</span>)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="dv">3</span> <span class="op">*</span> np.pi <span class="op">*</span> r</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  subplot_kw <span class="op">=</span> {<span class="st">'projection'</span>: <span class="st">'polar'</span>} </span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>ax.plot(theta, r)</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>ax.set_rticks(myrange(<span class="dv">1</span>, <span class="dv">4</span>))</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>)</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> myrange(start, stop, step<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">round</span>((stop<span class="op">-</span>start)<span class="op">/</span>step) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.linspace(start, stop, n)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> myrange(<span class="dv">0</span>, <span class="dv">4</span>, <span class="fl">0.01</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="dv">3</span> <span class="op">*</span> np.pi <span class="op">*</span> r</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  subplot_kw <span class="op">=</span> {<span class="st">'projection'</span>: <span class="st">'polar'</span>} </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>ax.plot(theta, r)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>ax.set_rticks(myrange(<span class="dv">1</span>, <span class="dv">4</span>))</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-polar" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -395,8 +369,8 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
