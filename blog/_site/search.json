@@ -63,6 +63,13 @@
     "text": "Committing to git\nNext, I ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nThe Quarto doc says “you should always fully quarto render your site before deploying it”, so let’s do it.\n\n!quarto render blog\n\n[1/4] posts/setup/setup.ipynb\n[2/4] posts/blogging/blogging.ipynb\n[3/4] about.qmd\n[4/4] index.qmd\nWARNING: File /home/sam/ai/blog/posts/blogging/blogging.ipynb in the listing 'listing' contains no metadata.\n\nOutput created: _site/index.html\n\n\n\nAnd let’s commit it to git:\n\n!git add blog\n\n\n!git commit -q -m 'add blog'\n\n\n!git push -q\n\nSee also:\n\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter"
   },
   {
+    "objectID": "posts/blogging/blogging.html#publishing-the-blog",
+    "href": "posts/blogging/blogging.html#publishing-the-blog",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Publishing the blog",
+    "text": "Publishing the blog\nI pushed the git repo to my webserver, and used a symlink to put the rendered blog into my website at https://sam.ucm.dev/blog:\nln -s ~/ai/blog/_site ~/www/sam.ucm.dev/blog\nSee also:\n\nQuarto - Publishing"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
