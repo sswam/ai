@@ -3,6 +3,8 @@ project:
 
 website:
   title: "Sam's AI Blog"
+  site-url: https://sam.ucm.dev/blog
+  description: "recording my AI studies"
   navbar:
     right:
       - about.qmd
@@ -16,6 +18,8 @@ website:
         href: https://www.linkedin.com/in/ultracode/
       - icon: github
         href: https://github.com/sswam/
+      - icon: rss
+        href: index.xml
 format:
   html:
     theme: cosmo

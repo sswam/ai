@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Sam&#39;s AI Blog</title>
+<link>https://sam.ucm.dev/blog/index.html</link>
+<atom:link href="https://sam.ucm.dev/blog/index.xml" rel="self" type="application/rss+xml"/>
+<description>recording my AI studies</description>
+<generator>quarto-1.2.280</generator>
+<lastBuildDate>Tue, 07 Feb 2023 13:00:00 GMT</lastBuildDate>
+<item>
+  <title>Blogging AI with Jupyter and Quarto</title>
+  <dc:creator>Sam Watkins</dc:creator>
+  <link>https://sam.ucm.dev/blog/posts/blogging/blogging.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>I am starting this blog to record my AI studies, particularly with the <a href="https://fast.ai">fast.ai</a> book and courses.</p>
+<p>In this first post, I’ll detail why and how I’m setting up this blog.</p>
+<section id="why-write-a-blog" class="level2">
+<h2 class="anchored" data-anchor-id="why-write-a-blog">Why write a blog?</h2>
+<p>It’s important for me to record what I’m learning. If I publish these notes as a blog, I can get feedback and possibly help other people too.</p>
+<p>See also:</p>
+<ul>
+<li>This previous post of mine on dev.to: <a href="https://dev.to/gamedev/why-write-a-dev-log-27nh">Why Write a Dev Log?</a></li>
+<li>Rachael Thomas’s post: <a href="https://www.fast.ai/posts/2017-04-06-alternatives.html#why-you-yes-you-should-blog">Why you (yes, you) should blog</a></li>
+<li>Another post from Rachael: <a href="https://www.fast.ai/posts/2019-05-13-blogging-advice.html">Advice for Better Blog Posts</a></li>
+</ul>
+</section>
+<section id="why-use-jupyter-and-quarto" class="level2">
+<h2 class="anchored" data-anchor-id="why-use-jupyter-and-quarto">Why use Jupyter and Quarto?</h2>
+<p>The <a href="https://fast.ai">fast.ai</a> team recommends to work in <a href="https://jupyter.org/">Jupyter</a> and blog using <a href="https://quarto.org/">Quarto</a>. Their <a href="https://nbdev.fast.ai/">nbdev2</a> tool also makes use of Quarto. We can work on a notebooks in Jupyter, then run them through nbdev2 and Quarto to produce software libraries, documentation, apps, blog posts, papers, and even books.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://www.fast.ai/posts/2022-07-28-nbdev2.html">nbdev+Quarto: A new secret weapon for productivity</a></li>
+</ul>
+</section>
+<section id="installing-the-software" class="level2">
+<h2 class="anchored" data-anchor-id="installing-the-software">Installing the software</h2>
+<p>I am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU. I’ll write more about my setup in another post.</p>
+<p>I downloaded Quarto from their <a href="https://quarto.org/docs/get-started/">Get Started</a> page, and installed it.</p>
+<p>This command installs or upgrades the other software we need:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;">!</span>pip install <span class="op" style="color: #5E5E5E;">-</span>U jupyter fastbook nbdev</span></code></pre></div>
+</div>
+</section>
+<section id="setting-up-the-blog" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-the-blog">Setting up the blog</h2>
+<p>I already had a git repo called <code>ai</code> in my home directory. The following commands would create it, and don’t do any harm if it’s already there.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="op" style="color: #5E5E5E;">%</span>cd</span>
+<span id="cb2-2"><span class="op" style="color: #5E5E5E;">!</span>mkdir <span class="op" style="color: #5E5E5E;">-</span>p ai</span>
+<span id="cb2-3"><span class="op" style="color: #5E5E5E;">%</span>cd ai</span>
+<span id="cb2-4"><span class="op" style="color: #5E5E5E;">!</span>git init</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/home/sam
+/home/sam/ai
+Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="op" style="color: #5E5E5E;">!</span>quarto create<span class="op" style="color: #5E5E5E;">-</span>project blog <span class="op" style="color: #5E5E5E;">--</span><span class="bu" style="color: null;">type</span> website:blog</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Creating project at /home/sam/ai/blog:
+  - Created _quarto.yml
+  - Created .gitignore
+  - Created index.qmd
+  - Created posts/welcome/index.qmd
+  - Created posts/post-with-code/index.qmd
+  - Created about.qmd
+  - Created styles.css
+  - Created posts/_metadata.yml</code></pre>
+</div>
+</div>
+<p>I ran <code>nbdev_install_hooks</code>, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="op" style="color: #5E5E5E;">!</span>nbdev_install_hooks</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hooks are installed.</code></pre>
+</div>
+</div>
+<p>See also:</p>
+<ul>
+<li><a href="https://quarto.org/docs/websites/website-blog.html">Quarto - Creating a Blog</a></li>
+<li><a href="https://www.fast.ai/posts/2022-08-25-jupyter-git.html">The Jupyter+git problem is now solved</a></li>
+<li><a href="https://nbdev.fast.ai/tutorials/git_friendly_jupyter.html">Git-Friendly Jupyter</a></li>
+</ul>
+</section>
+<section id="adding-this-post-to-the-blog" class="level2">
+<h2 class="anchored" data-anchor-id="adding-this-post-to-the-blog">Adding this post to the blog</h2>
+<p>I had already started writing this post in a Jupyter Lab notebook <code>blogging.ipynb</code>. Now I needed to put it in the right place, so I made a directory for it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="op" style="color: #5E5E5E;">!</span>mkdir <span class="op" style="color: #5E5E5E;">-</span>pv blog<span class="op" style="color: #5E5E5E;">/</span>posts<span class="op" style="color: #5E5E5E;">/</span>blogging</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mkdir: created directory 'blog/posts/blogging'</code></pre>
+</div>
+</div>
+<p>I then moved this notebook <code>blogging.ipynb</code> into that new <code>blog/posts/blogging</code> directory, directly in Jupyter Lab. There was no need to close the notebook.</p>
+</section>
+<section id="previewing-the-blog" class="level2">
+<h2 class="anchored" data-anchor-id="previewing-the-blog">Previewing the blog</h2>
+<p>We can preview the blog, by running this in a terminal:</p>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;">quarto</span> preview blog</span></code></pre></div>
+<p>Don’t run it in a Jupyter cell, because it doesn’t exit and will hang Jupyter!</p>
+<p>I’m using a few extra options that suit my setup:</p>
+<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="ex" style="color: null;">quarto</span> preview blog <span class="at" style="color: #657422;">--no-browser</span> <span class="at" style="color: #657422;">--port</span> 4242</span></code></pre></div>
+</section>
+<section id="finishing-up" class="level2">
+<h2 class="anchored" data-anchor-id="finishing-up">Finishing up</h2>
+<p>I removed the example posts, changed the settings, filled in the about page, added links to my socials, and added a profile picture.</p>
+<p>I followed the Quarto doc to enable comments using <a href="https://web.hypothes.is/">Hypothesis</a>, and an RSS feed.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://quarto.org/docs/output-formats/html-basics.html#commenting">Quarto - HTML Basics - Commenting</a></li>
+<li><a href="https://quarto.org/docs/websites/website-blog.html#rss-feed">Quarto - Creating a Blog - RSS Feed</a></li>
+</ul>
+</section>
+<section id="committing-to-git" class="level2">
+<h2 class="anchored" data-anchor-id="committing-to-git">Committing to git</h2>
+<p>The Quarto doc says “you should always fully <code>quarto render</code> your site before deploying it”, so let’s do it, and commit to git:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="op" style="color: #5E5E5E;">%</span>cd <span class="op" style="color: #5E5E5E;">~/</span>ai</span>
+<span id="cb12-2"><span class="op" style="color: #5E5E5E;">!</span>quarto render blog</span>
+<span id="cb12-3"><span class="op" style="color: #5E5E5E;">!</span>git add blog</span>
+<span id="cb12-4"><span class="op" style="color: #5E5E5E;">!</span>git commit <span class="op" style="color: #5E5E5E;">-</span>m <span class="st" style="color: #20794D;">'update blog'</span></span>
+<span id="cb12-5"><span class="op" style="color: #5E5E5E;">!</span>git push</span>
+<span id="cb12-6"><span class="op" style="color: #5E5E5E;">!</span>git push opal</span>
+<span id="cb12-7"><span class="op" style="color: #5E5E5E;">!</span>git push pi</span></code></pre></div>
+</div>
+<p>I pushed to github, and my two servers <em>opal</em> and <em>pi</em>.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://quarto.org/docs/websites/">Quarto - Websites</a></li>
+</ul>
+</section>
+<section id="publishing-the-blog" class="level2">
+<h2 class="anchored" data-anchor-id="publishing-the-blog">Publishing the blog</h2>
+<p>I used a symlink to put the rendered blog into my website at <a href="https://sam.ucm.dev/blog">sam.ucm.dev/blog</a>:</p>
+<div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="fu" style="color: #4758AB;">ln</span> <span class="at" style="color: #657422;">-s</span> ~/ai/blog/_site ~/www/sam.ucm.dev/blog</span></code></pre></div>
+<p>See also:</p>
+<ul>
+<li><a href="https://quarto.org/docs/publishing/">Quarto - Publishing</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>fastai</category>
+  <category>blogging</category>
+  <category>Jupyter</category>
+  <category>Quarto</category>
+  <guid>https://sam.ucm.dev/blog/posts/blogging/blogging.html</guid>
+  <pubDate>Tue, 07 Feb 2023 13:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>
