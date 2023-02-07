@@ -1,0 +1,25 @@
+project:
+  type: website
+
+website:
+  title: "Sam's AI Blog"
+  navbar:
+    right:
+      - about.qmd
+#      - icon: house
+#        href: https://ucm.dev
+      - icon: mastodon
+        href: https://sigmoid.social/@sswam
+#      - icon: twitter
+#        href: https://twitter.com/ultracodemonkey
+      - icon: linkedin
+        href: https://www.linkedin.com/in/ultracode/
+      - icon: github
+        href: https://github.com/sswam/
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+
+
+

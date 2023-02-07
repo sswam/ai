@@ -1,0 +1,26 @@
+---
+title: "About"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: mastodon
+      text: Mastodon
+      href: https://sigmoid.social/@sswam
+#    - icon: twitter
+#      text: Twitter
+#      href: https://twitter.com/ultracodemonkey
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/ultracode/
+    - icon: github
+      text: Github
+      href: https://github.com/sswam/
+
+---
+
+I'm Sam Watkins, from Melbourne, Australia.
+
+I am starting this blog to record my AI studies, particularly with the [fast.ai](https://fast.ai) book and courses.
+
+It's important for me to record what I'm learning. If I publish these notes as a blog, I can get feedback and possibly help other people too.

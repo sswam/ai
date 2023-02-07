@@ -1,0 +1,142 @@
+[
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "This is a post with executable code."
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
+    "objectID": "posts/blogging/blogging.html",
+    "href": "posts/blogging/blogging.html",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "",
+    "text": "I am starting this blog to record my AI studies, particularly with the fast.ai book and courses.\nIn this first post, I’ll detail why and how I’m setting up this blog."
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#why-write-a-blog",
+    "href": "posts/blogging/blogging.html#why-write-a-blog",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Why write a blog?",
+    "text": "Why write a blog?\nIt’s important for me to record what I’m learning. If I publish these notes as a blog, I can get feedback and possibly help other people too.\nSee also:\n\nThis previous post of mine on dev.to: Why Write a Dev Log?\nRachael Thomas’s post: Why you (yes, you) should blog\nAnother post from Rachael: Advice for Better Blog Posts"
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#why-use-jupyter-and-quarto",
+    "href": "posts/blogging/blogging.html#why-use-jupyter-and-quarto",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Why use Jupyter and Quarto?",
+    "text": "Why use Jupyter and Quarto?\nThe fast.ai team recommends to work in Jupyter and blog using Quarto. Their nbdev2 tool also makes use of Quarto. We can work on a notebooks in Jupyter, then run them through nbdev2 and Quarto to produce software libraries, documentation, apps, blog posts, papers, and even books.\nSee also:\n\nnbdev+Quarto: A new secret weapon for productivity"
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#create-the-blog",
+    "href": "posts/blogging/blogging.html#create-the-blog",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Create the blog",
+    "text": "Create the blog\nI already had a git repo called ai in my home directory. The following commands would create it, and don’t do any harm if it’s already there.\n\n\nCode\n%cd\n!mkdir -p ai\n%cd ai\n!git init\n\n\n/home/sam\n/home/sam/ai\nReinitialized existing Git repository in /home/sam/ai/.git/\n\n\n\n\nCode\n!quarto create-project blog --type website:blog\n\n\nCreating project at /home/sam/ai/blog:\n  - Created _quarto.yml\n  - Created .gitignore\n  - Created index.qmd\n  - Created posts/welcome/index.qmd\n  - Created posts/post-with-code/index.qmd\n  - Created about.qmd\n  - Created styles.css\n  - Created posts/_metadata.yml\n\n\nI made a folder for this post I’m working on.\n\n\nCode\n!mkdir -pv blog/posts/blogging\n\n\nmkdir: created directory 'blog/posts/blogging'\n\n\nI then moved the notebook blogging.ipynb for this blog post, into that new blog/posts/blogging directory, directly in Jupyter Lab. There’s no need to close the notebook.\nNext, I ran nbdev_install_hooks, which helps git and Jupyter to: - prevent unnecessary git merge conflicts - enable to resolve conflicts in Jupyter\n\n\nCode\n!nbdev_install_hooks\n\n\nHooks are installed.\n\n\nSee also:\n\nQuarto - Creating a Blog\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter"
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#install-quarto",
+    "href": "posts/blogging/blogging.html#install-quarto",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Install Quarto",
+    "text": "Install Quarto"
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#polar-line-plot",
+    "href": "posts/blogging/blogging.html#polar-line-plot",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Polar Line Plot",
+    "text": "Polar Line Plot\nFor a demonstration of a line plot on a polar axis, see Figure 1.\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\ndef myrange(start, stop, step=1):\n    n = round((stop-start)/step) + 1\n    return np.linspace(start, stop, n)\n\nr = myrange(0, 4, 0.01)\ntheta = 3 * np.pi * r\nfig, ax = plt.subplots(\n  subplot_kw = {'projection': 'polar'} \n)\nax.plot(theta, r)\nax.set_rticks(myrange(1, 4))\nax.grid(True)\nplt.show()\n\n\n\n\nFigure 1: A line plot on a polar axis\n\n\n\n\n\na = 1\nb = 2"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "I’m Sam Watkins, from Melbourne, Australia.\nI am starting this blog to record my AI studies, particularly with the fast.ai book and courses.\nIt’s important for me to record what I’m learning. If I publish these notes as a blog, I can get feedback and possibly help other people too."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Sam’s AI Blog",
+    "section": "",
+    "text": "My setup for AI work on my Linux PC\n\n\n\n\n\n\n\nfastai\n\n\nsetup\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\n\n\nBlogging about AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#installing-required-software",
+    "href": "posts/blogging/blogging.html#installing-required-software",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Installing required software",
+    "text": "Installing required software\nI am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU. I’ll write more about my setup in another post.\nDownload Quarto from their Get Started page, and installed it.\nThen upgrade the Python libs we need.\n\n\nCode\n!pip install -U fastbook nbdev"
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#setting-up-the-blog",
+    "href": "posts/blogging/blogging.html#setting-up-the-blog",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Setting up the blog",
+    "text": "Setting up the blog\nI already had a git repo called ai in my home directory. The following commands would create it, and don’t do any harm if it’s already there.\n\n%cd\n!mkdir -p ai\n%cd ai\n!git init\n\n/home/sam\n/home/sam/ai\nReinitialized existing Git repository in /home/sam/ai/.git/\n\n\n\n!quarto create-project blog --type website:blog\n\nCreating project at /home/sam/ai/blog:\n  - Created _quarto.yml\n  - Created .gitignore\n  - Created index.qmd\n  - Created posts/welcome/index.qmd\n  - Created posts/post-with-code/index.qmd\n  - Created about.qmd\n  - Created styles.css\n  - Created posts/_metadata.yml\n\n\nSee also:\n\nQuarto - Creating a Blog"
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#my-setup",
+    "href": "posts/blogging/blogging.html#my-setup",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "My setup",
+    "text": "My setup\nI am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU.\nThe following setup is not recommended unless you know what you’re doing with Linux, and not even then! Check the fast.ai docs and (Lesson 1 of Practical Deep Learning for Coders)[] for some more sensible options to get started.\nI decided to go old school and install the necessary Python modules under /usr/local with pip. This way I can use my AI tools directly from the shell, like other programs on the system.\nIt’s not safe to run pip as root. It will merrily remove files from Debian-packaged python modules, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under /usr/local via the staff group.\nI might write more about my setup in a separate blog post."
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#installing-the-software",
+    "href": "posts/blogging/blogging.html#installing-the-software",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Installing the software",
+    "text": "Installing the software\nI am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU. I’ll write more about my setup in another post.\nI downloaded Quarto from their Get Started page, and installed it.\nThis command installs or upgrades the other software we need:\n\n!pip install -U jupyter fastbook nbdev"
+  },
+  {
+    "objectID": "posts/setup/setup.html",
+    "href": "posts/setup/setup.html",
+    "title": "My setup for AI work on my Linux PC",
+    "section": "",
+    "text": "I am using my home PC, with Debian 12 “bookworm” (testing) and an NVIDIA GPU.\nThe following setup is not recommended unless you know what you’re doing with Linux, and probably not even then, but it’s working okay for me.\nI decided not to use conda, virtualenv, or docker. Instead, I installed the necessary Python modules under /usr/local with pip. This way I can use my AI tools directly from the command line and other scripts, like any other tools.\nIt’s not safe to run pip install -U as root. It will merrily remove files from Debian-packaged Python modules under /usr/lib, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under /usr/local via the staff group:\nThis is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.\nIn order to upgrade a pip package where the same package was also installed in /usr/lib by dpkg, I need to use pip -IU packagename. The -I flag tells it to ignore installed packages, i.e. don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.\nThis setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet."
+  },
+  {
+    "objectID": "posts/setup/setup.html#this-post-is-not-complete-yet",
+    "href": "posts/setup/setup.html#this-post-is-not-complete-yet",
+    "title": "My setup for AI work on my Linux PC",
+    "section": "This post is not complete yet!",
+    "text": "This post is not complete yet!"
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#adding-this-post-to-the-blog",
+    "href": "posts/blogging/blogging.html#adding-this-post-to-the-blog",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Adding this post to the blog",
+    "text": "Adding this post to the blog\nI had already started writing this post in a Jupyter Lab notebook blogging.ipynb. Now I needed to put it in the right place, so I made a directory for it:\n\n!mkdir -pv blog/posts/blogging\n\nmkdir: created directory 'blog/posts/blogging'\n\n\nI then moved this notebook blogging.ipynb into that new blog/posts/blogging directory, directly in Jupyter Lab. There was no need to close the notebook."
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#previewing-the-blog",
+    "href": "posts/blogging/blogging.html#previewing-the-blog",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Previewing the blog",
+    "text": "Previewing the blog\nWe can preview the blog, by running this in a terminal:\nquarto preview blog\nDon’t run it in a Jupyter cell, because it doesn’t exit and will hang Jupyter!\nI’m using a few extra options that suit my setup:\nquarto preview blog --no-browser --port 4242"
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#committing-to-git",
+    "href": "posts/blogging/blogging.html#committing-to-git",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Committing to git",
+    "text": "Committing to git\nNext, I ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nAnd let’s commit it to git:\n\n!git status\n\nOn branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   !notes.ipynb\n    modified:   !plan.ipynb\n    modified:   .gitignore\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    Walk-with-fastai-revisited/\n    blog/\n    experiments/\n    projects/dupes\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n\n\nSee also:\n\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter"
+  },
+  {
+    "objectID": "posts/blogging/blogging.html#cleaning-up",
+    "href": "posts/blogging/blogging.html#cleaning-up",
+    "title": "Blogging about AI with Jupyter and Quarto",
+    "section": "Cleaning up",
+    "text": "Cleaning up\nI looked over the sample posts and removed them, changed the about page and other settings, added links, and added my profile picture."
+  }
+]
