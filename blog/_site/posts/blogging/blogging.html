@@ -308,40 +308,26 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 <pre><code>Hooks are installed.</code></pre>
 </div>
 </div>
-<p>The Quarto doc says “you should always fully <code>quarto render</code> your site before deploying it”, so let’s do it.</p>
+<p>The Quarto doc says “you should always fully <code>quarto render</code> your site before deploying it”, so let’s do it, and commit to git:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>quarto render blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1/4] posts/setup/setup.ipynb
-[2/4] posts/blogging/blogging.ipynb
-[3/4] about.qmd
-[4/4] index.qmd
-WARNING: File /home/sam/ai/blog/posts/blogging/blogging.ipynb in the listing 'listing' contains no metadata.
-
-Output created: _site/index.html
-</code></pre>
-</div>
-</div>
-<p>And let’s commit it to git:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git add blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git commit <span class="op">-</span>q <span class="op">-</span>m <span class="st">'add blog'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git push <span class="op">-</span>q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>quarto render blog</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git add blog</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git commit <span class="op">-</span>m <span class="st">'add blog'</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git push</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git push opal</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>git push pi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>See also:</p>
 <ul>
 <li><a href="https://www.fast.ai/posts/2022-08-25-jupyter-git.html">The Jupyter+git problem is now solved</a></li>
 <li><a href="https://nbdev.fast.ai/tutorials/git_friendly_jupyter.html">Git-Friendly Jupyter</a></li>
+<li><a href="https://quarto.org/docs/websites/">Quarto - Websites</a></li>
 </ul>
 </section>
 <section id="publishing-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="publishing-the-blog">Publishing the blog</h2>
 <p>I pushed the git repo to my webserver, and used a symlink to put the rendered blog into my website at https://sam.ucm.dev/blog:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ~/ai/blog/_site ~/www/sam.ucm.dev/blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ~/ai/blog/_site ~/www/sam.ucm.dev/blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>See also:</p>
 <ul>
 <li><a href="https://quarto.org/docs/publishing/">Quarto - Publishing</a></li>
