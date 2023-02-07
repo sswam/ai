@@ -67,7 +67,7 @@
     "href": "posts/blogging/blogging.html#publishing-the-blog",
     "title": "Blogging about AI with Jupyter and Quarto",
     "section": "Publishing the blog",
-    "text": "Publishing the blog\nI pushed the git repo to my webserver, and used a symlink to put the rendered blog into my website at https://sam.ucm.dev/blog:\nln -s ~/ai/blog/_site ~/www/sam.ucm.dev/blog\nSee also:\n\nQuarto - Publishing"
+    "text": "Publishing the blog\nI pushed the git repo to my webserver, and used a symlink to put the rendered blog into my website at sam.ucm.dev/blog:\nln -s ~/ai/blog/_site ~/www/sam.ucm.dev/blog\nSee also:\n\nQuarto - Publishing"
   },
   {
     "objectID": "about.html",
