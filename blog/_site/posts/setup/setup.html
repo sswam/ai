@@ -219,13 +219,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">introduction</h2>
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>I am using my home PC, with Debian 12 “bookworm” (testing) and an NVIDIA GPU.</p>
 <p>The following setup is <strong>not recommended</strong> unless you know what you’re doing with Linux, and probably not even then.</p>
 <p>I decided not to use conda, virtualenv, or docker. Instead, I installed the necessary Python modules under <code>/usr/local</code> with <code>pip</code>. This way I can use my AI tools directly from the command line and other scripts, like any other tools.</p>
 </section>
-<section id="allow-my-user-to-install-packages-to-usrlocal" class="level2">
-<h2 class="anchored" data-anchor-id="allow-my-user-to-install-packages-to-usrlocal">allow my user to install packages to /usr/local</h2>
+<section id="allow-myself-to-install-packages-to-usrlocal" class="level2">
+<h2 class="anchored" data-anchor-id="allow-myself-to-install-packages-to-usrlocal">Allow myself to install packages to /usr/local</h2>
 <p>It’s not safe to run <code>pip install -U</code> as root. It will merrily remove files from Debian-packaged Python modules under <code>/usr/lib</code>, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under <code>/usr/local</code> via the <code>staff</code> group. I do the same for <code>/opt</code> because I want to upgrade Rust from my own user ID also:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> adduser <span class="va">$USER</span> staff</span>
@@ -241,7 +241,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>If you try to downgrade a package, and If multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, the sym</p>
 </section>
 <section id="enable-switching-the-system-python-version" class="level2">
-<h2 class="anchored" data-anchor-id="enable-switching-the-system-python-version">enable switching the system python version</h2>
+<h2 class="anchored" data-anchor-id="enable-switching-the-system-python-version">Enable switching the system python version</h2>
 <p>The default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.11</span> <span class="at">-m</span> pip install torchvision</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -284,7 +284,7 @@ update-alternatives: using /usr/bin/pydoc3.10 to provide /usr/bin/pydoc3 (pydoc3
 </div>
 </section>
 <section id="install-rust" class="level2">
-<h2 class="anchored" data-anchor-id="install-rust">install rust</h2>
+<h2 class="anchored" data-anchor-id="install-rust">Install Rust</h2>
 <p>Some Python modules now depend on Rust to build. I want to install Rust system-wide, in <code>/opt/rust</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /tmp</span>
@@ -323,7 +323,7 @@ info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
 </div>
 </section>
 <section id="install-packages-for-fastai-and-jupyter" class="level2">
-<h2 class="anchored" data-anchor-id="install-packages-for-fastai-and-jupyter">install packages for fastai and jupyter</h2>
+<h2 class="anchored" data-anchor-id="install-packages-for-fastai-and-jupyter">Install packages for fastai and jupyter</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-U</span> <span class="at">-qq</span> fastbook jupyter jupyterlab tensorflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -345,6 +345,10 @@ info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
   KernelSpecManager().install_kernel_spec(td, 'c', user=user, replace=True, prefix=prefix)</code></pre>
 </div>
 </div>
+</section>
+<section id="untold-difficulties" class="level2">
+<h2 class="anchored" data-anchor-id="untold-difficulties">Untold difficulties</h2>
+<p>I haven’t described all the various problems I’ve had to deal with, due to using this approach. There were plenty of problems! I guess I’m learning something from it, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would be a lot easier than this. Maybe I should give it a try on Debian anyway, and see what happens.</p>
 
 
 </section>

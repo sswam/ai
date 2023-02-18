@@ -1,5 +1,47 @@
 [
   {
+    "objectID": "posts/setup/setup.html",
+    "href": "posts/setup/setup.html",
+    "title": "My setup for AI work on my Linux PC",
+    "section": "",
+    "text": "I am using my home PC, with Debian 12 “bookworm” (testing) and an NVIDIA GPU.\nThe following setup is not recommended unless you know what you’re doing with Linux, and probably not even then.\nI decided not to use conda, virtualenv, or docker. Instead, I installed the necessary Python modules under /usr/local with pip. This way I can use my AI tools directly from the command line and other scripts, like any other tools."
+  },
+  {
+    "objectID": "posts/setup/setup.html#allow-myself-to-install-packages-to-usrlocal",
+    "href": "posts/setup/setup.html#allow-myself-to-install-packages-to-usrlocal",
+    "title": "My setup for AI work on my Linux PC",
+    "section": "Allow myself to install packages to /usr/local",
+    "text": "Allow myself to install packages to /usr/local\nIt’s not safe to run pip install -U as root. It will merrily remove files from Debian-packaged Python modules under /usr/lib, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under /usr/local via the staff group. I do the same for /opt because I want to upgrade Rust from my own user ID also:\n\nsudo adduser $USER staff\nsudo chgrp -R staff /usr/local /opt\nsudo chmod -R g+w /usr/local /opt\n\nadduser: The user `sam' is already a member of `staff'.\n\n\nThis is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.\nIn order to upgrade a pip package where the same package was also installed in /usr/lib by dpkg, I need to use pip -I -U packagename. The -I flag tells it to ignore installed packages, i.e. don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.\nThis setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.\nIf you try to downgrade a package, and If multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, the sym"
+  },
+  {
+    "objectID": "posts/setup/setup.html#enable-switching-the-system-python-version",
+    "href": "posts/setup/setup.html#enable-switching-the-system-python-version",
+    "title": "My setup for AI work on my Linux PC",
+    "section": "Enable switching the system python version",
+    "text": "Enable switching the system python version\nThe default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet:\n\npython3.11 -m pip install torchvision\n\nERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)\nERROR: No matching distribution found for torchvision\n\n\n\n: 1\n\n\nSo let’s enable switching the system Python version back to 3.10, using update-alternatives.\nFirst, note that we can undo this change later, if necessary, as follows:\n\nsudo update-alternatives --remove-all python3\nsudo update-alternatives --remove-all pydoc3\nsudo ln -sf python3.11 /usr/bin/python3\nsudo ln -sf pydoc3.11 /usr/bin/pydoc3\n\nWe can set up alternatives for python3:\n\nsudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 11\nsudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 10\nsudo update-alternatives --set python3 /usr/bin/python3.10\n\nupdate-alternatives: using /usr/bin/python3.11 to provide /usr/bin/python3 (python3) in auto mode\nupdate-alternatives: using /usr/bin/python3.10 to provide /usr/bin/python3 (python3) in manual mode\n\n\nand do the same for pydoc3:\n\nsudo update-alternatives --install /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11\nsudo update-alternatives --install /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10\nsudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10\n\nupdate-alternatives: using /usr/bin/pydoc3.11 to provide /usr/bin/pydoc3 (pydoc3) in auto mode\nupdate-alternatives: using /usr/bin/pydoc3.10 to provide /usr/bin/pydoc3 (pydoc3) in manual mode"
+  },
+  {
+    "objectID": "posts/setup/setup.html#install-rust",
+    "href": "posts/setup/setup.html#install-rust",
+    "title": "My setup for AI work on my Linux PC",
+    "section": "Install Rust",
+    "text": "Install Rust\nSome Python modules now depend on Rust to build. I want to install Rust system-wide, in /opt/rust:\n\ncd /tmp\ncurl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install_rust.sh\nsudo RUSTUP_HOME=/opt/rust CARGO_HOME=/opt/rust sh ./install_rust.sh -y --no-modify-path\n\ninfo: downloading installer\ninfo: profile set to 'default'\ninfo: default host triple is x86_64-unknown-linux-gnu\nwarning: Updating existing toolchain, profile choice will be ignored\ninfo: syncing channel updates for 'stable-x86_64-unknown-linux-gnu'\ninfo: default toolchain set to 'stable-x86_64-unknown-linux-gnu'\n\n  stable-x86_64-unknown-linux-gnu unchanged - rustc 1.67.1 (d5a82bbd2 2023-02-07)\n\n\nRust is installed now. Great!\n\nTo get started you need Cargo's bin directory (/opt/rust/bin) in your PATH\nenvironment variable. This has not been done automatically.\n\nTo configure your current shell, run:\nsource \"/opt/rust/env\"\n\n\n\n. /opt/rust/env\nrustup default stable\n\ninfo: using existing install for 'stable-x86_64-unknown-linux-gnu'\ninfo: default toolchain set to 'stable-x86_64-unknown-linux-gnu'\n\n  stable-x86_64-unknown-linux-gnu unchanged - rustc 1.67.1 (d5a82bbd2 2023-02-07)"
+  },
+  {
+    "objectID": "posts/setup/setup.html#install-packages-for-fastai-and-jupyter",
+    "href": "posts/setup/setup.html#install-packages-for-fastai-and-jupyter",
+    "title": "My setup for AI work on my Linux PC",
+    "section": "Install packages for fastai and jupyter",
+    "text": "Install packages for fastai and jupyter\n\npip install -U -qq fastbook jupyter jupyterlab tensorflow\n\nExtra packages for bash and C kernels:\n\npip install -U -qq nbdev bash_kernel jupyter-c-kernel\n\n\npython -m bash_kernel.install\n\nInstalling IPython kernel spec\n\n\n\ninstall_c_kernel\n\nInstalling IPython kernel spec\n/usr/local/bin/install_c_kernel:32: DeprecationWarning: replace is ignored. Installing a kernelspec always replaces an existing installation\n  KernelSpecManager().install_kernel_spec(td, 'c', user=user, replace=True, prefix=prefix)"
+  },
+  {
+    "objectID": "posts/setup/setup.html#untold-difficulties",
+    "href": "posts/setup/setup.html#untold-difficulties",
+    "title": "My setup for AI work on my Linux PC",
+    "section": "Untold difficulties",
+    "text": "Untold difficulties\nI haven’t described all the various problems I’ve had to deal with, due to using this approach. There were plenty of problems! I guess I’m learning something from it, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would be a lot easier than this. Maybe I should give it a try on Debian anyway, and see what happens."
+  },
+  {
     "objectID": "posts/blogging/blogging.html",
     "href": "posts/blogging/blogging.html",
     "title": "Blogging AI with Jupyter and Quarto",
@@ -81,6 +123,6 @@
     "href": "index.html",
     "title": "Sam’s AI Blog",
     "section": "",
-    "text": "Blogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
+    "text": "My setup for AI work on my Linux PC\n\n\n\n\n\n\n\nfastai\n\n\nsetup\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
   }
 ]
