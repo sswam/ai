@@ -46,25 +46,23 @@
 <p>I downloaded Quarto from their <a href="https://quarto.org/docs/get-started/">Get Started</a> page, and installed it.</p>
 <p>This command installs or upgrades the other software we need:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;">!pip</span> install <span class="at" style="color: #657422;">-U</span> jupyter fastbook nbdev</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> jupyter fastbook nbdev</span></code></pre></div>
 </div>
 </section>
 <section id="setting-up-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="setting-up-the-blog">Setting up the blog</h2>
 <p>I already had a git repo called <code>ai</code> in my home directory. The following commands would create it, and don’t do any harm if it’s already there.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;">%cd</span></span>
-<span id="cb2-2"><span class="ex" style="color: null;">!mkdir</span> <span class="at" style="color: #657422;">-p</span> ai</span>
-<span id="cb2-3"><span class="ex" style="color: null;">%cd</span> ai</span>
-<span id="cb2-4"><span class="ex" style="color: null;">!git</span> init</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="bu" style="color: null;">cd</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;">mkdir</span> <span class="at" style="color: #657422;">-p</span> ai</span>
+<span id="cb2-3"><span class="bu" style="color: null;">cd</span> ai</span>
+<span id="cb2-4"><span class="fu" style="color: #4758AB;">git</span> init</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>/home/sam
-/home/sam/ai
-Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
+<pre><code>Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;">!quarto</span> create-project blog <span class="at" style="color: #657422;">--type</span> website:blog</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;">quarto</span> create-project blog <span class="at" style="color: #657422;">--type</span> website:blog</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Creating project at /home/sam/ai/blog:
   - Created _quarto.yml
@@ -79,7 +77,7 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 </div>
 <p>I ran <code>nbdev_install_hooks</code>, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;">!nbdev_install_hooks</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;">nbdev_install_hooks</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Hooks are installed.</code></pre>
 </div>
@@ -95,20 +93,17 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 <h2 class="anchored" data-anchor-id="adding-this-post-to-the-blog">Adding this post to the blog</h2>
 <p>I had already started writing this post in a Jupyter Lab notebook <code>blogging.ipynb</code>. Now I needed to put it in the right place, so I made a directory for it:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;">!mkdir</span> <span class="at" style="color: #657422;">-pv</span> blog/posts/blogging</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>mkdir: created directory 'blog/posts/blogging'</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="fu" style="color: #4758AB;">mkdir</span> <span class="at" style="color: #657422;">-p</span> blog/posts/blogging</span></code></pre></div>
 </div>
 <p>I then moved this notebook <code>blogging.ipynb</code> into that new <code>blog/posts/blogging</code> directory, directly in Jupyter Lab. There was no need to close the notebook.</p>
 </section>
 <section id="previewing-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="previewing-the-blog">Previewing the blog</h2>
 <p>We can preview the blog, by running this in a terminal:</p>
-<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;">quarto</span> preview blog</span></code></pre></div>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;">quarto</span> preview blog</span></code></pre></div>
 <p>Don’t run it in a Jupyter cell, because it doesn’t exit and will hang Jupyter!</p>
 <p>I’m using a few extra options that suit my setup:</p>
-<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="ex" style="color: null;">quarto</span> preview blog <span class="at" style="color: #657422;">--no-browser</span> <span class="at" style="color: #657422;">--port</span> 4242</span></code></pre></div>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;">quarto</span> preview blog <span class="at" style="color: #657422;">--no-browser</span> <span class="at" style="color: #657422;">--port</span> 4242</span></code></pre></div>
 </section>
 <section id="finishing-up" class="level2">
 <h2 class="anchored" data-anchor-id="finishing-up">Finishing up</h2>
@@ -124,13 +119,13 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 <h2 class="anchored" data-anchor-id="committing-to-git">Committing to git</h2>
 <p>The Quarto doc says “you should always fully <code>quarto render</code> your site before deploying it”, so let’s do it, and commit to git:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;">%cd</span> ~/ai</span>
-<span id="cb12-2"><span class="ex" style="color: null;">!quarto</span> render blog</span>
-<span id="cb12-3"><span class="ex" style="color: null;">!git</span> add blog</span>
-<span id="cb12-4"><span class="ex" style="color: null;">!git</span> commit <span class="at" style="color: #657422;">-m</span> <span class="st" style="color: #20794D;">'update blog'</span></span>
-<span id="cb12-5"><span class="ex" style="color: null;">!git</span> push</span>
-<span id="cb12-6"><span class="ex" style="color: null;">!git</span> push opal</span>
-<span id="cb12-7"><span class="ex" style="color: null;">!git</span> push pi</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="bu" style="color: null;">cd</span> ~/ai</span>
+<span id="cb11-2"><span class="ex" style="color: null;">quarto</span> render blog</span>
+<span id="cb11-3"><span class="fu" style="color: #4758AB;">git</span> add blog</span>
+<span id="cb11-4"><span class="fu" style="color: #4758AB;">git</span> commit <span class="at" style="color: #657422;">-m</span> <span class="st" style="color: #20794D;">'update blog'</span></span>
+<span id="cb11-5"><span class="fu" style="color: #4758AB;">git</span> push</span>
+<span id="cb11-6"><span class="fu" style="color: #4758AB;">git</span> push opal</span>
+<span id="cb11-7"><span class="fu" style="color: #4758AB;">git</span> push pi</span></code></pre></div>
 </div>
 <p>I pushed to github, and my two servers <em>opal</em> and <em>pi</em>.</p>
 <p>See also:</p>
@@ -141,7 +136,7 @@ Reinitialized existing Git repository in /home/sam/ai/.git/</code></pre>
 <section id="publishing-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="publishing-the-blog">Publishing the blog</h2>
 <p>I used a symlink to put the rendered blog into my website at <a href="https://sam.ucm.dev/blog">sam.ucm.dev/blog</a>:</p>
-<div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="fu" style="color: #4758AB;">ln</span> <span class="at" style="color: #657422;">-s</span> ~/ai/blog/_site ~/www/sam.ucm.dev/blog</span></code></pre></div>
+<div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="fu" style="color: #4758AB;">ln</span> <span class="at" style="color: #657422;">-s</span> ~/ai/blog/_site ~/www/sam.ucm.dev/blog</span></code></pre></div>
 <p>See also:</p>
 <ul>
 <li><a href="https://quarto.org/docs/publishing/">Quarto - Publishing</a></li>

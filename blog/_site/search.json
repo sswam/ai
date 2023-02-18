@@ -25,21 +25,21 @@
     "href": "posts/blogging/blogging.html#installing-the-software",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Installing the software",
-    "text": "Installing the software\nI am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU. I’ll write more about my setup in another post.\nI downloaded Quarto from their Get Started page, and installed it.\nThis command installs or upgrades the other software we need:\n\n!pip install -U jupyter fastbook nbdev"
+    "text": "Installing the software\nI am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU. I’ll write more about my setup in another post.\nI downloaded Quarto from their Get Started page, and installed it.\nThis command installs or upgrades the other software we need:\n\npip install -qq -U jupyter fastbook nbdev"
   },
   {
     "objectID": "posts/blogging/blogging.html#setting-up-the-blog",
     "href": "posts/blogging/blogging.html#setting-up-the-blog",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Setting up the blog",
-    "text": "Setting up the blog\nI already had a git repo called ai in my home directory. The following commands would create it, and don’t do any harm if it’s already there.\n\n%cd\n!mkdir -p ai\n%cd ai\n!git init\n\n/home/sam\n/home/sam/ai\nReinitialized existing Git repository in /home/sam/ai/.git/\n\n\n\n!quarto create-project blog --type website:blog\n\nCreating project at /home/sam/ai/blog:\n  - Created _quarto.yml\n  - Created .gitignore\n  - Created index.qmd\n  - Created posts/welcome/index.qmd\n  - Created posts/post-with-code/index.qmd\n  - Created about.qmd\n  - Created styles.css\n  - Created posts/_metadata.yml\n\n\nI ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\n!nbdev_install_hooks\n\nHooks are installed.\n\n\nSee also:\n\nQuarto - Creating a Blog\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter"
+    "text": "Setting up the blog\nI already had a git repo called ai in my home directory. The following commands would create it, and don’t do any harm if it’s already there.\n\ncd\nmkdir -p ai\ncd ai\ngit init\n\nReinitialized existing Git repository in /home/sam/ai/.git/\n\n\n\nquarto create-project blog --type website:blog\n\nCreating project at /home/sam/ai/blog:\n  - Created _quarto.yml\n  - Created .gitignore\n  - Created index.qmd\n  - Created posts/welcome/index.qmd\n  - Created posts/post-with-code/index.qmd\n  - Created about.qmd\n  - Created styles.css\n  - Created posts/_metadata.yml\n\n\nI ran nbdev_install_hooks, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.\n\nnbdev_install_hooks\n\nHooks are installed.\n\n\nSee also:\n\nQuarto - Creating a Blog\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter"
   },
   {
     "objectID": "posts/blogging/blogging.html#adding-this-post-to-the-blog",
     "href": "posts/blogging/blogging.html#adding-this-post-to-the-blog",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Adding this post to the blog",
-    "text": "Adding this post to the blog\nI had already started writing this post in a Jupyter Lab notebook blogging.ipynb. Now I needed to put it in the right place, so I made a directory for it:\n\n!mkdir -pv blog/posts/blogging\n\nmkdir: created directory 'blog/posts/blogging'\n\n\nI then moved this notebook blogging.ipynb into that new blog/posts/blogging directory, directly in Jupyter Lab. There was no need to close the notebook."
+    "text": "Adding this post to the blog\nI had already started writing this post in a Jupyter Lab notebook blogging.ipynb. Now I needed to put it in the right place, so I made a directory for it:\n\nmkdir -p blog/posts/blogging\n\nI then moved this notebook blogging.ipynb into that new blog/posts/blogging directory, directly in Jupyter Lab. There was no need to close the notebook."
   },
   {
     "objectID": "posts/blogging/blogging.html#previewing-the-blog",
@@ -60,7 +60,7 @@
     "href": "posts/blogging/blogging.html#committing-to-git",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Committing to git",
-    "text": "Committing to git\nThe Quarto doc says “you should always fully quarto render your site before deploying it”, so let’s do it, and commit to git:\n\n%cd ~/ai\n!quarto render blog\n!git add blog\n!git commit -m 'update blog'\n!git push\n!git push opal\n!git push pi\n\nI pushed to github, and my two servers opal and pi.\nSee also:\n\nQuarto - Websites"
+    "text": "Committing to git\nThe Quarto doc says “you should always fully quarto render your site before deploying it”, so let’s do it, and commit to git:\n\ncd ~/ai\nquarto render blog\ngit add blog\ngit commit -m 'update blog'\ngit push\ngit push opal\ngit push pi\n\nI pushed to github, and my two servers opal and pi.\nSee also:\n\nQuarto - Websites"
   },
   {
     "objectID": "posts/blogging/blogging.html#publishing-the-blog",
