@@ -158,6 +158,8 @@ info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
  ]]></description>
   <category>fastai</category>
   <category>setup</category>
+  <category>python</category>
+  <category>pip</category>
   <guid>https://sam.ucm.dev/blog/posts/setup/setup.html</guid>
   <pubDate>Tue, 07 Feb 2023 13:00:00 GMT</pubDate>
 </item>
