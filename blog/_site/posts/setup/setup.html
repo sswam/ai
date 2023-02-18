@@ -22,6 +22,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -155,18 +218,133 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">introduction</h2>
 <p>I am using my home PC, with Debian 12 “bookworm” (testing) and an NVIDIA GPU.</p>
-<p>The following setup is <strong>not recommended</strong> unless you know what you’re doing with Linux, and probably not even then, but it’s working okay for me.</p>
+<p>The following setup is <strong>not recommended</strong> unless you know what you’re doing with Linux, and probably not even then.</p>
 <p>I decided not to use conda, virtualenv, or docker. Instead, I installed the necessary Python modules under <code>/usr/local</code> with <code>pip</code>. This way I can use my AI tools directly from the command line and other scripts, like any other tools.</p>
-<p>It’s not safe to run <code>pip install -U</code> as root. It will merrily remove files from Debian-packaged Python modules under <code>/usr/lib</code>, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under <code>/usr/local</code> via the <code>staff</code> group:</p>
-<pre><code>sudo adduser $USER staff
-sudo chgrp -R staff /usr/local
-sudo chmod -R g+w /usr/local</code></pre>
+</section>
+<section id="allow-my-user-to-install-packages-to-usrlocal" class="level2">
+<h2 class="anchored" data-anchor-id="allow-my-user-to-install-packages-to-usrlocal">allow my user to install packages to /usr/local</h2>
+<p>It’s not safe to run <code>pip install -U</code> as root. It will merrily remove files from Debian-packaged Python modules under <code>/usr/lib</code>, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under <code>/usr/local</code> via the <code>staff</code> group. I do the same for <code>/opt</code> because I want to upgrade Rust from my own user ID also:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> adduser <span class="va">$USER</span> staff</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chgrp <span class="at">-R</span> staff /usr/local /opt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chmod <span class="at">-R</span> g+w /usr/local /opt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>adduser: The user `sam' is already a member of `staff'.</code></pre>
+</div>
+</div>
 <p>This is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.</p>
-<p>In order to upgrade a pip package where the same package was also installed in <code>/usr/lib</code> by dpkg, I need to use <code>pip -IU packagename</code>. The <code>-I</code> flag tells it to ignore installed packages, i.e.&nbsp;don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.</p>
+<p>In order to upgrade a pip package where the same package was also installed in <code>/usr/lib</code> by dpkg, I need to use <code>pip -I -U packagename</code>. The <code>-I</code> flag tells it to ignore installed packages, i.e.&nbsp;don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.</p>
 <p>This setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.</p>
-<section id="this-post-is-not-complete-yet" class="level2">
-<h2 class="anchored" data-anchor-id="this-post-is-not-complete-yet">This post is not complete yet!</h2>
+<p>If you try to downgrade a package, and If multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, the sym</p>
+</section>
+<section id="enable-switching-the-system-python-version" class="level2">
+<h2 class="anchored" data-anchor-id="enable-switching-the-system-python-version">enable switching the system python version</h2>
+<p>The default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.11</span> <span class="at">-m</span> pip install torchvision</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)
+ERROR: No matching distribution found for torchvision
+</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>: 1</code></pre>
+</div>
+</div>
+<p>So let’s enable switching the system Python version back to 3.10, using <code>update-alternatives</code>.</p>
+<p>First, note that we can undo this change later, if necessary, as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> python3</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> pydoc3</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> python3.11 /usr/bin/python3</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> pydoc3.11 /usr/bin/pydoc3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can set up alternatives for <code>python3</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.11 11</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.10 10</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--set</span> python3 /usr/bin/python3.10</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>update-alternatives: using /usr/bin/python3.11 to provide /usr/bin/python3 (python3) in auto mode
+update-alternatives: using /usr/bin/python3.10 to provide /usr/bin/python3 (python3) in manual mode</code></pre>
+</div>
+</div>
+<p>and do the same for <code>pydoc3</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--set</span> pydoc3 /usr/bin/pydoc3.10</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>update-alternatives: using /usr/bin/pydoc3.11 to provide /usr/bin/pydoc3 (pydoc3) in auto mode
+update-alternatives: using /usr/bin/pydoc3.10 to provide /usr/bin/pydoc3 (pydoc3) in manual mode</code></pre>
+</div>
+</div>
+</section>
+<section id="install-rust" class="level2">
+<h2 class="anchored" data-anchor-id="install-rust">install rust</h2>
+<p>Some Python modules now depend on Rust to build. I want to install Rust system-wide, in <code>/opt/rust</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /tmp</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> https://sh.rustup.rs <span class="op">&gt;</span> install_rust.sh</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> RUSTUP_HOME=/opt/rust CARGO_HOME=/opt/rust sh ./install_rust.sh <span class="at">-y</span> <span class="at">--no-modify-path</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>info: downloading installer
+info: profile set to 'default'
+info: default host triple is x86_64-unknown-linux-gnu
+warning: Updating existing toolchain, profile choice will be ignored
+info: syncing channel updates for 'stable-x86_64-unknown-linux-gnu'
+info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
+
+  stable-x86_64-unknown-linux-gnu unchanged - rustc 1.67.1 (d5a82bbd2 2023-02-07)
+
+
+Rust is installed now. Great!
+
+To get started you need Cargo's bin directory (/opt/rust/bin) in your PATH
+environment variable. This has not been done automatically.
+
+To configure your current shell, run:
+source "/opt/rust/env"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/rust/env</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rustup</span> default stable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>info: using existing install for 'stable-x86_64-unknown-linux-gnu'
+info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
+
+  stable-x86_64-unknown-linux-gnu unchanged - rustc 1.67.1 (d5a82bbd2 2023-02-07)
+</code></pre>
+</div>
+</div>
+</section>
+<section id="install-packages-for-fastai-and-jupyter" class="level2">
+<h2 class="anchored" data-anchor-id="install-packages-for-fastai-and-jupyter">install packages for fastai and jupyter</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-U</span> <span class="at">-qq</span> fastbook jupyter jupyterlab tensorflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Extra packages for bash and C kernels:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-U</span> <span class="at">-qq</span> nbdev bash_kernel jupyter-c-kernel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> bash_kernel.install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Installing IPython kernel spec</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">install_c_kernel</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Installing IPython kernel spec
+/usr/local/bin/install_c_kernel:32: DeprecationWarning: replace is ignored. Installing a kernelspec always replaces an existing installation
+  KernelSpecManager().install_kernel_spec(td, 'c', user=user, replace=True, prefix=prefix)</code></pre>
+</div>
+</div>
 
 
 </section>
