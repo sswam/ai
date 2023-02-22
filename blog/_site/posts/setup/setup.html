@@ -233,9 +233,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> adduser <span class="va">$USER</span> staff</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chgrp <span class="at">-R</span> staff /usr/local /opt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chmod <span class="at">-R</span> g+w /usr/local /opt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>adduser: The user `sam' is already a member of `staff'.</code></pre>
-</div>
 </div>
 <p>This is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.</p>
 <p>In order to upgrade a pip package where the same package was also installed in <code>/usr/lib</code> by dpkg, I need to use <code>pip -I -U packagename</code>. The <code>-I</code> flag tells it to ignore installed packages, i.e.&nbsp;don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.</p>
@@ -246,7 +243,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="enable-switching-the-system-python-version">Enable switching the system python version</h2>
 <p>The default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.11</span> <span class="at">-m</span> pip install torchvision</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.11</span> <span class="at">-m</span> pip install torchvision</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>ERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)
 ERROR: No matching distribution found for torchvision
@@ -256,19 +253,20 @@ ERROR: No matching distribution found for torchvision
 <pre><code>: 1</code></pre>
 </div>
 </div>
-<p>So let’s enable switching the system Python version back to 3.10, using <code>update-alternatives</code>.</p>
+<p>I’m leaving this section in, however I have since switched to using Python 3.11 and nightly builds of torch.</p>
+<p>Anyway, let’s enable switching the system Python version back to 3.10, using <code>update-alternatives</code>.</p>
 <p>First, note that we can undo this change later, if necessary, as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> python3</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> pydoc3</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> python3.11 /usr/bin/python3</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> pydoc3.11 /usr/bin/pydoc3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> python3</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> pydoc3</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> python3.11 /usr/bin/python3</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> pydoc3.11 /usr/bin/pydoc3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can set up alternatives for <code>python3</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.11 11</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.10 10</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--set</span> python3 /usr/bin/python3.10</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.11 11</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.10 10</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sudo update-alternatives --set python3 /usr/bin/python3.10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>update-alternatives: using /usr/bin/python3.11 to provide /usr/bin/python3 (python3) in auto mode
 update-alternatives: using /usr/bin/python3.10 to provide /usr/bin/python3 (python3) in manual mode</code></pre>
@@ -276,9 +274,9 @@ update-alternatives: using /usr/bin/python3.10 to provide /usr/bin/python3 (pyth
 </div>
 <p>and do the same for <code>pydoc3</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--set</span> pydoc3 /usr/bin/pydoc3.10</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>update-alternatives: using /usr/bin/pydoc3.11 to provide /usr/bin/pydoc3 (pydoc3) in auto mode
 update-alternatives: using /usr/bin/pydoc3.10 to provide /usr/bin/pydoc3 (pydoc3) in manual mode</code></pre>
@@ -289,9 +287,9 @@ update-alternatives: using /usr/bin/pydoc3.10 to provide /usr/bin/pydoc3 (pydoc3
 <h2 class="anchored" data-anchor-id="install-rust">Install Rust</h2>
 <p>Some Python modules now depend on Rust to build. I want to install Rust system-wide, in <code>/opt/rust</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /tmp</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> https://sh.rustup.rs <span class="op">&gt;</span> install_rust.sh</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> RUSTUP_HOME=/opt/rust CARGO_HOME=/opt/rust sh ./install_rust.sh <span class="at">-y</span> <span class="at">--no-modify-path</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /tmp</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> https://sh.rustup.rs <span class="op">&gt;</span> install_rust.sh</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> RUSTUP_HOME=/opt/rust CARGO_HOME=/opt/rust sh ./install_rust.sh <span class="at">-y</span> <span class="at">--no-modify-path</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>info: downloading installer
 info: profile set to 'default'
@@ -313,8 +311,8 @@ source "/opt/rust/env"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/rust/env</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rustup</span> default stable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/rust/env</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rustup</span> default stable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>info: using existing install for 'stable-x86_64-unknown-linux-gnu'
 info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
@@ -324,23 +322,29 @@ info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
 </div>
 </div>
 </section>
-<section id="install-packages-for-fastai-and-jupyter" class="level2">
-<h2 class="anchored" data-anchor-id="install-packages-for-fastai-and-jupyter">Install packages for fastai and jupyter</h2>
+<section id="install-packages-for-torch-fastai-and-jupyter" class="level2">
+<h2 class="anchored" data-anchor-id="install-packages-for-torch-fastai-and-jupyter">Install packages for torch, fastai and jupyter</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-U</span> <span class="at">-qq</span> fastbook jupyter jupyterlab tensorflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> fastbook jupyter jupyterlab tensorflow ipywidgets</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Extra packages for bash and C kernels:</p>
+<p>At some point I saw a warning about compatibility between fastai and torch.</p>
+<pre><code>fastai 2.7.11 has requirement torch&lt;1.14,&gt;=1.7, but you have torch 2.0.0.dev20230220+cu117</code></pre>
+<p>I decided to try using it with nightly torch anyway:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-U</span> <span class="at">-qq</span> nbdev bash_kernel jupyter-c-kernel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> <span class="at">--pre</span> torch torchvision torchaudio <span class="at">--index-url</span> https://download.pytorch.org/whl/nightly/cu117</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Extra packages: nbdev, and kernels for bash and C:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> nbdev bash_kernel jupyter-c-kernel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> bash_kernel.install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> bash_kernel.install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Installing IPython kernel spec</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">install_c_kernel</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">install_c_kernel</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Installing IPython kernel spec
 /usr/local/bin/install_c_kernel:32: DeprecationWarning: replace is ignored. Installing a kernelspec always replaces an existing installation
