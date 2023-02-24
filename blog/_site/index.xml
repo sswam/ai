@@ -10,7 +10,195 @@
 <atom:link href="https://sam.ucm.dev/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>recording my AI studies</description>
 <generator>quarto-1.2.280</generator>
-<lastBuildDate>Tue, 07 Feb 2023 13:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 23 Feb 2023 13:00:00 GMT</lastBuildDate>
+<item>
+  <title>My startup script for my Linux desktop environment</title>
+  <dc:creator>Sam Watkins</dc:creator>
+  <link>https://sam.ucm.dev/blog/posts/startup/startup.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>I am working on a startup.sh script, to open various apps and webpages when I log in to my Linux PC.</p>
+<p>Testing and debugging this script is a bit annoying. My approach up until now has been to make fixes to the script, close everything, exit my desktop session, then log in again and see what happens. Another possibility is to copy-paste lines out of the script into the terminal.</p>
+<p>Now I’m going to try developing the script as a Jupyter notebook with the Bash kernel. I will also generate the shell script from the notebook.</p>
+<p>My startup script calls out to several other scripts, which aren’t included in this blog post yet.</p>
+</section>
+<section id="workspaces-and-apps" class="level2">
+<h2 class="anchored" data-anchor-id="workspaces-and-apps">Workspaces and Apps</h2>
+<p>I use two monitors:</p>
+<ol type="1">
+<li>Left monitor, doesn’t switch workspaces, for apps that I want always to hand.</li>
+<li>Right monitor, widescreen, does switch between workspaces, for work.</li>
+</ol>
+<p>Apps on left monitor:</p>
+<ol type="1">
+<li>Gnome Pomodoro - timer</li>
+<li>Trello - tasks planner</li>
+<li>ChatGPT - AI assistant</li>
+<li>Miniflux - blog reader</li>
+<li>Anki - learning with flashcards</li>
+<li>Swatch - my system monitor script</li>
+</ol>
+<p>I am using these workspaces:</p>
+<ol type="1">
+<li>Entertainment
+<ul>
+<li>playing music</li>
+<li>watching movies</li>
+<li>terminal with GNU screen</li>
+</ul></li>
+<li>Miscellaneous
+<ul>
+<li>sysadmin</li>
+<li>random stuff</li>
+</ul></li>
+<li>AI Study
+<ul>
+<li>Jupyter notebook</li>
+<li>Quarto blog</li>
+<li>terminal with GNU screen</li>
+</ul></li>
+</ol>
+<p>I can add extra workspaces as needed when I work on other projects.</p>
+</section>
+<section id="the-startup-script" class="level2">
+<h2 class="anchored" data-anchor-id="the-startup-script">The startup script</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;">#!/bin/bash</span></span>
+<span id="cb1-2"><span class="co" style="color: #5E5E5E;"># usage: source from ~/.xsessionrc</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="fu" style="color: #4758AB;">sleep</span> 1</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;">gnome-dark</span></span>
+<span id="cb3-2"><span class="ex" style="color: null;">connects</span> <span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-s</span> 0</span></code></pre></div>
+</div>
+<section id="common-apps-on-the-left-monitor" class="level3">
+<h3 class="anchored" data-anchor-id="common-apps-on-the-left-monitor">Common apps on the left monitor</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;">chrome_profile</span> Sam <span class="at" style="color: #657422;">--new-window</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb5-2"><span class="st" style="color: #20794D;">"https://trello.com/b/dnuAgKw1/ai"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb5-3"><span class="st" style="color: #20794D;">"https://trello.com/b/y16reUe3/misc"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb5-4"><span class="st" style="color: #20794D;">"https://chat.openai.com/chat"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb5-5"><span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb5-6"><span class="ex" style="color: null;">chrome_profile</span> Sam <span class="at" style="color: #657422;">--new-window</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb5-7"><span class="st" style="color: #20794D;">"https://miniflux.ucm.dev/unread"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb5-8"><span class="st" style="color: #20794D;">"https://www.youtube.com/playlist?list=PLqkzs79RU9yUrYAN083Jbiza9DMqQE1dq"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb5-9"><span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;">gnome-pomodoro</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb6-2"><span class="ex" style="color: null;">barrier</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb6-3"><span class="ex" style="color: null;">anki</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb6-4"><span class="ex" style="color: null;">swatch</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb6-5"><span class="ex" style="color: null;">flameshot</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb6-6"><span class="co" style="color: #5E5E5E;"># miniflux &amp;</span></span>
+<span id="cb6-7"><span class="co" style="color: #5E5E5E;"># chatgpt &amp;</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="ex" style="color: null;">discord</span> <span class="at" style="color: #657422;">--start-minimized</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb7-2"><span class="ex" style="color: null;">slack</span> <span class="at" style="color: #657422;">--startup</span> <span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="co" style="color: #5E5E5E;"># Sleep for a bit, and try to get out of the Activities Overview</span></span>
+<span id="cb8-2"><span class="fu" style="color: #4758AB;">sleep</span> 5<span class="kw" style="color: #003B4F;">;</span> <span class="ex" style="color: null;">xdotool</span> key <span class="st" style="color: #20794D;">'Super'</span><span class="kw" style="color: #003B4F;">;</span> <span class="fu" style="color: #4758AB;">sleep</span> 1 <span class="kw" style="color: #003B4F;">;</span> <span class="ex" style="color: null;">xdotool</span> key <span class="st" style="color: #20794D;">'Escape'</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Trello <span class="at" style="color: #657422;">-e</span> 0,960,0,960,1080</span>
+<span id="cb9-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> pomodoro <span class="at" style="color: #657422;">-e</span> 0,0,0,400,400</span>
+<span id="cb9-3"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Barrier <span class="at" style="color: #657422;">-e</span> 0,400,0,400,400</span>
+<span id="cb9-4"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Anki <span class="at" style="color: #657422;">-e</span> 0,0,0,960,540</span>
+<span id="cb9-5"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Miniflux <span class="at" style="color: #657422;">-e</span> 0,0,540,960,540</span>
+<span id="cb9-6"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> swatch windowmove 600 100</span>
+<span id="cb9-7"></span>
+<span id="cb9-8"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> Trello pomodoro Anki swatch Trello Miniflux<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span></span>
+<span id="cb9-9">    <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> <span class="st" style="color: #20794D;">"</span><span class="va" style="color: #111111;">$app</span><span class="st" style="color: #20794D;">"</span> <span class="at" style="color: #657422;">-b</span> add,sticky</span>
+<span id="cb9-10"><span class="cf" style="color: #003B4F;">done</span></span>
+<span id="cb9-11"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> pomodoro <span class="at" style="color: #657422;">-b</span> add,above</span>
+<span id="cb9-12"></span>
+<span id="cb9-13"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> barrier<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-c</span> <span class="va" style="color: #111111;">$app</span><span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span>
+<span id="cb9-14"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> swatch pomodoro<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="va" style="color: #111111;">$app</span> windowminimize %@<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;">gnome-pomodoro</span> <span class="at" style="color: #657422;">--start</span></span></code></pre></div>
+</div>
+</section>
+<section id="apps-on-workspace-1-entertainment" class="level3">
+<h3 class="anchored" data-anchor-id="apps-on-workspace-1-entertainment">Apps on Workspace 1: Entertainment</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">'. entertain'</span> <span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
+</div>
+</section>
+<section id="apps-on-workspace-2-miscellaneous" class="level3">
+<h3 class="anchored" data-anchor-id="apps-on-workspace-2-miscellaneous">Apps on Workspace 2: Miscellaneous</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb12-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-s</span> 1</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;">nautilus</span> ~/plan.dev <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 1<span class="kw" style="color: #003B4F;">;</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> plan.dev <span class="at" style="color: #657422;">-e</span> 0,1920,0,400,400</span></code></pre></div>
+</div>
+</section>
+<section id="apps-on-workspace-3-ai-study" class="level3">
+<h3 class="anchored" data-anchor-id="apps-on-workspace-3-ai-study">Apps on Workspace 3: AI Study</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb14-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-s</span> 2</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><span class="ex" style="color: null;">zotero</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb15-2"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">'. ai'</span> <span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb16-2"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> zotero windowminimize %@</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="exporting-the-shell-script" class="level2">
+<h2 class="anchored" data-anchor-id="exporting-the-shell-script">Exporting the shell script</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="co" style="color: #5E5E5E;"># __END__</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><span class="ex" style="color: null;">jupyter</span> nbconvert <span class="at" style="color: #657422;">--no-prompt</span> <span class="at" style="color: #657422;">--to</span> script startup.ipynb <span class="at" style="color: #657422;">--stdout</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb18-2">--TemplateExporter.exclude_raw=True <span class="kw" style="color: #003B4F;">|</span></span>
+<span id="cb18-3"><span class="fu" style="color: #4758AB;">sed</span> <span class="at" style="color: #657422;">-n</span> <span class="st" style="color: #20794D;">'/^# __END__/q; p'</span> <span class="op" style="color: #5E5E5E;">&gt;</span> startup.sh</span>
+<span id="cb18-4"><span class="fu" style="color: #4758AB;">chmod</span> +x startup.sh</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[NbConvertApp] Converting notebook startup.ipynb to script</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><span class="fu" style="color: #4758AB;">mv</span> <span class="at" style="color: #657422;">-v</span> ./startup.sh ~/local/x/startup.sh</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>renamed './startup.sh' -&gt; '/home/sam/local/x/startup.sh'</code></pre>
+</div>
+</div>
+</section>
+<section id="logging-out-to-test-the-script" class="level2">
+<h2 class="anchored" data-anchor-id="logging-out-to-test-the-script">Logging out to test the script</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><span class="fu" style="color: #4758AB;">killall</span> screen Xorg</span></code></pre></div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>startup</category>
+  <category>Linux</category>
+  <guid>https://sam.ucm.dev/blog/posts/startup/startup.html</guid>
+  <pubDate>Thu, 23 Feb 2023 13:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Blogging AI with Jupyter and Quarto</title>
   <dc:creator>Sam Watkins</dc:creator>

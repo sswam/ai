@@ -222,7 +222,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>I am working on a startup.sh script, to open various apps and webpages when I log in to my Linux PC.</p>
 <p>Testing and debugging this script is a bit annoying. My approach up until now has been to make fixes to the script, close everything, exit my desktop session, then log in again and see what happens. Another possibility is to copy-paste lines out of the script into the terminal.</p>
-<p>Now I’m going to try developing the script as a Jupyter notebook with the Bash kernel. I will also write a script to generate the shell script from the notebook.</p>
+<p>Now I’m going to try developing the script as a Jupyter notebook with the Bash kernel. I will also generate the shell script from the notebook.</p>
+<p>My startup script calls out to several other scripts, which aren’t included in this blog post yet.</p>
 </section>
 <section id="workspaces-and-apps" class="level2">
 <h2 class="anchored" data-anchor-id="workspaces-and-apps">Workspaces and Apps</h2>
@@ -275,13 +276,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gnome-dark</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">connects</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="try-to-get-out-of-the-activities-overview" class="level3">
-<h3 class="anchored" data-anchor-id="try-to-get-out-of-the-activities-overview">Try to get out of the Activities Overview</h3>
-<p>This doesn’t work at startup time, not sure why. If I can’t get it working, remove it.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 5<span class="kw">;</span> <span class="ex">xdotool</span> key <span class="st">'Super'</span><span class="kw">;</span> <span class="fu">sleep</span> 1 <span class="kw">;</span> <span class="ex">xdotool</span> key <span class="st">'Escape'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
 <section id="common-apps-on-the-left-monitor" class="level3">
 <h3 class="anchored" data-anchor-id="common-apps-on-the-left-monitor">Common apps on the left monitor</h3>
 <div class="cell">
@@ -309,7 +306,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">slack</span> <span class="at">--startup</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sleep for a bit, and try to get out of the Activities Overview</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 5<span class="kw">;</span> <span class="ex">xdotool</span> key <span class="st">'Super'</span><span class="kw">;</span> <span class="fu">sleep</span> 1 <span class="kw">;</span> <span class="ex">xdotool</span> key <span class="st">'Escape'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Trello <span class="at">-e</span> 0,960,0,960,1080</span>
@@ -317,14 +315,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Barrier <span class="at">-e</span> 0,400,0,400,400</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Anki <span class="at">-e</span> 0,0,0,960,540</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Miniflux <span class="at">-e</span> 0,0,540,960,540</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">xdotool</span> search <span class="at">--name</span> swatch windowmove 100 100</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">xdotool</span> search <span class="at">--name</span> swatch windowmove 600 100</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> Trello pomodoro Anki swatch Trello Miniflux<span class="kw">;</span> <span class="cf">do</span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">wmctrl</span> <span class="at">-r</span> <span class="st">"</span><span class="va">$app</span><span class="st">"</span> <span class="at">-b</span> add,sticky</span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> pomodoro <span class="at">-b</span> add,above</span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> barrier<span class="kw">;</span> <span class="cf">do</span> <span class="ex">wmctrl</span> <span class="at">-c</span> <span class="va">$app</span><span class="kw">;</span> <span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> barrier<span class="kw">;</span> <span class="cf">do</span> <span class="ex">wmctrl</span> <span class="at">-c</span> <span class="va">$app</span><span class="kw">;</span> <span class="cf">done</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> swatch pomodoro<span class="kw">;</span> <span class="cf">do</span> <span class="ex">xdotool</span> search <span class="at">--name</span> <span class="va">$app</span> windowminimize %@<span class="kw">;</span> <span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gnome-pomodoro</span> <span class="at">--start</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -333,55 +332,60 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="apps-on-workspace-1-entertainment" class="level3">
 <h3 class="anchored" data-anchor-id="apps-on-workspace-1-entertainment">Apps on Workspace 1: Entertainment</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">'. entertain'</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">'. entertain'</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="apps-on-workspace-2-miscellaneous" class="level3">
 <h3 class="anchored" data-anchor-id="apps-on-workspace-2-miscellaneous">Apps on Workspace 2: Miscellaneous</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nautilus</span> ~/plan.dev <span class="kw">&amp;</span> <span class="fu">sleep</span> 1<span class="kw">;</span> <span class="ex">wmctrl</span> <span class="at">-r</span> plan.dev <span class="at">-e</span> 0,1920,0,400,400</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nautilus</span> ~/plan.dev <span class="kw">&amp;</span> <span class="fu">sleep</span> 1<span class="kw">;</span> <span class="ex">wmctrl</span> <span class="at">-r</span> plan.dev <span class="at">-e</span> 0,1920,0,400,400</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="apps-on-workspace-3-ai-study" class="level3">
 <h3 class="anchored" data-anchor-id="apps-on-workspace-3-ai-study">Apps on Workspace 3: AI Study</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">zotero</span> <span class="kw">&amp;</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">'. ai'</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">zotero</span> <span class="kw">&amp;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">'. ai'</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 1</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xdotool</span> search <span class="at">--name</span> zotero windowminimize %@</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xdotool</span> search <span class="at">--name</span> zotero windowminimize %@</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="exporting-the-script" class="level2">
-<h2 class="anchored" data-anchor-id="exporting-the-script">Exporting the script</h2>
+<section id="exporting-the-shell-script" class="level2">
+<h2 class="anchored" data-anchor-id="exporting-the-shell-script">Exporting the shell script</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># __END__</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># __END__</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> nbconvert <span class="at">--no-prompt</span> <span class="at">--to</span> script startup.ipynb <span class="at">--stdout</span> <span class="dt">\</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>--TemplateExporter.exclude_raw=True <span class="kw">|</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-n</span> <span class="st">'/^# __END__/q; p'</span> <span class="op">&gt;</span> startup.sh</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x startup.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> nbconvert <span class="at">--no-prompt</span> <span class="at">--to</span> script startup.ipynb <span class="at">--stdout</span> <span class="dt">\</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>--TemplateExporter.exclude_raw=True <span class="kw">|</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-n</span> <span class="st">'/^# __END__/q; p'</span> <span class="op">&gt;</span> startup.sh</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x startup.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[NbConvertApp] Converting notebook startup.ipynb to script</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="at">-v</span> ./startup.sh ~/local/x/startup.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="at">-v</span> ./startup.sh ~/local/x/startup.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>renamed './startup.sh' -&gt; '/home/sam/local/x/startup.sh'</code></pre>
 </div>
+</div>
+</section>
+<section id="logging-out-to-test-the-script" class="level2">
+<h2 class="anchored" data-anchor-id="logging-out-to-test-the-script">Logging out to test the script</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">killall</span> screen Xorg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
