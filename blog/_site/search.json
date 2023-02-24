@@ -116,7 +116,7 @@
     "href": "posts/startup/startup.html#logging-out-to-test-the-script",
     "title": "Startup script for my Linux desktop",
     "section": "Logging out to test the script",
-    "text": "Logging out to test the script\n\nkillall screen Xorg"
+    "text": "Logging out to test the script\n\nxdotool search --name 'Chrome' windowclose %@\nsleep 1\nkillall screen Xorg"
   },
   {
     "objectID": "about.html",

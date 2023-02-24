@@ -261,7 +261,9 @@
 <section id="logging-out-to-test-the-script" class="level2">
 <h2 class="anchored" data-anchor-id="logging-out-to-test-the-script">Logging out to test the script</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><span class="fu" style="color: #4758AB;">killall</span> screen Xorg</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="st" style="color: #20794D;">'Chrome'</span> windowclose %@</span>
+<span id="cb22-2"><span class="fu" style="color: #4758AB;">sleep</span> 1</span>
+<span id="cb22-3"><span class="fu" style="color: #4758AB;">killall</span> screen Xorg</span></code></pre></div>
 </div>
 
 
