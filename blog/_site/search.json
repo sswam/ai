@@ -72,35 +72,35 @@
   {
     "objectID": "posts/startup/startup.html",
     "href": "posts/startup/startup.html",
-    "title": "My startup script for my Linux desktop environment",
+    "title": "Startup script for my Linux desktop",
     "section": "",
     "text": "I am working on a startup.sh script, to open various apps and webpages when I log in to my Linux PC.\nTesting and debugging this script is a bit annoying. My approach up until now has been to make fixes to the script, close everything, exit my desktop session, then log in again and see what happens. Another possibility is to copy-paste lines out of the script into the terminal.\nNow I’m going to try developing the script as a Jupyter notebook with the Bash kernel. I will also generate the shell script from the notebook.\nMy startup script calls out to several other scripts, which aren’t included in this blog post yet."
   },
   {
     "objectID": "posts/startup/startup.html#workspaces-and-apps",
     "href": "posts/startup/startup.html#workspaces-and-apps",
-    "title": "My startup script for my Linux desktop environment",
+    "title": "Startup script for my Linux desktop",
     "section": "Workspaces and Apps",
     "text": "Workspaces and Apps\nI use two monitors:\n\nLeft monitor, doesn’t switch workspaces, for apps that I want always to hand.\nRight monitor, widescreen, does switch between workspaces, for work.\n\nApps on left monitor:\n\nGnome Pomodoro - timer\nTrello - tasks planner\nChatGPT - AI assistant\nMiniflux - blog reader\nAnki - learning with flashcards\nSwatch - my system monitor script\n\nI am using these workspaces:\n\nEntertainment\n\nplaying music\nwatching movies\nterminal with GNU screen\n\nMiscellaneous\n\nsysadmin\nrandom stuff\n\nAI Study\n\nJupyter notebook\nQuarto blog\nterminal with GNU screen\n\n\nI can add extra workspaces as needed when I work on other projects."
   },
   {
     "objectID": "posts/startup/startup.html#the-startup-script",
     "href": "posts/startup/startup.html#the-startup-script",
-    "title": "My startup script for my Linux desktop environment",
+    "title": "Startup script for my Linux desktop",
     "section": "The startup script",
     "text": "The startup script\n\n#!/bin/bash\n# usage: source from ~/.xsessionrc\n\n\nsleep 1\n\n\ngnome-dark\nconnects &\n\n\nwmctrl -s 0\n\n\nCommon apps on the left monitor\n\nchrome_profile Sam --new-window \\\n\"https://trello.com/b/dnuAgKw1/ai\" \\\n\"https://trello.com/b/y16reUe3/misc\" \\\n\"https://chat.openai.com/chat\" \\\n&\nchrome_profile Sam --new-window \\\n\"https://miniflux.ucm.dev/unread\" \\\n\"https://www.youtube.com/playlist?list=PLqkzs79RU9yUrYAN083Jbiza9DMqQE1dq\" \\\n&\n\n\ngnome-pomodoro &\nbarrier &\nanki &\nswatch &\nflameshot &\n# miniflux &\n# chatgpt &\n\n\ndiscord --start-minimized &\nslack --startup &\n\n\n# Sleep for a bit, and try to get out of the Activities Overview\nsleep 5; xdotool key 'Super'; sleep 1 ; xdotool key 'Escape'\n\n\nwmctrl -r Trello -e 0,960,0,960,1080\nwmctrl -r pomodoro -e 0,0,0,400,400\nwmctrl -r Barrier -e 0,400,0,400,400\nwmctrl -r Anki -e 0,0,0,960,540\nwmctrl -r Miniflux -e 0,0,540,960,540\nxdotool search --name swatch windowmove 600 100\n\nfor app in Trello pomodoro Anki swatch Trello Miniflux; do\n    wmctrl -r \"$app\" -b add,sticky\ndone\nwmctrl -r pomodoro -b add,above\n\nfor app in barrier; do wmctrl -c $app; done\nfor app in swatch pomodoro; do xdotool search --name $app windowminimize %@; done\n\n\ngnome-pomodoro --start\n\n\n\nApps on Workspace 1: Entertainment\n\nxterm -e '. entertain' &\n\n\n\nApps on Workspace 2: Miscellaneous\n\nsleep 2\nwmctrl -s 1\n\n\nnautilus ~/plan.dev & sleep 1; wmctrl -r plan.dev -e 0,1920,0,400,400\n\n\n\nApps on Workspace 3: AI Study\n\nsleep 2\nwmctrl -s 2\n\n\nzotero &\nxterm -e '. ai' &\n\n\nsleep 2\nxdotool search --name zotero windowminimize %@"
   },
   {
     "objectID": "posts/startup/startup.html#exporting-the-shell-script",
     "href": "posts/startup/startup.html#exporting-the-shell-script",
-    "title": "My startup script for my Linux desktop environment",
+    "title": "Startup script for my Linux desktop",
     "section": "Exporting the shell script",
     "text": "Exporting the shell script\n\n# __END__\n\n\njupyter nbconvert --no-prompt --to script startup.ipynb --stdout \\\n--TemplateExporter.exclude_raw=True |\nsed -n '/^# __END__/q; p' > startup.sh\nchmod +x startup.sh\n\n[NbConvertApp] Converting notebook startup.ipynb to script\n\n\n\nmv -v ./startup.sh ~/local/x/startup.sh\n\nrenamed './startup.sh' -> '/home/sam/local/x/startup.sh'"
   },
   {
     "objectID": "posts/startup/startup.html#logging-out-to-test-the-script",
     "href": "posts/startup/startup.html#logging-out-to-test-the-script",
-    "title": "My startup script for my Linux desktop environment",
+    "title": "Startup script for my Linux desktop",
     "section": "Logging out to test the script",
     "text": "Logging out to test the script\n\nkillall screen Xorg"
   },
@@ -116,6 +116,6 @@
     "href": "index.html",
     "title": "Sam’s AI Blog",
     "section": "",
-    "text": "My startup script for my Linux desktop environment\n\n\n\n\n\n\n\nstartup\n\n\nLinux\n\n\nX11\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\nSam Watkins\n\n\n\n\n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
+    "text": "Startup script for my Linux desktop\n\n\n\n\n\n\n\nstartup\n\n\nLinux\n\n\nX11\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\nSam Watkins\n\n\n\n\n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
   }
 ]
