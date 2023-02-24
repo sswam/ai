@@ -1,0 +1,7 @@
+cd ~/ai
+quarto render blog
+git add blog
+git commit -m "blog_build"
+git push
+git push opal
+git push pi
