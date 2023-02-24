@@ -1,5 +1,19 @@
 [
   {
+    "objectID": "posts/shortcuts/shortcuts.html",
+    "href": "posts/shortcuts/shortcuts.html",
+    "title": "Keyboard shortcuts for Jupyter Lab",
+    "section": "",
+    "text": "I added some keyboard shortcuts to Jupyter Lab:\n\n\n\nshortcut\nfunction\n\n\n\n\nCtrl Shift Enter\nRun All Above Selected Cell\n\n\nAlt L\nClear All Outputs\n\n\nAlt M\nRender All Markdown Cells"
+  },
+  {
+    "objectID": "posts/shortcuts/shortcuts.html#editing-the-settings",
+    "href": "posts/shortcuts/shortcuts.html#editing-the-settings",
+    "title": "Keyboard shortcuts for Jupyter Lab",
+    "section": "Editing the settings",
+    "text": "Editing the settings\nGo to Settings -> Advanced Settings Editor -> JSON Settings Editor\nThen add these shortcuts at the end of the file:\n    {\n        \"args\": {},\n        \"command\": \"notebook:run-all-above\",\n        \"keys\": [\n            \"Ctrl Shift Enter\"\n        ],\n        \"selector\": \".jp-Notebook:focus\"\n    },\n    {\n        \"args\": {},\n        \"command\": \"notebook:clear-all-cell-outputs\",\n        \"keys\": [\n            \"Alt L\"\n        ],\n        \"selector\": \".jp-Notebook:focus\"\n    },\n    {\n        \"args\": {},\n        \"command\": \"notebook:render-all-markdown\",\n        \"keys\": [\n            \"Alt M\"\n        ],\n        \"selector\": \".jp-Notebook:focus\"\n    }\nRemember to add a trailing comma on the previous entry, and no comma after the final entry."
+  },
+  {
     "objectID": "posts/blogging/blogging.html",
     "href": "posts/blogging/blogging.html",
     "title": "Blogging AI with Jupyter and Quarto",
@@ -74,14 +88,14 @@
     "href": "posts/startup/startup.html",
     "title": "Startup script for my Linux desktop",
     "section": "",
-    "text": "I am working on a startup.sh script, to open various apps and webpages when I log in to my Linux PC.\nTesting and debugging this script is a bit annoying. My approach up until now has been to make fixes to the script, close everything, exit my desktop session, then log in again and see what happens. Another possibility is to copy-paste lines out of the script into the terminal.\nNow I’m going to try developing the script as a Jupyter notebook with the Bash kernel. I will also generate the shell script from the notebook.\nMy startup script calls out to several other scripts, which aren’t included in this blog post yet."
+    "text": "This is my startup.sh script, to open various apps and webpages when I log in to my Linux PC, and arrange them on my workspaces.\nTesting and debugging this script is a bit annoying. My previous approach was to make fixes to the script, close everything, exit my desktop session, then log in again and see what happens. Another possibility is to copy-paste lines out of the script into the terminal.\nNow I’m going to try developing the script as a Jupyter notebook with the Bash kernel. I will also generate the shell script from the notebook.\nMy startup script calls out to several other scripts, which aren’t included in this blog post yet."
   },
   {
     "objectID": "posts/startup/startup.html#workspaces-and-apps",
     "href": "posts/startup/startup.html#workspaces-and-apps",
     "title": "Startup script for my Linux desktop",
     "section": "Workspaces and Apps",
-    "text": "Workspaces and Apps\nI use two monitors:\n\nLeft monitor, doesn’t switch workspaces, for apps that I want always to hand.\nRight monitor, widescreen, does switch between workspaces, for work.\n\nApps on left monitor:\n\nGnome Pomodoro - timer\nTrello - tasks planner\nChatGPT - AI assistant\nMiniflux - blog reader\nAnki - learning with flashcards\nSwatch - my system monitor script\n\nI am using these workspaces:\n\nEntertainment\n\nplaying music\nwatching movies\nterminal with GNU screen\n\nMiscellaneous\n\nsysadmin\nrandom stuff\n\nAI Study\n\nJupyter notebook\nQuarto blog\nterminal with GNU screen\n\n\nI can add extra workspaces as needed when I work on other projects."
+    "text": "Workspaces and Apps\nI use two monitors:\n\nLeft monitor, doesn’t switch workspaces, for apps that I want always to hand.\nRight monitor, widescreen, does switch between workspaces, for work.\n\nApps on left monitor:\n\nGnome Pomodoro - timer\nTrello - tasks planner\nChatGPT - AI assistant\nMiniflux - blog reader\nAnki - learning with flashcards\nSwatch - my system monitor script\n\nI am using these workspaces:\n\nEntertainment\n\nplaying music\nwatching movies\nxterm with GNU screen\n\nMiscellaneous\n\nsysadmin\nrandom stuff\n\nAI Study\n\nJupyter notebook\nQuarto blog\nxterm with GNU screen\n\n\nI can add extra workspaces as needed when I work on other projects."
   },
   {
     "objectID": "posts/startup/startup.html#the-startup-script",
@@ -116,6 +130,6 @@
     "href": "index.html",
     "title": "Sam’s AI Blog",
     "section": "",
-    "text": "Startup script for my Linux desktop\n\n\n\n\n\n\n\nstartup\n\n\nLinux\n\n\nX11\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\nSam Watkins\n\n\n\n\n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
+    "text": "Keyboard shortcuts for Jupyter Lab\n\n\n\n\n\n\n\njupyter\n\n\nshortcuts\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\nSam Watkins\n\n\n\n\n\n\n\n\nStartup script for my Linux desktop\n\n\n\n\n\n\n\nstartup\n\n\nLinux\n\n\nX11\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\nSam Watkins\n\n\n\n\n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nfastai\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\nSam Watkins\n\n\n\n\n\n\nNo matching items"
   }
 ]

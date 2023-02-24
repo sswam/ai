@@ -12,6 +12,80 @@
 <generator>quarto-1.2.280</generator>
 <lastBuildDate>Thu, 23 Feb 2023 13:00:00 GMT</lastBuildDate>
 <item>
+  <title>Keyboard shortcuts for Jupyter Lab</title>
+  <dc:creator>Sam Watkins</dc:creator>
+  <link>https://sam.ucm.dev/blog/posts/shortcuts/shortcuts.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>I added some keyboard shortcuts to Jupyter Lab:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>shortcut</th>
+<th>function</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ctrl Shift Enter</td>
+<td>Run All Above Selected Cell</td>
+</tr>
+<tr class="even">
+<td>Alt L</td>
+<td>Clear All Outputs</td>
+</tr>
+<tr class="odd">
+<td>Alt M</td>
+<td>Render All Markdown Cells</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="editing-the-settings" class="level2">
+<h2 class="anchored" data-anchor-id="editing-the-settings">Editing the settings</h2>
+<p>Go to Settings -&gt; Advanced Settings Editor -&gt; JSON Settings Editor</p>
+<p>Then add these shortcuts at the end of the file:</p>
+<pre><code>    {
+        "args": {},
+        "command": "notebook:run-all-above",
+        "keys": [
+            "Ctrl Shift Enter"
+        ],
+        "selector": ".jp-Notebook:focus"
+    },
+    {
+        "args": {},
+        "command": "notebook:clear-all-cell-outputs",
+        "keys": [
+            "Alt L"
+        ],
+        "selector": ".jp-Notebook:focus"
+    },
+    {
+        "args": {},
+        "command": "notebook:render-all-markdown",
+        "keys": [
+            "Alt M"
+        ],
+        "selector": ".jp-Notebook:focus"
+    }</code></pre>
+<p>Remember to add a trailing comma on the previous entry, and no comma after the final entry.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>jupyter</category>
+  <category>shortcuts</category>
+  <guid>https://sam.ucm.dev/blog/posts/shortcuts/shortcuts.html</guid>
+  <pubDate>Thu, 23 Feb 2023 13:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Startup script for my Linux desktop</title>
   <dc:creator>Sam Watkins</dc:creator>
   <link>https://sam.ucm.dev/blog/posts/startup/startup.html</link>
@@ -22,8 +96,8 @@
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>I am working on a startup.sh script, to open various apps and webpages when I log in to my Linux PC.</p>
-<p>Testing and debugging this script is a bit annoying. My approach up until now has been to make fixes to the script, close everything, exit my desktop session, then log in again and see what happens. Another possibility is to copy-paste lines out of the script into the terminal.</p>
+<p>This is my <code>startup.sh</code> script, to open various apps and webpages when I log in to my Linux PC, and arrange them on my workspaces.</p>
+<p>Testing and debugging this script is a bit annoying. My previous approach was to make fixes to the script, close everything, exit my desktop session, then log in again and see what happens. Another possibility is to copy-paste lines out of the script into the terminal.</p>
 <p>Now I’m going to try developing the script as a Jupyter notebook with the Bash kernel. I will also generate the shell script from the notebook.</p>
 <p>My startup script calls out to several other scripts, which aren’t included in this blog post yet.</p>
 </section>
@@ -49,7 +123,7 @@
 <ul>
 <li>playing music</li>
 <li>watching movies</li>
-<li>terminal with GNU screen</li>
+<li>xterm with GNU screen</li>
 </ul></li>
 <li>Miscellaneous
 <ul>
@@ -60,7 +134,7 @@
 <ul>
 <li>Jupyter notebook</li>
 <li>Quarto blog</li>
-<li>terminal with GNU screen</li>
+<li>xterm with GNU screen</li>
 </ul></li>
 </ol>
 <p>I can add extra workspaces as needed when I work on other projects.</p>
