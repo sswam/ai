@@ -218,41 +218,46 @@
 <span id="cb12-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-s</span> 1</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;">nautilus</span> ~/plan.dev <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 1<span class="kw" style="color: #003B4F;">;</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> plan.dev <span class="at" style="color: #657422;">-e</span> 0,1920,0,400,400</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;">nautilus</span> ~/plan.dev <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 1<span class="kw" style="color: #003B4F;">;</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> plan.dev <span class="at" style="color: #657422;">-e</span> 0,3640,0,400,400</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="ex" style="color: null;">sw</span> misc sh</span>
+<span id="cb14-2"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">"stty -ixon; xtile /2 1 1 ; sxw misc sh ; exec </span><span class="va" style="color: #111111;">$SHELL</span><span class="st" style="color: #20794D;">"</span> <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb14-3"><span class="ex" style="color: null;">sstuff</span> misc sh <span class="st" style="color: #20794D;">"^L"</span></span></code></pre></div>
 </div>
 </section>
 <section id="apps-on-workspace-3-ai-study" class="level3">
 <h3 class="anchored" data-anchor-id="apps-on-workspace-3-ai-study">Apps on Workspace 3: AI Study</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
-<span id="cb14-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-s</span> 2</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb15-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-s</span> 2</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><span class="ex" style="color: null;">zotero</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
-<span id="cb15-2"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">'. ai'</span> <span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="ex" style="color: null;">zotero</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb16-2"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">'. ai'</span> <span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
-<span id="cb16-2"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> zotero windowminimize %@</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb17-2"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> zotero windowminimize %@</span></code></pre></div>
 </div>
 </section>
 </section>
 <section id="exporting-the-shell-script" class="level2">
 <h2 class="anchored" data-anchor-id="exporting-the-shell-script">Exporting the shell script</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="co" style="color: #5E5E5E;"># __END__</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><span class="co" style="color: #5E5E5E;"># __END__</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><span class="ex" style="color: null;">jupyter</span> nbconvert <span class="at" style="color: #657422;">--no-prompt</span> <span class="at" style="color: #657422;">--to</span> script startup.ipynb <span class="at" style="color: #657422;">--stdout</span> <span class="dt" style="color: #AD0000;">\</span></span>
-<span id="cb18-2">--TemplateExporter.exclude_raw=True <span class="kw" style="color: #003B4F;">|</span></span>
-<span id="cb18-3"><span class="fu" style="color: #4758AB;">sed</span> <span class="at" style="color: #657422;">-n</span> <span class="st" style="color: #20794D;">'/^# __END__/q; p'</span> <span class="op" style="color: #5E5E5E;">&gt;</span> startup.sh</span>
-<span id="cb18-4"><span class="fu" style="color: #4758AB;">chmod</span> +x startup.sh</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><span class="ex" style="color: null;">jupyter</span> nbconvert <span class="at" style="color: #657422;">--no-prompt</span> <span class="at" style="color: #657422;">--to</span> script startup.ipynb <span class="at" style="color: #657422;">--stdout</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb19-2">--TemplateExporter.exclude_raw=True <span class="kw" style="color: #003B4F;">|</span></span>
+<span id="cb19-3"><span class="fu" style="color: #4758AB;">sed</span> <span class="at" style="color: #657422;">-n</span> <span class="st" style="color: #20794D;">'/^# __END__/q; p'</span> <span class="op" style="color: #5E5E5E;">&gt;</span> startup.sh</span>
+<span id="cb19-4"><span class="fu" style="color: #4758AB;">chmod</span> +x startup.sh</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[NbConvertApp] Converting notebook startup.ipynb to script</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><span class="fu" style="color: #4758AB;">mv</span> <span class="at" style="color: #657422;">-v</span> ./startup.sh ~/local/x/startup.sh</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><span class="fu" style="color: #4758AB;">mv</span> <span class="at" style="color: #657422;">-v</span> ./startup.sh ~/local/x/startup.sh</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>renamed './startup.sh' -&gt; '/home/sam/local/x/startup.sh'</code></pre>
 </div>
@@ -261,9 +266,9 @@
 <section id="logging-out-to-test-the-script" class="level2">
 <h2 class="anchored" data-anchor-id="logging-out-to-test-the-script">Logging out to test the script</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="st" style="color: #20794D;">'Chrome'</span> windowclose %@</span>
-<span id="cb22-2"><span class="fu" style="color: #4758AB;">sleep</span> 1</span>
-<span id="cb22-3"><span class="fu" style="color: #4758AB;">killall</span> screen Xorg</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="st" style="color: #20794D;">'Chrome'</span> windowclose %@</span>
+<span id="cb23-2"><span class="fu" style="color: #4758AB;">sleep</span> 1</span>
+<span id="cb23-3"><span class="fu" style="color: #4758AB;">killall</span> screen Xorg</span></code></pre></div>
 </div>
 
 
