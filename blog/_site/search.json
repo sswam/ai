@@ -4,14 +4,14 @@
     "href": "posts/shortcuts/shortcuts.html",
     "title": "Keyboard shortcuts for Jupyter Lab",
     "section": "",
-    "text": "I added some keyboard shortcuts to Jupyter Lab:\n\n\n\nshortcut\nfunction\n\n\n\n\nCtrl Shift Enter\nRun All Above Selected Cell\n\n\nAlt L\nClear All Outputs\n\n\nAlt M\nRender All Markdown Cells"
+    "text": "I added some keyboard shortcuts to Jupyter Lab:\n\n\n\nshortcut\nfunction\n\n\n\n\nCtrl Shift Enter\nRun All Above Selected Cell\n\n\nAlt L\nClear All Outputs\n\n\nAlt M\nRender All Markdown Cells\n\n\nShift V\nPaste Cells Above"
   },
   {
     "objectID": "posts/shortcuts/shortcuts.html#editing-the-settings",
     "href": "posts/shortcuts/shortcuts.html#editing-the-settings",
     "title": "Keyboard shortcuts for Jupyter Lab",
     "section": "Editing the settings",
-    "text": "Editing the settings\nGo to Settings → Advanced Settings Editor → JSON Settings Editor\nThen add these shortcuts at the end of the file:\n    {\n        \"args\": {},\n        \"command\": \"notebook:run-all-above\",\n        \"keys\": [\n            \"Ctrl Shift Enter\"\n        ],\n        \"selector\": \".jp-Notebook:focus\"\n    },\n    {\n        \"args\": {},\n        \"command\": \"notebook:clear-all-cell-outputs\",\n        \"keys\": [\n            \"Alt L\"\n        ],\n        \"selector\": \".jp-Notebook:focus\"\n    },\n    {\n        \"args\": {},\n        \"command\": \"notebook:render-all-markdown\",\n        \"keys\": [\n            \"Alt M\"\n        ],\n        \"selector\": \".jp-Notebook:focus\"\n    }\nRemember to add a trailing comma on the previous entry, and no comma after the final entry."
+    "text": "Editing the settings\nGo to Settings → Advanced Settings Editor → JSON Settings Editor\nThen add these shortcuts at the end of the file:\n    {\n        \"args\": {},\n        \"command\": \"notebook:run-all-above\",\n        \"keys\": [\n            \"Ctrl Shift Enter\"\n        ],\n        \"selector\": \".jp-Notebook:focus\"\n    },\n    {\n        \"args\": {},\n        \"command\": \"notebook:clear-all-cell-outputs\",\n        \"keys\": [\n            \"Alt L\"\n        ],\n        \"selector\": \".jp-Notebook:focus\"\n    },\n    {\n        \"args\": {},\n        \"command\": \"notebook:render-all-markdown\",\n        \"keys\": [\n            \"Alt M\"\n        ],\n        \"selector\": \".jp-Notebook:focus\"\n    },\n    {\n        \"args\": {},\n        \"command\": \"notebook:paste-cell-above\",\n        \"keys\": [\n            \"Shift V\"\n        ],\n        \"selector\": \".jp-Notebook:focus\"\n    }\nRemember to add a trailing comma on the previous entry, and no comma after the final entry."
   },
   {
     "objectID": "posts/blogging/blogging.html",

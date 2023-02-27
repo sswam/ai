@@ -43,6 +43,10 @@
 <td>Alt M</td>
 <td>Render All Markdown Cells</td>
 </tr>
+<tr class="even">
+<td>Shift V</td>
+<td>Paste Cells Above</td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -71,6 +75,14 @@
         "command": "notebook:render-all-markdown",
         "keys": [
             "Alt M"
+        ],
+        "selector": ".jp-Notebook:focus"
+    },
+    {
+        "args": {},
+        "command": "notebook:paste-cell-above",
+        "keys": [
+            "Shift V"
         ],
         "selector": ".jp-Notebook:focus"
     }</code></pre>

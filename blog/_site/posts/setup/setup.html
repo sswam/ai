@@ -484,9 +484,10 @@ Setting up python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...</code></pre>
 <section id="pypi-does-not-include-onnxruntime-for-python3.11" class="level2">
 <h2 class="anchored" data-anchor-id="pypi-does-not-include-onnxruntime-for-python3.11">PyPI does not include onnxruntime for python3.11</h2>
 </section>
-<section id="stacked-python-environments" class="level2">
-<h2 class="anchored" data-anchor-id="stacked-python-environments">Stacked Python environments</h2>
+<section id="python-environments" class="level2">
+<h2 class="anchored" data-anchor-id="python-environments">Python environments</h2>
 <p>I’m going to try setting up a series of Python environments under <code>/opt</code>, and adding them to the PYTHONPATH as appropriate.</p>
+<p>It will be easier to rebuild them rather than</p>
 <table class="table">
 <colgroup>
 <col style="width: 25%">
@@ -504,7 +505,7 @@ Setting up python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>/usr/local/lib/python3.11</td>
+<td>/opt/python3.11-ai</td>
 <td>Debian’s default python3.11</td>
 <td>torch 2 (nightly)</td>
 <td>fastai, tensorrt</td>
@@ -530,50 +531,62 @@ Setting up python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...</code></pre>
 </tbody>
 </table>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_python_env()</span> <span class="kw">{</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="va">$VIRTUAL_ENV</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-V</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">which</span> python</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">namei</span> <span class="kw">`</span><span class="fu">which</span> python<span class="kw">`</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="at">-n</span> <span class="st">'/-&gt;/ { s/.*-&gt; //; p; }'</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-c</span> <span class="st">'import sys; print(sys.path)'</span></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="ex">show_python_env</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cw</span> python_env</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#!/bin/bash
+echo $VIRTUAL_ENV
+python -V
+which python
+namei `which python` | sed -n '/-&gt;/ { s/.*-&gt; //; p; }'
+python -c 'import sys; print(sys.path)'</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python_env</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Python 3.11.1
+Python 3.11.2
 /usr/local/bin/python
 /usr/bin/python
 python3
 /etc/alternatives/python3
 /usr/bin/python3.11
-['', '/usr/lib/python311.zip', '/usr/lib/python3.11', '/usr/lib/python3.11/lib-dynload', '/usr/local/lib/python3.11/dist-packages', '/usr/lib/python3/dist-packages', '/usr/lib/python3.11/dist-packages']</code></pre>
+['', '/usr/lib/python311.zip', '/usr/lib/python3.11', '/usr/lib/python3.11/lib-dynload', '/usr/lib/python3/dist-packages', '/usr/lib/python3.11/dist-packages']</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.10</span> <span class="at">-m</span> venv python3.10-ai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/python3.10-ai/bin/activate</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> bin/activate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-ld</span> python<span class="pp">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>(python3.10-ai) 
-(python3.10-ai) </code></pre>
+<pre><code>drwxr-xr-x 5 sam sam 4096 Feb 28 05:50 python3.10-ai</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> rm <span class="at">-rf</span> ./python3.10-ai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.10</span> <span class="at">-m</span> venv python3.10-ai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/python3.10-ai/bin/activate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(python3.10-ai) </code></pre>
 </div>
 <div class="cell-output cell-output-error">
 <pre><code>: 1</code></pre>
 </div>
 </div>
+</section>
+<section id="pypi-does-not-include-onnxruntime-for-python3.11-1" class="level2">
+<h2 class="anchored" data-anchor-id="pypi-does-not-include-onnxruntime-for-python3.11-1">PyPI does not include onnxruntime for python3.11</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="ex">deactivate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="ex">deactivate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="maybe-use-usrlocal-installs-first-then-opt-venv-installs-based-on-those" class="level2">
-<h2 class="anchored" data-anchor-id="maybe-use-usrlocal-installs-first-then-opt-venv-installs-based-on-those">Maybe use /usr/local installs first then /opt venv installs based on those</h2>
+<section id="maybe-use-usrlocal-installs-first-then-opt-venv-installs-based-on-those.-no" class="level2">
+<h2 class="anchored" data-anchor-id="maybe-use-usrlocal-installs-first-then-opt-venv-installs-based-on-those.-no">Maybe use /usr/local installs first then /opt venv installs based on those. no</h2>
 <ul>
+<li>the /usr/local/lib/python3.10 install doesn’t work, though</li>
 <li>/usr/local/lib/python3.11/dist-packages</li>
 <li>/usr/local/lib/python3.10/dist-packages</li>
 </ul>
