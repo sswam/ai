@@ -223,271 +223,170 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>I am using my home PC, with Debian 12 “bookworm” (testing) and an NVIDIA GPU.</p>
-<p>The following setup is <strong>not recommended</strong> unless you know what you’re doing with Linux, and probably not even then.</p>
-<p>I decided not to use conda, virtualenv, or docker. Instead, I installed the necessary Python modules under <code>/usr/local</code> with <code>pip</code>. This way I can use my AI tools directly from the command line and other scripts, like any other tools.</p>
+<p>This document is mostly for my own reference. It wasn’t so easy getting everything working nicely and I want to have a record of how I did it!</p>
+<p>Initially I wanted to avoid using docker, conda, or virtualenv. Instead, I installed the necessary Python modules under <code>/usr/local</code> with <code>pip</code>. I was thinking that I would be able to use my AI tools directly from the command line and other scripts, like any other tools.</p>
+<p>This worked for a little while, but then Debian started using Python 3.11 for their default Python. Torch isn’t compatible with Python 3.11 yet, and everything broke for me. After trying to fix it for a while and encountering numerous problems, I decided to switch to using venvs.</p>
 </section>
-<section id="allow-myself-to-install-packages-to-usrlocal" class="level2">
-<h2 class="anchored" data-anchor-id="allow-myself-to-install-packages-to-usrlocal">Allow myself to install packages to /usr/local</h2>
-<p>It’s not safe to run <code>pip install -U</code> as root. It will merrily remove files from Debian-packaged Python modules under <code>/usr/lib</code>, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under <code>/usr/local</code> via the <code>staff</code> group. I do the same for <code>/opt</code> because I want to upgrade Rust from my own user ID also:</p>
+<section id="debian-apt-setup" class="level2">
+<h2 class="anchored" data-anchor-id="debian-apt-setup">Debian apt setup</h2>
+<p>I installed CUDA from NVIDIA’s repositories which are intended for Ubuntu, which is a bit hacky, but it works.</p>
+<section id="dont-break-debian-release-pinning" class="level3">
+<h3 class="anchored" data-anchor-id="dont-break-debian-release-pinning">Don’t break Debian, release pinning</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> adduser <span class="va">$USER</span> staff</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chgrp <span class="at">-R</span> staff /usr/local /opt</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chmod <span class="at">-R</span> g+w /usr/local /opt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /etc/apt/preferences.d/99dontbreakdebian</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Package: *
+Pin: release o=Debian,a=experimental
+Pin-Priority: 1
+
+Package: *
+Pin: release o=Debian,a=unstable
+Pin-Priority: 90
+
+Package: *
+Pin: release a=focal
+Pin-Priority: 70
+
+Package: *
+Pin: release a=jammy
+Pin-Priority: 80
+
+Package: *
+Pin: release o=LP-PPA-deadsnakes
+Pin-Priority: 90
+
+Package: *
+Pin: origin ppa.launchpad.net
+Pin-Priority: 90
+
+Package: *
+Pin: release o=Debian
+Pin-Priority: 990</code></pre>
 </div>
-<p>This is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.</p>
-<p>In order to upgrade a pip package where the same package was also installed in <code>/usr/lib</code> by dpkg, I need to use <code>pip -I -U packagename</code>. The <code>-I</code> flag tells it to ignore installed packages, i.e.&nbsp;don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.</p>
-<p>This setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.</p>
-<p>If you try to downgrade a package, and If multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, the sym</p>
+</div>
 </section>
-<section id="enable-switching-the-system-python-version" class="level2">
-<h2 class="anchored" data-anchor-id="enable-switching-the-system-python-version">Enable switching the system python version</h2>
-<p>The default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet:</p>
+<section id="my-main-apt-sources.list" class="level3">
+<h3 class="anchored" data-anchor-id="my-main-apt-sources.list">My main apt sources.list</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.11</span> <span class="at">-m</span> pip install torchvision</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /etc/apt/sources.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>ERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)
-ERROR: No matching distribution found for torchvision
-</code></pre>
+<pre><code>deb http://deb.debian.org/debian/ bookworm main contrib non-free
+deb http://deb.debian.org/debian/ sid main contrib non-free
+deb-src http://deb.debian.org/debian/ bookworm main contrib non-free
+deb-src http://deb.debian.org/debian/ sid main contrib non-free
+
+deb http://security.debian.org/debian-security bookworm-security main contrib non-free
+deb-src http://security.debian.org/debian-security bookworm-security main contrib non-free
+
+deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free
+deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free
+
+deb http://deb.debian.org/debian/ bookworm-backports main contrib non-free
+deb-src http://deb.debian.org/debian/ bookworm-backports main contrib non-free
+
+deb http://deb.debian.org/debian/ experimental main contrib non-free
+deb-src http://deb.debian.org/debian/ experimental main contrib non-free</code></pre>
 </div>
-<div class="cell-output cell-output-error">
-<pre><code>: 1</code></pre>
 </div>
-</div>
-<p>I’m leaving this section in, however I have since switched to using Python 3.11 and nightly builds of torch.</p>
-<p>Anyway, let’s enable switching the system Python version back to 3.10, using <code>update-alternatives</code>.</p>
-<p>First, note that we can undo this change later, if necessary, as follows:</p>
+</section>
+<section id="apt-sources-for-nvidia-cuda-cudnn-tensorrt-and-containers" class="level3">
+<h3 class="anchored" data-anchor-id="apt-sources-for-nvidia-cuda-cudnn-tensorrt-and-containers">Apt sources for NVIDIA CUDA, CUDNN, TensorRT, and containers</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> python3</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> pydoc3</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> python3.11 /usr/bin/python3</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> pydoc3.11 /usr/bin/pydoc3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /etc/apt/sources.list.d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We can set up alternatives for <code>python3</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.11 11</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.10 10</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sudo update-alternatives --set python3 /usr/bin/python3.10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> cuda-debian11-x86_64.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>update-alternatives: using /usr/bin/python3.11 to provide /usr/bin/python3 (python3) in auto mode
-update-alternatives: using /usr/bin/python3.10 to provide /usr/bin/python3 (python3) in manual mode</code></pre>
-</div>
-</div>
-<p>and do the same for <code>pydoc3</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>update-alternatives: using /usr/bin/pydoc3.11 to provide /usr/bin/pydoc3 (pydoc3) in auto mode
-update-alternatives: using /usr/bin/pydoc3.10 to provide /usr/bin/pydoc3 (pydoc3) in manual mode</code></pre>
+<pre><code>deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/ /</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">update-alternatives</span> <span class="at">--list</span> python3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> cudnn-local-ubuntu2204-8.6.0.163.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>/usr/bin/python3.10
-/usr/bin/python3.11</code></pre>
+<pre><code>deb [signed-by=/usr/share/keyrings/cudnn-local-FAED14DD-keyring.gpg] file:///var/cudnn-local-repo-ubuntu2204-8.6.0.163 /</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">update-alternatives</span> <span class="at">--list</span> pydoc3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> nv-tensorrt-local-ubuntu2204-8.5.3-cuda-11.8.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>/usr/bin/pydoc3.10
-/usr/bin/pydoc3.11</code></pre>
+<pre><code>deb [signed-by=/usr/share/keyrings/nv-tensorrt-local-3E951519-keyring.gpg] file:///var/nv-tensorrt-local-repo-ubuntu2204-8.5.3-cuda-11.8 /</code></pre>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> nvidia-container-runtime.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb https://nvidia.github.io/libnvidia-container/stable/debian11/$(ARCH) /
+# deb https://nvidia.github.io/libnvidia-container/experimental/debian10/$(ARCH) /
+deb https://nvidia.github.io/nvidia-container-runtime/stable/debian11/$(ARCH) /
+# deb https://nvidia.github.io/nvidia-container-runtime/experimental/debian10/$(ARCH) /</code></pre>
+</div>
+</div>
+</section>
+<section id="apt-sources-for-old-versions-of-python" class="level3">
+<h3 class="anchored" data-anchor-id="apt-sources-for-old-versions-of-python">Apt sources for old versions of Python</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> deadsnakes.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy main
+deb-src http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy main</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="install-required-debian-packages" class="level2">
+<h2 class="anchored" data-anchor-id="install-required-debian-packages">Install required Debian packages</h2>
+<section id="nvidia-cuda" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-cuda">NVIDIA CUDA</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-qq</span> install cuda=12.0.1-1 cuda-drivers=525.85.12-1 cuda-11-7 cuda-11-8</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>cuda is already the newest version (12.0.1-1).
+cuda-drivers is already the newest version (525.85.12-1).
+cuda-11-7 is already the newest version (11.7.1-1).
+cuda-11-8 is already the newest version (11.8.0-1).
+0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.</code></pre>
+</div>
+</div>
+</section>
+<section id="nvidia-container-runtime" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-container-runtime">NVIDIA Container Runtime</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-qq</span> install nvidia-container-runtime</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>nvidia-container-runtime is already the newest version (3.12.0-1).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+</section>
+<section id="nvidia-cudnn" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-cudnn">NVIDIA cuDNN</h3>
+<p>TBA!</p>
+</section>
+<section id="nvidia-tensorrt" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-tensorrt">NVIDIA TensorRT</h3>
+<p>TBA!</p>
+</section>
+<section id="xformers" class="level3">
+<h3 class="anchored" data-anchor-id="xformers">Xformers</h3>
+<p>TBA!</p>
+</section>
 </section>
 <section id="install-rust" class="level2">
 <h2 class="anchored" data-anchor-id="install-rust">Install Rust</h2>
-<p>Some Python modules now depend on Rust to build. I want to install Rust system-wide, in <code>/opt/rust</code>:</p>
+<p>Some Python modules now depend on Rust to build. Also, I wanted to build Anki from source. I decided to install Rust system-wide, in <code>/opt/rust</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /tmp</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> https://sh.rustup.rs <span class="op">&gt;</span> install_rust.sh</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> RUSTUP_HOME=/opt/rust CARGO_HOME=/opt/rust sh ./install_rust.sh <span class="at">-y</span> <span class="at">--no-modify-path</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>info: downloading installer
-info: profile set to 'default'
-info: default host triple is x86_64-unknown-linux-gnu
-warning: Updating existing toolchain, profile choice will be ignored
-info: syncing channel updates for 'stable-x86_64-unknown-linux-gnu'
-info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
-
-  stable-x86_64-unknown-linux-gnu unchanged - rustc 1.67.1 (d5a82bbd2 2023-02-07)
-
-
-Rust is installed now. Great!
-
-To get started you need Cargo's bin directory (/opt/rust/bin) in your PATH
-environment variable. This has not been done automatically.
-
-To configure your current shell, run:
-source "/opt/rust/env"</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /tmp</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> https://sh.rustup.rs <span class="op">&gt;</span> install_rust.sh</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> RUSTUP_HOME=/opt/rust CARGO_HOME=/opt/rust sh ./install_rust.sh <span class="at">-y</span> <span class="at">--no-modify-path</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/rust/env</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rustup</span> default stable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>info: using existing install for 'stable-x86_64-unknown-linux-gnu'
-info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
-
-  stable-x86_64-unknown-linux-gnu unchanged - rustc 1.67.1 (d5a82bbd2 2023-02-07)
-</code></pre>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/rust/env</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rustup</span> default stable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</section>
-<section id="install-packages-for-torch-fastai-and-jupyter" class="level2">
-<h2 class="anchored" data-anchor-id="install-packages-for-torch-fastai-and-jupyter">Install packages for torch, fastai and jupyter</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> fastbook jupyter jupyterlab tensorflow ipywidgets</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>At some point I saw a warning about compatibility between fastai and torch.</p>
-<pre><code>fastai 2.7.11 has requirement torch&lt;1.14,&gt;=1.7, but you have torch 2.0.0.dev20230220+cu117</code></pre>
-<p>I decided to try using it with nightly torch anyway:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> <span class="at">--pre</span> torch torchvision torchaudio <span class="at">--index-url</span> https://download.pytorch.org/whl/nightly/cu117</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Extra packages: nbdev, and kernels for bash and C:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> nbdev bash_kernel jupyter-c-kernel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> bash_kernel.install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Installing IPython kernel spec</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">install_c_kernel</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Installing IPython kernel spec
-/usr/local/bin/install_c_kernel:32: DeprecationWarning: replace is ignored. Installing a kernelspec always replaces an existing installation
-  KernelSpecManager().install_kernel_spec(td, 'c', user=user, replace=True, prefix=prefix)</code></pre>
-</div>
-</div>
-</section>
-<section id="untold-difficulties" class="level2">
-<h2 class="anchored" data-anchor-id="untold-difficulties">Untold difficulties</h2>
-<p>I haven’t described all of the various problems I’ve had to deal with, due to using this approach. There were plenty of problems! I guess I’m learning something from it, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would be a lot easier than this. Maybe I should give it a try on Debian anyway, and see what happens.</p>
-</section>
-<section id="use-the-old-pip-resolver-if-necessary" class="level2">
-<h2 class="anchored" data-anchor-id="use-the-old-pip-resolver-if-necessary">Use the old pip resolver, if necessary</h2>
-<p>As of pip 20.3, a new resolver has been introduced, which doesn’t always work. As of pip 21.0 the old working resolver is unsupported and slated for removal dependent on pip team resources.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>pip 23.0 from /usr/lib/python3/dist-packages/pip (python 3.11)</code></pre>
-</div>
-</div>
-<p>With this version of pip, it’s possible to use the “legacy resolver” with the following option:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-U</span> <span class="at">-r</span> requirements.txt <span class="at">--use-deprecated</span><span class="op">=</span>legacy-resolver</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Or, I can downgrade pip to version 20.2.4, before they switched to the new resolver.</p>
-<p>Refer to https://stackoverflow.com/a/67408694 for more info.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install pip==20.2.4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Collecting pip==20.2.4
-  Using cached pip-20.2.4-py2.py3-none-any.whl (1.5 MB)
-Installing collected packages: pip
-  Attempting uninstall: pip
-    Found existing installation: pip 23.0
-    Not uninstalling pip at /usr/lib/python3/dist-packages, outside environment /usr
-    Can't uninstall 'pip'. No files were found to uninstall.
-Successfully installed pip-20.2.4</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>pip 20.2.4 from /usr/local/lib/python3.10/dist-packages/pip (python 3.10)</code></pre>
-</div>
-</div>
-</section>
-<section id="nvidia-tensorrt-is-not-ready-for-python3.11" class="level2">
-<h2 class="anchored" data-anchor-id="nvidia-tensorrt-is-not-ready-for-python3.11">NVIDIA tensorrt is not ready for python3.11</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get <span class="at">-q</span> install python3-libnvinfer-dev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Reading package lists...
-Building dependency tree...
-Reading state information...
-Some packages could not be installed. This may mean that you have
-requested an impossible situation or if you are using the unstable
-distribution that some required packages have not yet been created
-or been moved out of Incoming.
-The following information may help to resolve the situation:
-
-The following packages have unmet dependencies:
- python3-libnvinfer : Depends: python3 (&lt; 3.11) but 3.11.1-3 is to be installed
-E: Unable to correct problems, you have held broken packages.</code></pre>
-</div>
-<div class="cell-output cell-output-error">
-<pre><code>: 100</code></pre>
-</div>
-</div>
-<p>I’d like to install it as a python3.10 library at least, but it is demanding that the system Python version, i.e.&nbsp;the version of Debian’s python3 package, should be less than 3.11, and I don’t want to try to change that. So I’ll adjust this <code>python3-libnvinfer</code> package to depend on the <code>python3.10</code> package instead of <code>python3 &lt; 3.11</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /var/nv-tensorrt-local-repo-ubuntu2204-8.5.3-cuda-11.8</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> python3-libnvinfer<span class="pp">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb
-python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-v</span> python3-libnvinfer<span class="pp">*</span> ~/soft-ai/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>'python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb' -&gt; '/home/sam/soft-ai/python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb'
-'python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb' -&gt; '/home/sam/soft-ai/python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb'</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/soft-ai</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="ex">dpkg-deb</span> <span class="at">-R</span> python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb unpacked</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> Depends unpacked/DEBIAN/control</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Depends: python3 (&gt;= 3.10), python3 (&lt;&lt; 3.11), libnvinfer8 (= 8.5.3-1+cuda11.8), libnvinfer-plugin8 (= 8.5.3-1+cuda11.8), libnvparsers8 (= 8.5.3-1+cuda11.8), libnvonnxparsers8 (= 8.5.3-1+cuda11.8)</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-i</span> <span class="st">'s/python3 (&gt;= 3.10), python3 (&lt;&lt; 3.11), /python3.10, /'</span> unpacked/DEBIAN/control</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> Depends unpacked/DEBIAN/control</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Depends: python3.10, libnvinfer8 (= 8.5.3-1+cuda11.8), libnvinfer-plugin8 (= 8.5.3-1+cuda11.8), libnvparsers8 (= 8.5.3-1+cuda11.8), libnvonnxparsers8 (= 8.5.3-1+cuda11.8)</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dpkg-deb</span> <span class="at">-b</span> unpacked python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>dpkg-deb: building package 'python3-libnvinfer' in 'python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb'.</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb ./python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Selecting previously unselected package python3-libnvinfer.
-(Reading database ... 1135689 files and directories currently installed.)
-Preparing to unpack .../python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb ...
-Unpacking python3-libnvinfer (8.5.3-1+cuda11.8) ...
-Selecting previously unselected package python3-libnvinfer-dev.
-Preparing to unpack .../python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb ...
-Unpacking python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...
-Setting up python3-libnvinfer (8.5.3-1+cuda11.8) ...
-Setting up python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...</code></pre>
-</div>
-</div>
-</section>
-<section id="pypi-does-not-include-onnxruntime-for-python3.11" class="level2">
-<h2 class="anchored" data-anchor-id="pypi-does-not-include-onnxruntime-for-python3.11">PyPI does not include onnxruntime for python3.11</h2>
 </section>
 <section id="python-environments" class="level2">
 <h2 class="anchored" data-anchor-id="python-environments">Python environments</h2>
-<p>I’m going to try setting up a series of Python environments under <code>/opt</code>, and adding them to the PYTHONPATH as appropriate.</p>
-<p>It will be easier to rebuild them rather than</p>
+<p>I’m going to add Python venvs under <code>/opt/venvs</code>, and use hard linking to share large files between them.</p>
 <table class="table">
 <colgroup>
 <col style="width: 25%">
@@ -500,98 +399,307 @@ Setting up python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...</code></pre>
 <th>Folder</th>
 <th>Depends</th>
 <th>Uses</th>
-<th>Conflicts</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>/opt/python3.11-ai</td>
-<td>Debian’s default python3.11</td>
-<td>torch 2 (nightly)</td>
-<td>fastai, tensorrt</td>
-</tr>
-<tr class="even">
-<td>/opt/python3.10-ai</td>
-<td>Debian’s python3.10</td>
-<td>torch stable ()</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>/opt/python3.10-fastai</td>
-<td>python3.10-fastai</td>
-<td>torch stable ()</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>/opt/python3.10-webui</td>
 <td>python3.10-ai</td>
-<td>torch stable ()</td>
-<td></td>
+<td>Debian’s python3.10</td>
+<td>torch stable</td>
+<td>AI development</td>
+</tr>
+<tr class="even">
+<td>python3.10-webui</td>
+<td>python3.10-ai</td>
+<td>torch stable</td>
+<td>stable-diffusion-webui</td>
 </tr>
 </tbody>
 </table>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cw</span> python_env</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /opt/venvs</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt/venvs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="the-base-venv-python3.10-ai" class="level3">
+<h3 class="anchored" data-anchor-id="the-base-venv-python3.10-ai">The base venv python3.10-ai</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> python3.10-ai</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.10</span> <span class="at">-m</span> venv python3.10-ai/venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">lecho</span> torch pipdeptree torchvision torchaudio tensorflow jupyter jupyterlab <span class="dt">\</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    ipywidgets bash_kernel jupyter-c-kernel nbdev pandas matplotlib <span class="dt">\</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    scipy scikit-learn scikit-image gradio onnx <span class="dt">\</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    transformers diffusers huggingface_hub numba <span class="dt">\</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    accelerate timm safetensors fastai fastbook <span class="dt">\</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> python3.10-ai/require.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> python3.10-ai/venv/bin/activate <span class="kw">&amp;&amp;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> <span class="at">-r</span> python3.10-ai/require.txt</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> bash_kernel.install</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="ex">install_c_kernel</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> freeze <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> python3.10-ai/freeze.txt</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#!/bin/bash
-echo $VIRTUAL_ENV
-python -V
-which python
-namei `which python` | sed -n '/-&gt;/ { s/.*-&gt; //; p; }'
-python -c 'import sys; print(sys.path)'</code></pre>
+<pre><code>Installing IPython kernel spec
+Installing IPython kernel spec
+/opt/venvs/python3.10-ai/venv/bin/install_c_kernel:32: DeprecationWarning: replace is ignored. Installing a kernelspec always replaces an existing installation
+  KernelSpecManager().install_kernel_spec(td, 'c', user=user, replace=True, prefix=prefix)</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python_env</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&lt;&lt;END</span> <span class="op">&gt;</span> python3.10-ai/venv/bin/pydoc</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="st">#!/bin/sh</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="st">python -m pydoc "</span><span class="va">$@</span><span class="st">"</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="op">END</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x python3.10-ai/venv/bin/pydoc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="the-secondary-venv-python3.10-webui" class="level3">
+<h3 class="anchored" data-anchor-id="the-secondary-venv-python3.10-webui">The secondary venv python3.10-webui</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> python3.10-webui</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> rm <span class="at">-rf</span> python3.10-webui/venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-al</span> python3.10-ai/venv python3.10-webui/venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">yes</span> <span class="kw">|</span> <span class="ex">venv_move</span> python3.10-webui/venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> python3.10-ai/require.txt ~/soft-ai/stable-diffusion-webui/requirements.txt </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> fastapi==0.90.1</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span> <span class="op">&gt;</span> python3.10-webui/require.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> python3.10-webui/venv/bin/activate <span class="kw">&amp;&amp;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> <span class="at">-r</span> python3.10-webui/require.txt</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> freeze <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> python3.10-webui/freeze.txt</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Python 3.11.2
-/usr/local/bin/python
-/usr/bin/python
-python3
-/etc/alternatives/python3
-/usr/bin/python3.11
-['', '/usr/lib/python311.zip', '/usr/lib/python3.11', '/usr/lib/python3.11/lib-dynload', '/usr/lib/python3/dist-packages', '/usr/lib/python3.11/dist-packages']</code></pre>
+<pre><code>ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+open-clip-torch 2.7.0 requires protobuf==3.20.0, but you have protobuf 3.19.6 which is incompatible.
+</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-ld</span> python<span class="pp">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-f</span> python3.10-ai/venv/bin/pydoc python3.10-webui/venv/bin/pydoc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="compare-the-two-venvs" class="level3">
+<h3 class="anchored" data-anchor-id="compare-the-two-venvs">Compare the two venvs</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comm</span> <span class="at">-3</span> python3.10-ai/freeze.txt python3.10-webui/freeze.txt <span class="kw">|</span> <span class="fu">tee</span> comm.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> venv <span class="op">&gt;</span> .gitignore</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">'venvs'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>du</code> tool shows the size of the base venv, and the additional storage used by the webui venv. It only counts hard-linked files once. I’m saving nearly 6GB by using hard links:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">du</span> <span class="at">-csh</span> ./python3.10-<span class="dt">{ai</span><span class="op">,</span><span class="dt">webui}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>drwxr-xr-x 5 sam sam 4096 Feb 28 05:50 python3.10-ai</code></pre>
+<pre><code>5.9G    ./python3.10-ai
+794M    ./python3.10-webui
+6.6G    total</code></pre>
 </div>
 </div>
+</section>
+</section>
+<section id="nvidia-tensorrt-doesnt-like-python3.11" class="level2">
+<h2 class="anchored" data-anchor-id="nvidia-tensorrt-doesnt-like-python3.11">NVIDIA tensorrt doesn’t like python3.11</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> rm <span class="at">-rf</span> ./python3.10-ai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.10</span> <span class="at">-m</span> venv python3.10-ai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/python3.10-ai/bin/activate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get <span class="at">-q</span> install python3-libnvinfer-dev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>(python3.10-ai) </code></pre>
+<pre><code>Reading package lists...
+Building dependency tree...
+Reading state information...
+Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ python3-libnvinfer : Depends: python3 (&lt; 3.11) but 3.11.2-1 is to be installed
+E: Unable to correct problems, you have held broken packages.</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>: 100</code></pre>
+</div>
+</div>
+<p>I’d like to install it as a python3.10 library at least, but it is demanding that the system Python version, i.e.&nbsp;the version of Debian’s python3 package, should be less than 3.11, and I don’t want to try to change that. So I’ll adjust this <code>python3-libnvinfer</code> package to depend on the <code>python3.10</code> package instead of <code>python3 &lt; 3.11</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /var/nv-tensorrt-local-repo-ubuntu2204-8.5.3-cuda-11.8</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> python3-libnvinfer<span class="pp">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb
+python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-v</span> python3-libnvinfer<span class="pp">*</span> ~/soft-ai/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb' -&gt; '/home/sam/soft-ai/python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb'
+'python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb' -&gt; '/home/sam/soft-ai/python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb'</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/soft-ai</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> rm <span class="at">-rf</span> unpacked</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="ex">dpkg-deb</span> <span class="at">-R</span> python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb unpacked</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> Depends unpacked/DEBIAN/control</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Depends: python3 (&gt;= 3.10), python3 (&lt;&lt; 3.11), libnvinfer8 (= 8.5.3-1+cuda11.8), libnvinfer-plugin8 (= 8.5.3-1+cuda11.8), libnvparsers8 (= 8.5.3-1+cuda11.8), libnvonnxparsers8 (= 8.5.3-1+cuda11.8)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-i</span> <span class="st">'s/python3 (&gt;= 3.10), python3 (&lt;&lt; 3.11), /python3.10, /'</span> unpacked/DEBIAN/control</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> Depends unpacked/DEBIAN/control</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Depends: python3.10, libnvinfer8 (= 8.5.3-1+cuda11.8), libnvinfer-plugin8 (= 8.5.3-1+cuda11.8), libnvparsers8 (= 8.5.3-1+cuda11.8), libnvonnxparsers8 (= 8.5.3-1+cuda11.8)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dpkg-deb</span> <span class="at">-b</span> unpacked python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dpkg-deb: building package 'python3-libnvinfer' in 'python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb'.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb ./python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Selecting previously unselected package python3-libnvinfer.
+(Reading database ... 1157567 files and directories currently installed.)
+Preparing to unpack .../python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb ...
+Unpacking python3-libnvinfer (8.5.3-1+cuda11.8) ...
+Selecting previously unselected package python3-libnvinfer-dev.
+Preparing to unpack .../python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb ...
+Unpacking python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...
+Setting up python3-libnvinfer (8.5.3-1+cuda11.8) ...
+Setting up python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># __END__</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="graveyard-of-bad-ideas" class="level1">
+<h1>Graveyard of Bad Ideas</h1>
+<p>Here is a list of other things I tried, which didn’t work out so well.</p>
+<section id="allow-myself-to-install-packages-to-usrlocal" class="level2">
+<h2 class="anchored" data-anchor-id="allow-myself-to-install-packages-to-usrlocal">Allow myself to install packages to /usr/local</h2>
+<p>Since I wrote this section, Debian has modified their pip so that it refuses to install to <code>/usr/local</code>, unless we use the <code>--break-system-packages</code> flag.</p>
+<p>It’s not safe to run <code>pip install -U</code> as root. It will merrily remove files from Debian-packaged Python modules under <code>/usr/lib</code>, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under <code>/usr/local</code> via the <code>staff</code> group. I do the same for <code>/opt</code> because I want to upgrade Rust from my own user ID also:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> adduser <span class="va">$USER</span> staff</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chgrp <span class="at">-R</span> staff /usr/local /opt</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chmod <span class="at">-R</span> g+w /usr/local /opt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.</p>
+<p>In order to upgrade a pip package where the same package was also installed in <code>/usr/lib</code> by dpkg, I need to use <code>pip -I -U packagename</code>. The <code>-I</code> flag tells it to ignore installed packages, i.e.&nbsp;don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.</p>
+<p>This setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.</p>
+<p>If you try to downgrade a package, and if multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, it can get confused, so watch out for that. You might need to manually remove one of the versions.</p>
+</section>
+<section id="enable-switching-the-system-python-version" class="level2">
+<h2 class="anchored" data-anchor-id="enable-switching-the-system-python-version">Enable switching the system python version</h2>
+<p>The default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet. I decided to try switch the system Python version back to 3.10. This is not recommended, but at least it’s easy to undo!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.11</span> <span class="at">-m</span> pip install <span class="at">--break-system-packages</span> torchvision</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)
+ERROR: No matching distribution found for torchvision
+</code></pre>
 </div>
 <div class="cell-output cell-output-error">
 <pre><code>: 1</code></pre>
 </div>
 </div>
-</section>
-<section id="pypi-does-not-include-onnxruntime-for-python3.11-1" class="level2">
-<h2 class="anchored" data-anchor-id="pypi-does-not-include-onnxruntime-for-python3.11-1">PyPI does not include onnxruntime for python3.11</h2>
+<p>Anyway, let’s enable switching the system Python version back to 3.10, using <code>update-alternatives</code>.</p>
+<p>First, note that we can undo this change later, if necessary, as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="ex">deactivate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> python3</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> pydoc3</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> python3.11 /usr/bin/python3</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> pydoc3.11 /usr/bin/pydoc3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can set up alternatives for <code>python3</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.11 11</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.10 10</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sudo update-alternatives --set python3 /usr/bin/python3.10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and do the same for <code>pydoc3</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="ex">update-alternatives</span> <span class="at">--list</span> python3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="ex">update-alternatives</span> <span class="at">--list</span> pydoc3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="maybe-use-usrlocal-installs-first-then-opt-venv-installs-based-on-those.-no" class="level2">
-<h2 class="anchored" data-anchor-id="maybe-use-usrlocal-installs-first-then-opt-venv-installs-based-on-those.-no">Maybe use /usr/local installs first then /opt venv installs based on those. no</h2>
-<ul>
-<li>the /usr/local/lib/python3.10 install doesn’t work, though</li>
-<li>/usr/local/lib/python3.11/dist-packages</li>
-<li>/usr/local/lib/python3.10/dist-packages</li>
-</ul>
+<section id="install-nightly-torch-with-python-3.11" class="level2">
+<h2 class="anchored" data-anchor-id="install-nightly-torch-with-python-3.11">Install nightly torch with Python 3.11</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> fastbook jupyter jupyterlab tensorflow ipywidgets</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>At some point I saw a warning about compatibility between fastai and torch.</p>
+<pre><code>fastai 2.7.11 has requirement torch&lt;1.14,&gt;=1.7, but you have torch 2.0.0.dev20230220+cu117</code></pre>
+<p>I decided to try using it with nightly torch anyway:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> <span class="at">--pre</span> torch torchvision torchaudio <span class="at">--index-url</span> https://download.pytorch.org/whl/nightly/cu117</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Extra packages: nbdev, and kernels for bash and C:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> nbdev bash_kernel jupyter-c-kernel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="use-the-old-pip-resolver-if-necessary" class="level2">
+<h2 class="anchored" data-anchor-id="use-the-old-pip-resolver-if-necessary">Use the old pip resolver, if necessary</h2>
+<p>As of pip 20.3, a new resolver has been introduced, which doesn’t always work. As of pip 21.0 the old working resolver is unsupported and slated for removal dependent on pip team resources.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>pip 23.0 from /usr/lib/python3/dist-packages/pip (python 3.11)</code></pre>
+</div>
+</div>
+<p>With this version of pip, it’s possible to use the “legacy resolver” with the following option:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-U</span> <span class="at">-r</span> requirements.txt <span class="at">--use-deprecated</span><span class="op">=</span>legacy-resolver</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Or, I can downgrade pip to version 20.2.4, before they switched to the new resolver.</p>
+<p>Refer to https://stackoverflow.com/a/67408694 for more info.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install pip==20.2.4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pypi-does-not-include-onnxruntime-for-python3.11" class="level2">
+<h2 class="anchored" data-anchor-id="pypi-does-not-include-onnxruntime-for-python3.11">PyPI does not include onnxruntime for python3.11</h2>
+<p>At one point I was hoping to use python3.11. I attempted to build onnxruntime from source, but didn’t persevere with it.</p>
+</section>
+<section id="untold-difficulties" class="level2">
+<h2 class="anchored" data-anchor-id="untold-difficulties">Untold difficulties</h2>
+<p>I haven’t described all of the various problems I had to deal with, due to using various bad approaches rather than venvs. There were plenty of problems! I guess I learned something from it, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would have been a lot easier than this. Maybe I should give it a try on Debian anyway, and see what happens.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
