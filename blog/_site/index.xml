@@ -12,7 +12,7 @@
 <generator>quarto-1.2.280</generator>
 <lastBuildDate>Thu, 02 Mar 2023 13:00:00 GMT</lastBuildDate>
 <item>
-  <title>Graveyard of many bad setup ideas</title>
+  <title>Graveyard of bad setup ideas</title>
   <link>https://sam.ucm.dev/blog/posts/bad_ideas/bad_ideas.html</link>
   <description><![CDATA[ 
 
@@ -193,7 +193,6 @@ Glossary
   <category>bad</category>
   <category>setup</category>
   <category>Debian</category>
-  <category>Linux</category>
   <guid>https://sam.ucm.dev/blog/posts/bad_ideas/bad_ideas.html</guid>
   <pubDate>Thu, 02 Mar 2023 13:00:00 GMT</pubDate>
 </item>
@@ -1265,11 +1264,8 @@ Glossary
  ]]></description>
   <category>setup</category>
   <category>Debian</category>
-  <category>Linux</category>
   <category>fastai</category>
   <category>Python</category>
-  <category>PyTorch</category>
-  <category>pip</category>
   <category>CUDA</category>
   <guid>https://sam.ucm.dev/blog/posts/setup/setup.html</guid>
   <pubDate>Thu, 02 Mar 2023 13:00:00 GMT</pubDate>
@@ -1360,7 +1356,6 @@ Glossary
  ]]></description>
   <category>setup</category>
   <category>Jupyter</category>
-  <category>shortcuts</category>
   <guid>https://sam.ucm.dev/blog/posts/shortcuts/shortcuts.html</guid>
   <pubDate>Thu, 23 Feb 2023 13:00:00 GMT</pubDate>
 </item>
@@ -1637,10 +1632,8 @@ See also
  ]]></description>
   <category>bad</category>
   <category>setup</category>
-  <category>Linux</category>
-  <category>X11</category>
+  <category>Debian</category>
   <category>tools</category>
-  <category>apps</category>
   <guid>https://sam.ucm.dev/blog/posts/startup/startup.html</guid>
   <pubDate>Thu, 23 Feb 2023 13:00:00 GMT</pubDate>
 </item>
@@ -1834,7 +1827,6 @@ See also
 
  ]]></description>
   <category>setup</category>
-  <category>fastai</category>
   <category>blogging</category>
   <category>Jupyter</category>
   <category>Quarto</category>
