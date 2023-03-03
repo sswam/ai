@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Sam Watkins">
 <meta name="dcterms.date" content="2023-02-08">
 
 <title>Sam’s AI Blog - Blogging AI with Jupyter and Quarto</title>
@@ -129,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -150,17 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://sigmoid.social/@sswam"><i class="bi bi-mastodon" role="img">
-</i> 
- <span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://www.linkedin.com/in/ultracode/"><i class="bi bi-linkedin" role="img">
-</i> 
- <span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/sswam/"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://sam.ucm.dev/"><i class="bi bi-house" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -181,6 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div class="quarto-title column-body">
       <h1 class="title">Blogging AI with Jupyter and Quarto</h1>
                                 <div class="quarto-categories">
+                <div class="quarto-category">setup</div>
                 <div class="quarto-category">fastai</div>
                 <div class="quarto-category">blogging</div>
                 <div class="quarto-category">Jupyter</div>
@@ -192,12 +182,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   
   <div class="quarto-title-meta">
 
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Sam Watkins </p>
-            </div>
-    </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
@@ -206,6 +190,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">March 3, 2023</p>
+      </div>
+    </div>
       
     </div>
     
@@ -213,7 +203,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#why-write-a-blog" id="toc-why-write-a-blog" class="nav-link" data-scroll-target="#why-write-a-blog">Why write a blog?</a></li>
+  <li><a href="#why-use-jupyter-and-quarto" id="toc-why-use-jupyter-and-quarto" class="nav-link" data-scroll-target="#why-use-jupyter-and-quarto">Why use Jupyter and Quarto?</a></li>
+  <li><a href="#installing-the-software" id="toc-installing-the-software" class="nav-link" data-scroll-target="#installing-the-software">Installing the software</a></li>
+  <li><a href="#setting-up-the-blog" id="toc-setting-up-the-blog" class="nav-link" data-scroll-target="#setting-up-the-blog">Setting up the blog</a></li>
+  <li><a href="#adding-this-post-to-the-blog" id="toc-adding-this-post-to-the-blog" class="nav-link" data-scroll-target="#adding-this-post-to-the-blog">Adding this post to the blog</a></li>
+  <li><a href="#previewing-the-blog" id="toc-previewing-the-blog" class="nav-link" data-scroll-target="#previewing-the-blog">Previewing the blog</a></li>
+  <li><a href="#finishing-up" id="toc-finishing-up" class="nav-link" data-scroll-target="#finishing-up">Finishing up</a></li>
+  <li><a href="#committing-to-git" id="toc-committing-to-git" class="nav-link" data-scroll-target="#committing-to-git">Committing to git</a></li>
+  <li><a href="#publishing-the-blog" id="toc-publishing-the-blog" class="nav-link" data-scroll-target="#publishing-the-blog">Publishing the blog</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -222,39 +230,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>I am starting this blog to record my AI studies, particularly with the <a href="https://fast.ai">fast.ai</a> book and courses.</p>
-<p>In this first post, I’ll detail why and how I’m setting up this blog.</p>
+<p>Welcome to my blog! My name is <a href="https://sam.ucm.dev/">Sam Watkins</a>, and I am a programmer and math enthusiast with a keen interest in artificial intelligence. As part of my journey to learn more about AI, I am starting this blog to document my studies, particularly with the <a href="https://fast.ai">fast.ai</a> book and courses.</p>
+<p>In this first post, I will provide an overview of why I am starting this blog and share some details on how I plan to use Jupyter, Quarto, and nbdev2 tools to create software libraries, documentation, apps, and blog posts. I believe that blogging will not only help me solidify my understanding of AI but also provide a platform to share my insights and get feedback from others in the community. Blogging can be a powerful tool for learning, networking, and personal development.</p>
+<p>I want to note from the beginning, that I am using ChatGPT to help me write better blog posts; but I’m doing most of the work!</p>
 </section>
 <section id="why-write-a-blog" class="level2">
 <h2 class="anchored" data-anchor-id="why-write-a-blog">Why write a blog?</h2>
-<p>It’s important for me to record what I’m learning. If I publish these notes as a blog, I can get feedback and possibly help other people too.</p>
-<p>See also:</p>
+<p>In a previous post on dev.to, I discussed the benefits of keeping a development log. Writing about my progress helps me learn more effectively, and the feedback I receive can be invaluable. I’ve also learned from the success of other developers, like the creator of the game <a href="https://www.pentadact.com/category/making-games/gunpoint/?orderby=date&amp;order=ASC">Gunpoint</a>, who grew a community around his blog and received feedback at every step of his project.</p>
+<p>I hope that by starting this blog, I can experience some of the benefits of blogging for myself and maybe help others in the process. Please leave a comment using the <a href="https://hypothes.is/">hypothes.is</a> plugin on the right side, if you have any thoughts on the topic or suggestions for me as I begin this journey.</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
 <li>This previous post of mine on dev.to: <a href="https://dev.to/gamedev/why-write-a-dev-log-27nh">Why Write a Dev Log?</a></li>
 <li>Rachael Thomas’s post: <a href="https://www.fast.ai/posts/2017-04-06-alternatives.html#why-you-yes-you-should-blog">Why you (yes, you) should blog</a></li>
 <li>Another post from Rachael: <a href="https://www.fast.ai/posts/2019-05-13-blogging-advice.html">Advice for Better Blog Posts</a></li>
+<li>An exemplary dev log: <a href="https://www.pentadact.com/category/making-games/gunpoint/?orderby=date&amp;order=ASC">Gunpoint dev log</a></li>
+<li>An exemplary dev retrospective: <a href="https://www.pentadact.com/2013-10-15-gunpoint-development-breakdown/">Gunpoint dev breakdown</a></li>
 </ul>
+</details>
 </section>
 <section id="why-use-jupyter-and-quarto" class="level2">
 <h2 class="anchored" data-anchor-id="why-use-jupyter-and-quarto">Why use Jupyter and Quarto?</h2>
 <p>The <a href="https://fast.ai">fast.ai</a> team recommends to work in <a href="https://jupyter.org/">Jupyter</a> and blog using <a href="https://quarto.org/">Quarto</a>. Their <a href="https://nbdev.fast.ai/">nbdev2</a> tool also makes use of Quarto. We can work on a notebooks in Jupyter, then run them through nbdev2 and Quarto to produce software libraries, documentation, apps, blog posts, papers, and even books.</p>
-<p>See also:</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
-<li><a href="https://www.fast.ai/posts/2022-07-28-nbdev2.html">nbdev+Quarto: A new secret weapon for productivity</a></li>
+<li><a href="https://www.fast.ai/">fast.ai</a>: A company that provides practical deep learning courses and libraries, as well as open source software tools for building and deploying deep learning models.</li>
+<li><a href="https://www.fast.ai/posts/2022-07-28-nbdev2.html">nbdev+Quarto: A new secret weapon for productivity</a>: The blog post recommending to use Jupyter with nbdev and Quarto.</li>
+<li><a href="https://jupyter.org/">Jupyter</a>: A web-based interactive development environment for creating notebooks, code, and data visualizations. Supports multiple programming languages.</li>
+<li><a href="https://quarto.org/">Quarto</a>: A document automation tool that can be used for creating books, reports, and blogs using Markdown, Jupyter Notebooks, and other file formats.</li>
+<li><a href="https://nbdev.fast.ai/">nbdev</a>: A tool that helps you develop Python packages using Jupyter Notebooks.</li>
 </ul>
+</details>
 </section>
 <section id="installing-the-software" class="level2">
 <h2 class="anchored" data-anchor-id="installing-the-software">Installing the software</h2>
 <p>I am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU. I’ll write more about my setup in another post.</p>
 <p>I downloaded Quarto from their <a href="https://quarto.org/docs/get-started/">Get Started</a> page, and installed it.</p>
-<p>This command installs or upgrades the other software we need:</p>
+<p>To manage the installation of Python packages, I’m using pip, which is a package installer for Python. It’s a command-line utility that helps you install and manage software packages written in Python. You can learn more about pip and its usage from the <a href="https://pip.pypa.io/en/stable/">official pip documentation</a>.</p>
+<p>This command installs or upgrades Jupyter, fastbook, and nbdev Python packages, which I’ll need to use for AI experiments and to help me write my blog.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> jupyter fastbook nbdev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="setting-up-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="setting-up-the-blog">Setting up the blog</h2>
-<p>I already had a git repo called <code>ai</code> in my home directory. The following commands would create it, and don’t do any harm if it’s already there.</p>
+<p>To set up the blog, I first created a Git repository called <code>ai</code> in my home directory. I used the following commands to create the blog project.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ai</span>
@@ -278,45 +303,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   - Created posts/_metadata.yml</code></pre>
 </div>
 </div>
-<p>I ran <code>nbdev_install_hooks</code>, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.</p>
+<p>I also ran the command <code>nbdev_install_hooks</code> to prevent unnecessary Git merge conflicts and enable conflict resolution in Jupyter.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nbdev_install_hooks</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Hooks are installed.</code></pre>
 </div>
 </div>
-<p>See also:</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
 <li><a href="https://quarto.org/docs/websites/website-blog.html">Quarto - Creating a Blog</a></li>
 <li><a href="https://www.fast.ai/posts/2022-08-25-jupyter-git.html">The Jupyter+git problem is now solved</a></li>
 <li><a href="https://nbdev.fast.ai/tutorials/git_friendly_jupyter.html">Git-Friendly Jupyter</a></li>
+<li><a href="https://git-scm.com/docs">Git documentation</a></li>
+<li><a href="https://guides.github.com/introduction/git-handbook/">Git Handbook</a></li>
+<li><a href="https://www.codecademy.com/learn/learn-git">Codecademy’s “Learn Git” course</a></li>
+<li><a href="http://tldp.org/LDP/Bash-Beginners-Guide/html/">Bash Guide for Beginners</a></li>
 </ul>
+</details>
 </section>
 <section id="adding-this-post-to-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="adding-this-post-to-the-blog">Adding this post to the blog</h2>
 <p>I had already started writing this post in a Jupyter Lab notebook <code>blogging.ipynb</code>. Now I needed to put it in the right place, so I made a directory for it:</p>
+<p>I started writing this post in a Jupyter Lab notebook called <code>blogging.ipynb</code>. When I got to this point, I needed to put it in the right directory to include it in the blog. I first created a directory called <code>blog/posts/blogging</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> blog/posts/blogging</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>I then moved this notebook <code>blogging.ipynb</code> into that new <code>blog/posts/blogging</code> directory, directly in Jupyter Lab. There was no need to close the notebook.</p>
+<p>Then I simply moved the <code>blogging.ipynb</code> file to that directory using Jupyter Lab’s file browser. This allowed me to easily include the post in the blog without even having to close the notebook.</p>
 </section>
 <section id="previewing-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="previewing-the-blog">Previewing the blog</h2>
-<p>We can preview the blog, by running this in a terminal:</p>
+<p>Once you’ve set up your blog, you can preview it by running the following command in a terminal:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> preview blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Don’t run it in a Jupyter cell, because it doesn’t exit and will hang Jupyter!</p>
-<p>I’m using a few extra options that suit my setup:</p>
+<p>Make sure to run this command outside of Jupyter, as it can cause Jupyter to hang if run in a cell.</p>
+<p>You can also use additional options to customize the preview. For example, if you don’t want to launch a browser, you can use the –no-browser option. If you want to specify a custom port, you can use the –port option followed by the desired port number. Here’s an example of how to use both options:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> preview blog <span class="at">--no-browser</span> <span class="at">--port</span> 4242</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will start the preview on port 4242 and prevent it from automatically launching a browser. I do it this way myself, because I open the preview window from a separate startup script.</p>
 </section>
 <section id="finishing-up" class="level2">
 <h2 class="anchored" data-anchor-id="finishing-up">Finishing up</h2>
-<p>I removed the example posts, changed the settings, filled in the about page, added links to my socials, and added a profile picture.</p>
-<p>I followed the Quarto doc to enable comments using <a href="https://web.hypothes.is/">Hypothesis</a>, and an RSS feed.</p>
-<p>See also:</p>
+<p>To clean up the blog ready for publishing my first post, I removed the example posts, changed the settings, filled in the about page, added links to my social media profiles, and added a profile picture.</p>
+<p>I also followed the Quarto documentation to enable comments using Hypothesis and an RSS feed for the blog.</p>
+<p>The Hypothesis annotation tool to allow readers to leave comments and annotations on the blog posts. This feature required me to create an Hypothesis account and link it to the blog. It’s functional, but looks and feels different from regular commenting. Please try it out and leave a comment for me.</p>
+<p>For the RSS feed, I followed the Quarto guide to add an RSS feed to the blog. This enables readers to subscribe to the blog and receive updates whenever new posts are published. Personally I am using the Miniflux RSS reader; Newsblur is another good option. After a bit of research, I found that I can follow the comments on my blog using <a href="https://hypothes.is/stream.rss?wildcard_uri=https://sam.ucm.dev/*">this RSS stream</a>.</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
 <li><a href="https://quarto.org/docs/output-formats/html-basics.html#commenting">Quarto - HTML Basics - Commenting</a></li>
 <li><a href="https://quarto.org/docs/websites/website-blog.html#rss-feed">Quarto - Creating a Blog - RSS Feed</a></li>
+<li><a href="https://web.hypothes.is/">Hypothesis</a>: A web-based annotation tool that allows users to highlight and comment on web pages.</li>
+<li><a href="https://en.wikipedia.org/wiki/RSS">RSS</a>: A web feed format used to publish frequently updated content such as blog entries, news headlines, and podcasts.</li>
+<li><a href="https://miniflux.app/">Miniflux</a>: A minimalist and open source RSS reader.</li>
+<li><a href="https://www.newsblur.com/">NewsBlur</a>: A personal news reader that brings people together to talk about the world.</li>
 </ul>
+</details>
 </section>
 <section id="committing-to-git" class="level2">
 <h2 class="anchored" data-anchor-id="committing-to-git">Committing to git</h2>
@@ -331,19 +376,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push pi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I pushed to github, and my two servers <em>opal</em> and <em>pi</em>.</p>
-<p>See also:</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
 <li><a href="https://quarto.org/docs/websites/">Quarto - Websites</a></li>
+<li><a href="https://github.com/">GitHub</a></li>
 </ul>
+</details>
 </section>
 <section id="publishing-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="publishing-the-blog">Publishing the blog</h2>
-<p>I used a symlink to put the rendered blog into my website at <a href="https://sam.ucm.dev/blog">sam.ucm.dev/blog</a>:</p>
+<p>I used a symlink on my server to put the rendered blog into my website at <a href="https://sam.ucm.dev/blog">sam.ucm.dev/blog</a>:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ~/ai/blog/_site ~/www/sam.ucm.dev/blog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>See also:</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
 <li><a href="https://quarto.org/docs/publishing/">Quarto - Publishing</a></li>
 </ul>
+</details>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In this post, we’ve seen how to set up a blog using Quarto and Jupyter. These tools allow us to write and publish blog posts as Jupyter notebooks, which can be converted to various formats such as HTML, PDF, and LaTeX, among others. We’ve also looked at using Hypothesis for comments and annotations, and how to commit our changes to git and deploy our blog on a personal server. By following these steps, we can create a blog that showcases our AI studies and provides a platform for getting feedback, sharing knowledge, and building a community.</p>
+<p>One thing I would like to explore further, is a way that I can automatically link to other AI bloggers in the community. Link sharing and discovery is one of the benefits of posting on an off-the-shelf playform, such as <em>Towards Data Science</em>; it would be good to have something similar for indie bloggers. Maybe just an RSS aggregator plugin that would show links to other recent posts from selected friends and communities…</p>
+<p>If you have any questions or suggestions, please leave a comment, if you can figure out how to use Hypothesis. Thanks for reading!</p>
 
 
 </section>

@@ -10,10 +10,1273 @@
 <atom:link href="https://sam.ucm.dev/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>recording my AI studies</description>
 <generator>quarto-1.2.280</generator>
-<lastBuildDate>Thu, 23 Feb 2023 13:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 02 Mar 2023 13:00:00 GMT</lastBuildDate>
+<item>
+  <title>Graveyard of many bad setup ideas</title>
+  <dc:creator>Sam Watkins</dc:creator>
+  <link>https://sam.ucm.dev/blog/posts/bad_ideas/bad_ideas.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Here is a list of other things I tried for my Debian AI setup, which didn’t work out so well. They didn’t cause disasters for me, but they didn’t solve my setup problems either. Here be dragons!</p>
+</section>
+<section id="allow-myself-to-install-packages-to-usrlocal" class="level2">
+<h2 class="anchored" data-anchor-id="allow-myself-to-install-packages-to-usrlocal">Allow myself to install packages to /usr/local</h2>
+<p>Since I wrote this section, Debian has modified their pip so that it refuses to install to <code>/usr/local</code>, unless we use the <code>--break-system-packages</code> flag.</p>
+<p>It’s not safe to run <code>pip install -U</code> as root. It will merrily remove files from Debian-packaged Python modules under <code>/usr/lib</code>, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under <code>/usr/local</code> via the <code>staff</code> group. I do the same for <code>/opt</code> because I want to upgrade Rust from my own user ID also:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;">sudo</span> adduser <span class="va" style="color: #111111;">$USER</span> staff</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;">sudo</span> chgrp <span class="at" style="color: #657422;">-R</span> staff /usr/local /opt</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;">sudo</span> chmod <span class="at" style="color: #657422;">-R</span> g+w /usr/local /opt</span></code></pre></div>
+</div>
+<p>This is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.</p>
+<p>In order to upgrade a pip package where the same package was also installed in <code>/usr/lib</code> by dpkg, I need to use <code>pip -I -U packagename</code>. The <code>-I</code> flag tells it to ignore installed packages, i.e.&nbsp;don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.</p>
+<p>This setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.</p>
+<p>If you try to downgrade a package, and if multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, it can get confused, so watch out for that. You might need to manually remove one of the versions.</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>pip: A package manager for Python packages that allows users to easily install, upgrade, and remove Python packages.</li>
+<li>/usr/local: A directory on Unix-like systems where locally installed software is usually placed, separate from the operating system’s own packages.</li>
+<li>Debian: A popular Linux distribution known for its stability and ease of use.</li>
+<li>–break-system-packages: A flag used with pip to force installation of packages that conflict with system packages, even though this can cause problems.</li>
+<li>root: The default administrative user in Unix-like operating systems, with full permissions to all system files and directories.</li>
+<li>permissions: The settings that control who can access and modify files and directories on a computer.</li>
+<li>staff group: A group on Unix-like systems that provides additional permissions to users who belong to it.</li>
+<li>chgrp: A Unix command used to change the group ownership of a file or directory.</li>
+<li>chmod: A Unix command used to change the permissions of a file or directory.</li>
+<li>security concern: A potential risk to the security of a system, data, or user privacy.</li>
+<li>dpkg: A package manager for Debian-based Linux distributions.</li>
+<li>upgrade: The process of installing a newer version of a software package over an existing version to get new features or bug fixes.</li>
+<li>downgrade: The process of installing an older version of a software package over a newer version.</li>
+</ul>
+</details>
+</section>
+<section id="enable-switching-the-system-python-version" class="level2">
+<h2 class="anchored" data-anchor-id="enable-switching-the-system-python-version">Enable switching the system python version</h2>
+<p>The default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;">python3.11</span> <span class="at" style="color: #657422;">-m</span> pip install <span class="at" style="color: #657422;">--break-system-packages</span> torchvision</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)
+ERROR: No matching distribution found for torchvision
+</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>: 1</code></pre>
+</div>
+</div>
+<p>I decided to try switch the system Python version back to 3.10. This is not recommended, but at least it’s easy to undo!</p>
+<p>Anyway, let’s enable switching the system Python version back to 3.10, using <code>update-alternatives</code>.</p>
+<p>First, note that we can undo this change later, if necessary, as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--remove-all</span> python3</span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--remove-all</span> pydoc3</span>
+<span id="cb5-3"><span class="fu" style="color: #4758AB;">sudo</span> ln <span class="at" style="color: #657422;">-sf</span> python3.11 /usr/bin/python3</span>
+<span id="cb5-4"><span class="fu" style="color: #4758AB;">sudo</span> ln <span class="at" style="color: #657422;">-sf</span> pydoc3.11 /usr/bin/pydoc3</span></code></pre></div>
+</div>
+<p>We can set up alternatives for <code>python3</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/python3 python3 /usr/bin/python3.11 11</span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/python3 python3 /usr/bin/python3.10 10</span>
+<span id="cb6-3"><span class="co" style="color: #5E5E5E;"># sudo update-alternatives --set python3 /usr/bin/python3.10</span></span></code></pre></div>
+</div>
+<p>and do the same for <code>pydoc3</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11</span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10</span>
+<span id="cb7-3"><span class="co" style="color: #5E5E5E;"># sudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;">update-alternatives</span> <span class="at" style="color: #657422;">--list</span> python3</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;">update-alternatives</span> <span class="at" style="color: #657422;">--list</span> pydoc3</span></code></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>torchvision: a PyTorch library containing popular datasets, model architectures, and common image transformations for computer vision.</li>
+<li>update-alternatives: a Debian/Ubuntu tool for managing alternative versions of executables, such as Python or Pydoc.</li>
+<li>system Python: the version of Python installed on a Debian/Ubuntu system and used by default for system-level processes.</li>
+<li>break-system-packages: a pip option that allows installation of packages that may break other system packages.</li>
+<li>ln -s: a command for creating symbolic links between files.</li>
+<li>pydoc: a Python documentation tool.</li>
+</ul>
+</details>
+</section>
+<section id="install-nightly-torch-with-python-3.11" class="level2">
+<h2 class="anchored" data-anchor-id="install-nightly-torch-with-python-3.11">Install nightly torch with Python 3.11</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> fastbook jupyter jupyterlab tensorflow ipywidgets</span></code></pre></div>
+</div>
+<p>At some point I saw a warning about compatibility between fastai and torch.</p>
+<pre><code>fastai 2.7.11 has requirement torch&lt;1.14,&gt;=1.7, but you have torch 2.0.0.dev20230220+cu117</code></pre>
+<p>I decided to try using it with nightly torch anyway:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> <span class="at" style="color: #657422;">--pre</span> torch torchvision torchaudio <span class="at" style="color: #657422;">--index-url</span> https://download.pytorch.org/whl/nightly/cu117</span></code></pre></div>
+</div>
+<p>Extra packages: nbdev, and kernels for bash and C:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> nbdev bash_kernel jupyter-c-kernel</span></code></pre></div>
+</div>
+</section>
+<section id="use-the-old-pip-resolver-if-necessary" class="level2">
+<h2 class="anchored" data-anchor-id="use-the-old-pip-resolver-if-necessary">Use the old pip resolver, if necessary</h2>
+<p>As of pip 20.3, a new resolver has been introduced, which doesn’t always work. As of pip 21.0 the old working resolver is unsupported and slated for removal dependent on pip team resources.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="ex" style="color: null;">pip</span> <span class="at" style="color: #657422;">--version</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>pip 23.0 from /usr/lib/python3/dist-packages/pip (python 3.11)</code></pre>
+</div>
+</div>
+<p>With this version of pip, it’s possible to use the “legacy resolver” with the following option:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-U</span> <span class="at" style="color: #657422;">-r</span> requirements.txt <span class="at" style="color: #657422;">--use-deprecated</span><span class="op" style="color: #5E5E5E;">=</span>legacy-resolver</span></code></pre></div>
+</div>
+<p>Or, I can downgrade pip to version 20.2.4, before they switched to the new resolver.</p>
+<p>Refer to https://stackoverflow.com/a/67408694 for more info.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="ex" style="color: null;">pip</span> install pip==20.2.4</span></code></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>resolver: Part of pip responsible for resolving package dependencies and deciding which versions to install.</li>
+<li>legacy resolver: The older version of pip’s resolver algorithm, which is still supported in some versions of pip but has been deprecated and is no longer the default.</li>
+</ul>
+</details>
+</section>
+<section id="pypi-does-not-include-onnxruntime-for-python3.11" class="level2">
+<h2 class="anchored" data-anchor-id="pypi-does-not-include-onnxruntime-for-python3.11">PyPI does not include onnxruntime for python3.11</h2>
+<p>At one point I was hoping to use python3.11 rather than python3.10. I attempted to build onnxruntime from source, but didn’t persevere with it.</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>PyPI: PyPI (Python Package Index) is a repository of software for the Python programming language. It contains packages of software developed by various authors that are published and shared with the wider Python community.</li>
+<li>onnxruntime: onnxruntime is an open-source engine for executing machine learning models that are defined in the Open Neural Network Exchange (ONNX) format. It provides high performance and supports multiple platforms, including CPU, GPU, and FPGA.</li>
+<li>Source code is the human-readable code that programmers write to create computer programs. It needs to be compiled or interpreted to run on a computer.</li>
+<li>Build: Building refers to the process of compiling or otherwise preparing source code for execution on a specific platform or architecture.</li>
+<li>Open Neural Network Exchange (ONNX): ONNX is an open-source format for representing machine learning models. It is designed to be interoperable across different frameworks and platforms, allowing models to be easily transferred and executed on different hardware.</li>
+<li>FPGA: FPGA stands for Field-Programmable Gate Array. It is an integrated circuit that can be programmed to perform a wide range of computing tasks, including machine learning inference.</li>
+</ul>
+</details>
+</section>
+<section id="untold-difficulties" class="level2">
+<h2 class="anchored" data-anchor-id="untold-difficulties">Untold difficulties! 😭</h2>
+<p>I haven’t described all of the various problems I had to deal with, due to trying various hacky approaches rather than venvs. There were plenty of problems! I guess I learned something from the experience, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would have been a lot easier than this!</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>hacky approaches: Informal or unconventional methods used to solve a problem or complete a task, often using shortcuts or workarounds instead of following established best practices.</li>
+<li>Lambda Stack: A software stack from Lambda Labs that provides pre-built binaries of deep learning frameworks and other software packages for Ubuntu-based systems.</li>
+</ul>
+</details>
+
+
+</section>
+
+ ]]></description>
+  <category>bad</category>
+  <category>setup</category>
+  <category>Debian</category>
+  <category>Linux</category>
+  <guid>https://sam.ucm.dev/blog/posts/bad_ideas/bad_ideas.html</guid>
+  <pubDate>Thu, 02 Mar 2023 13:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>My setup for AI work on my Debian PC</title>
+  <dc:creator>Sam Watkins</dc:creator>
+  <link>https://sam.ucm.dev/blog/posts/setup/setup.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="disclaimer-what-you-should-do-instead" class="level2">
+<h2 class="anchored" data-anchor-id="disclaimer-what-you-should-do-instead">Disclaimer: What you should do instead</h2>
+<ul>
+<li>This post on the Fastai forum is helpful: <a href="https://forums.fast.ai/t/for-those-who-run-their-own-ai-box-or-want-to/96064">For those who run their own AI box, or want to</a>.</li>
+<li>If you use Ubuntu, <a href="https://lambdalabs.com/lambda-stack-deep-learning-software">Lambda Stack</a> looks good.</li>
+</ul>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This blog post is highly technical, so with the help of <em>ChatGPT</em> I have included a glossary of terms and concepts for each section. Thanks <em>ChatGPT</em>, I wouldn’t have done that without you!</p>
+<p>I am using my home PC for AI work, with Debian GNU/Linux 12 “bookworm” (testing) and an NVIDIA GPU.</p>
+<p>The main AI tools that I use are:</p>
+<ul>
+<li><a href="https://jupyter.org/">Jupyter</a> for experiments, development and blogging;</li>
+<li><a href="https://www.fast.ai/">fastai</a> for training neural networks;</li>
+<li>Huggingface tools such as transformers and diffusers;</li>
+<li>PyTorch, Tensorflow and other lower-level AI libraries; and</li>
+<li><a href="https://github.com/AUTOMATIC1111">stable-diffusion-webui</a> for experimenting with AI image generation.</li>
+</ul>
+<p>This document is mostly for my own reference. It wasn’t so easy getting everything working nicely and I want to have a record of how I did it. I don’t recommend that you try to do this unless you are experienced with Debian, and you don’t mind taking time to deal with problems when they occur.</p>
+<p>I wanted to avoid using docker, conda, or Python venvs. Instead, I installed the necessary Python modules under <code>/usr/local</code> with <code>pip</code>. I was thinking that I would be able to use my AI tools directly from the command line and other scripts, like any other tools.</p>
+<p>This worked for a little while, but then Debian started using Python 3.11 for their default Python. Torch isn’t compatible with Python 3.11 yet, and everything broke for me.</p>
+<p>After trying to fix it for a while and encountering numerous problems, I decided to switch to using Python 3.10. After more problems, I switched to using Python 3.10 venvs. I think that the original method of installing under <code>/usr/local</code> could work, but the Debian python packages are in a <del>mess</del> state of flux at the moment.</p>
+<p>As they say, using a virtual environment is a best practice in Python development and can help avoid issues with package conflicts and dependency management. So, venvs it is!</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>conda: a package management system and environment management system for installing multiple versions of software packages and their dependencies, including both Python and non-Python packages.</li>
+<li>Debian: a free and open-source operating system based on the Linux kernel, widely used for servers and workstations</li>
+<li>Debian “testing”: a rolling release version of Debian that is in the process of being tested for the next stable release, and contains newer packages than the current stable release. It is not recommended for production use.</li>
+<li>dependency management: the process of identifying and resolving dependencies between software packages, to ensure that they can be installed and run together without conflicts</li>
+<li>docker: a platform for developing, shipping, and running applications using containers, which are lightweight, portable, and self-contained environments that run applications and their dependencies.</li>
+<li>Fastai: a free, open-source deep learning library built on top of PyTorch that provides a high-level API and a range of state-of-the-art models and techniques</li>
+<li>GNU: A project started by Richard Stallman in 1983 to create a free and open-source operating system, consisting of a complete set of tools and utilities to replace proprietary software. GNU stands for “GNU’s Not Unix”.</li>
+<li>GNU/Linux: A term used to describe the operating system that consists of the GNU tools and the Linux kernel. The GNU tools provide the user interface and the software development tools, while the Linux kernel provides the low-level system functions, such as process management, memory management, and device drivers.</li>
+<li>Hugging Face 🤗: a company that develops tools for building machine learning apps, with a focus on natural language processing (NLP).</li>
+<li>Hugging Face Diffusers: a popular open-source library that provides pretrained vision and audio diffusion models, and serves as a modular toolbox for inference and training</li>
+<li>Hugging Face Hub: a platform that allows users to share machine learning models and datasets.</li>
+<li>Jupyter: an open-source web application that allows users to create and share documents that contain live code, equations, visualizations and narrative text</li>
+<li>Linux: A kernel, or the core component of an operating system, originally created by Linus Torvalds in 1991. Linux is based on Unix, and is released under an open-source license, which allows anyone to modify and distribute the source code. The combination of the Linux kernel and the GNU tools forms the GNU/Linux operating system.</li>
+<li>Neural networks: a machine learning technique that allows computers to learn from data by adjusting the strengths of connections between neurons</li>
+<li>NVIDIA GPU: a graphics processing unit manufactured by NVIDIA that is commonly used for machine learning and other compute-intensive tasks</li>
+<li>package conflicts: situations where two or more Python packages require different versions of the same dependency, leading to issues when trying to install or run the packages together</li>
+<li>pip: a package installer for Python that allows you to easily install and manage third-party packages and their dependencies. It is commonly used with virtual environments to manage Python package dependencies.</li>
+<li>PyTorch: a popular open-source machine learning library based on the Torch library</li>
+<li>Stable-diffusion-webui: an open-source web user interface for state-of-the-art image generation b based on stable diffusion, by automatic1111</li>
+<li>Tensorflow: an open-source machine learning library developed by Google Brain Team</li>
+<li>transformers: a state-of-the-art library for natural language processing (NLP) tasks such as text classification and question answering, built by Huggingface</li>
+<li>/usr/local: a directory in Unix-like operating systems that is typically used for installing software manually, outside of the system package manager.</li>
+<li>virtual environment (venv): a self-contained Python environment that allows you to install and manage packages without affecting the system-level Python installation or other virtual environments</li>
+</ul>
+</details>
+</section>
+<section id="debian-apt-setup" class="level2">
+<h2 class="anchored" data-anchor-id="debian-apt-setup">Debian apt setup</h2>
+<p>I installed some NVIDIA packages and alternative Python versions from repositories which are intended for Ubuntu, which is a bit hacky, but it can work. The following shows how to create a <a href="https://wiki.debian.org/DontBreakDebian#Don.27t_make_a_FrankenDebian">FrankenDebian</a> install using some packages that were intended for Ubuntu, without totally trashing your system.</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>FrankenDebian: a term used to describe a Debian installation that has been modified or customized in non-standard ways, often resulting in instability or other issues</li>
+<li>NVIDIA packages: software components and drivers provided by NVIDIA Corporation to support their graphics processing units (GPUs)</li>
+<li>Python versions: different releases of the Python programming language, each with its own set of features and bug fixes</li>
+<li>repositories: online locations where software packages can be downloaded and installed from, typically maintained by a software distributor or community</li>
+<li>Ubuntu: a popular distribution of the GNU/Linux operating system, known for its ease of use and large user community</li>
+</ul>
+</details>
+<section id="dont-break-debian-release-pinning" class="level3">
+<h3 class="anchored" data-anchor-id="dont-break-debian-release-pinning">Don’t break Debian: release pinning</h3>
+<p>Release pinning in Debian is a way of specifying which versions of packages to install from which Debian releases. The code snippet provided shows a file I added called <code>99dontbreakdebian</code> in the <code>/etc/apt/preferences.d/</code> directory, with pins for various package releases. These pins specify a release or origin and a priority, which determines which package version to install if multiple versions are available. By setting these pins, I can ensure that my system installs packages from the desired release and avoid accidentally breaking the system by installing incompatible package versions, while still being able to install packages from other sources as needed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;">cat</span> /etc/apt/preferences.d/99dontbreakdebian</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Package: *
+Pin: release o=Debian,a=experimental
+Pin-Priority: 1
+
+Package: *
+Pin: release o=Debian,a=unstable
+Pin-Priority: 90
+
+Package: *
+Pin: release a=focal
+Pin-Priority: 70
+
+Package: *
+Pin: release a=jammy
+Pin-Priority: 80
+
+Package: *
+Pin: release o=LP-PPA-deadsnakes
+Pin-Priority: 90
+
+Package: *
+Pin: origin ppa.launchpad.net
+Pin-Priority: 90
+
+Package: *
+Pin: release o=Debian
+Pin-Priority: 990</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>Release pinning: A way of specifying which versions of packages to install from which Debian releases.</li>
+<li>/etc/apt/preferences.d/: A directory in Debian where you can add files to specify package release pins.</li>
+<li>Pin: A rule that specifies a release or origin and a priority for a package.</li>
+<li>Experimental: The Debian release channel where packages are the least stable, but often contain the latest features and updates.</li>
+<li>Unstable: The Debian release channel where packages are more stable than experimental, but still not considered release quality.</li>
+<li>Focal and Jammy: Ubuntu release code names.</li>
+<li>LP-PPA-deadsnakes: A Personal Package Archive (PPA) on Launchpad for providing alternative versions of Python for Ubuntu and Debian systems.</li>
+</ul>
+</details>
+</section>
+<section id="my-main-apt-sources.list" class="level3">
+<h3 class="anchored" data-anchor-id="my-main-apt-sources.list">My main apt sources.list</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;">cat</span> /etc/apt/sources.list</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb http://deb.debian.org/debian/ bookworm main contrib non-free
+deb http://deb.debian.org/debian/ sid main contrib non-free
+deb-src http://deb.debian.org/debian/ bookworm main contrib non-free
+deb-src http://deb.debian.org/debian/ sid main contrib non-free
+
+deb http://security.debian.org/debian-security bookworm-security main contrib non-free
+deb-src http://security.debian.org/debian-security bookworm-security main contrib non-free
+
+deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free
+deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free
+
+deb http://deb.debian.org/debian/ bookworm-backports main contrib non-free
+deb-src http://deb.debian.org/debian/ bookworm-backports main contrib non-free
+
+deb http://deb.debian.org/debian/ experimental main contrib non-free
+deb-src http://deb.debian.org/debian/ experimental main contrib non-free</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>sources.list: a configuration file in Debian-based systems that specifies the package repositories from which the system can download and install software.</li>
+<li>deb: a Debian binary package format used to distribute software packages for Debian and its derivatives, including Ubuntu and Mint.</li>
+<li>bookworm: This is the codename for the Debian 12 release, currently in testing, which will become the next stable release.</li>
+<li>sid: the codename for Debian’s unstable release.</li>
+<li>main: This is one of the Debian software repositories, which contains the core packages that make up the Debian operating system.</li>
+<li>contrib and non-free: two categories of software packages in Debian that include packages with dependencies on non-free or proprietary software. deb-src: This stands for “debian source”. It refers to the software source code repositories for Debian, which users can access in order to download, modify, and compile the source code of various packages.</li>
+<li>security: This is the Debian repository that contains security updates for Debian packages. It is important to include this repository in your sources.list file to ensure that your system stays secure.</li>
+<li>backports: This is the Debian repository that contains newer versions of packages that have been backported from newer Debian releases.</li>
+<li>experimental repo: This is the Debian repository that contains packages that are still in the testing phase and are not yet stable enough for inclusion in the main Debian repositories.</li>
+</ul>
+</details>
+</section>
+<section id="apt-sources-for-nvidia-cuda-cudnn-tensorrt-and-containers" class="level3">
+<h3 class="anchored" data-anchor-id="apt-sources-for-nvidia-cuda-cudnn-tensorrt-and-containers">Apt sources for NVIDIA CUDA, cuDNN, TensorRT, and containers</h3>
+<p>We will use some packages that were built for Ubuntu, but it doesn’t seem to cause a problem.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="bu" style="color: null;">cd</span> /etc/apt/sources.list.d</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="fu" style="color: #4758AB;">cat</span> cuda-debian11-x86_64.list</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/ /</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="fu" style="color: #4758AB;">cat</span> cudnn-local-debian11-8.6.0.163.list </span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb [signed-by=/usr/share/keyrings/cudnn-local-C922C4FD-keyring.gpg] file:///var/cudnn-local-repo-debian11-8.6.0.163 /</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="fu" style="color: #4758AB;">cat</span> nv-tensorrt-local-ubuntu2204-8.5.3-cuda-11.8.list</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb [signed-by=/usr/share/keyrings/nv-tensorrt-local-3E951519-keyring.gpg] file:///var/nv-tensorrt-local-repo-ubuntu2204-8.5.3-cuda-11.8 /</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="fu" style="color: #4758AB;">cat</span> nvidia-container-runtime.list</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb https://nvidia.github.io/libnvidia-container/stable/debian11/$(ARCH) /
+# deb https://nvidia.github.io/libnvidia-container/experimental/debian10/$(ARCH) /
+deb https://nvidia.github.io/nvidia-container-runtime/stable/debian11/$(ARCH) /
+# deb https://nvidia.github.io/nvidia-container-runtime/experimental/debian10/$(ARCH) /</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>NVIDIA CUDA: a parallel computing platform and programming model for NVIDIA GPUs</li>
+<li>cuDNN: a GPU-accelerated library for deep neural networks</li>
+<li>TensorRT: a high-performance deep learning inference optimizer and runtime library</li>
+<li>Containers: lightweight, standalone executables that include everything needed to run a piece of software, including the code, libraries, and system tools</li>
+<li>NVIDIA container runtime: a platform developed by NVIDIA to support containerized applications that require access to GPU resources.</li>
+</ul>
+</details>
+</section>
+<section id="apt-sources-for-old-versions-of-python" class="level3">
+<h3 class="anchored" data-anchor-id="apt-sources-for-old-versions-of-python">Apt sources for old versions of Python</h3>
+<p>The “deadsnakes” PPA was built for Ubuntu, but works fine on Debian too.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="fu" style="color: #4758AB;">cat</span> deadsnakes.list</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy main
+deb-src http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy main</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>deadsnakes: A Personal Package Archive (PPA) on Launchpad for providing alternative versions of Python for Ubuntu and Debian systems.</li>
+<li>PPA: Stands for Personal Package Archive, a software repository for Ubuntu users that allows them to distribute software and updates that are not available in official Ubuntu repositories.</li>
+<li>jammy: The code name for Ubuntu 22.04.2 LTS (Jammy Jellyfish), the version of Ubuntu that the deadsnakes PPA was built for.</li>
+</ul>
+</details>
+</section>
+</section>
+<section id="install-required-debian-packages" class="level2">
+<h2 class="anchored" data-anchor-id="install-required-debian-packages">Install required Debian packages</h2>
+<section id="python-3.10" class="level3">
+<h3 class="anchored" data-anchor-id="python-3.10">Python 3.10</h3>
+<p>As I mentioned, Debian recently started using Python 3.11 for their default Python, and Torch isn’t compatible with Python 3.11 yet:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="ex" style="color: null;">python3.11</span> <span class="at" style="color: #657422;">-m</span> pip install <span class="at" style="color: #657422;">--break-system-packages</span> torchvision</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)
+ERROR: No matching distribution found for torchvision
+</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>: 1</code></pre>
+</div>
+</div>
+<p>I tried using nightly Torch, but there were more compatibility problems. So I decided to go back to using Python 3.10 for AI work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><span class="fu" style="color: #4758AB;">sudo</span> apt install <span class="at" style="color: #657422;">-qq</span> python3.10-venv</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ python3.10-venv : Depends: python3.10-distutils but it is not installable
+E: Unable to correct problems, you have held broken packages.</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>: 100</code></pre>
+</div>
+</div>
+<p>Unfortunately, the packaging for <code>python3.10-venv</code> is currently broken. I solved this by making a <code>python3.10-distutils-bogus</code> package, like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><span class="bu" style="color: null;">cd</span> ~/pkg</span>
+<span id="cb22-2"><span class="fu" style="color: #4758AB;">cat</span> python3.10-distutils-bogus</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Section: python
+Priority: optional
+Standards-Version: 3.9.2
+
+Package: python3.10-distutils-bogus
+Version: 1.0
+Maintainer: Sam Watkins &lt;sam@ucm.dev&gt;
+Provides: python3.10-distutils
+Description: Dummy package to satisfy python3.10-distutils</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><span class="ex" style="color: null;">equivs-build</span> python3.10-distutils-bogus</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dpkg-buildpackage: info: source package python3.10-distutils-bogus
+dpkg-buildpackage: info: source version 1.0
+dpkg-buildpackage: info: source distribution unstable
+dpkg-buildpackage: info: source changed by Sam Watkins &lt;sam@ucm.dev&gt;
+dpkg-buildpackage: info: host architecture amd64
+ dpkg-source --before-build .
+ debian/rules clean
+dh clean
+   dh_clean
+ debian/rules binary
+dh binary
+   dh_update_autotools_config
+   dh_autoreconf
+   create-stamp debian/debhelper-build-stamp
+   dh_prep
+   dh_auto_install --destdir=debian/python3.10-distutils-bogus/
+   dh_install
+   dh_installdocs
+   dh_installchangelogs
+   dh_perl
+   dh_link
+   dh_strip_nondeterminism
+   dh_compress
+   dh_fixperms
+   dh_missing
+   dh_installdeb
+   dh_gencontrol
+   dh_md5sums
+   dh_builddeb
+dpkg-deb: building package 'python3.10-distutils-bogus' in '../python3.10-distutils-bogus_1.0_all.deb'.
+ dpkg-genbuildinfo --build=binary -O../python3.10-distutils-bogus_1.0_amd64.buildinfo
+ dpkg-genchanges --build=binary -O../python3.10-distutils-bogus_1.0_amd64.changes
+dpkg-genchanges: info: binary-only upload (no source code included)
+ dpkg-source --after-build .
+dpkg-buildpackage: info: binary-only upload (no source included)
+
+The package has been created.
+Attention, the package has been created in the current directory,
+not in ".." as indicated by the message above!</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><span class="fu" style="color: #4758AB;">sudo</span> dpkg <span class="at" style="color: #657422;">-i</span> ./python3.10-distutils-bogus_1.0_all.deb</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Reading database ... 1158515 files and directories currently installed.)
+Preparing to unpack .../python3.10-distutils-bogus_1.0_all.deb ...
+Unpacking python3.10-distutils-bogus (1.0) over (1.0) ...
+Setting up python3.10-distutils-bogus (1.0) ...</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><span class="fu" style="color: #4758AB;">sudo</span> apt-get <span class="at" style="color: #657422;">-q</span> install python3.10-venv</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading package lists...
+Building dependency tree...
+Reading state information...
+python3.10-venv is already the newest version (3.10.10-2).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>Debian package dependencies: packages that are required for a specific package to install and function properly</li>
+<li>python3.11: the default version of Python now used in “bookworm” the latest Debian testing release, and “sid” (unstable))</li>
+<li>python3.10-venv: A package that provides the “venv” module for Python 3.10, which is used to create Python virtual environments.</li>
+<li>python3.10-distutils: a module in Python 3.10 that provides tools for building and installing Python modules and packages</li>
+<li>equivs-build: a tool for creating Debian packages that provide empty or dummy packages to satisfy dependencies</li>
+<li>dpkg-buildpackage: a tool for building Debian packages from source code</li>
+<li>broken packages: Packages that cannot be installed due to missing dependencies or conflicts with other packages.</li>
+<li>Torch: A popular machine learning library, which is not compatible with Python 3.11 yet.</li>
+<li>Python 3.10: A version of Python that is compatible with Torch.</li>
+<li>Maintainer: The person or organization responsible for maintaining a package in the Debian package repository.</li>
+<li>Provides: A field in a Debian package control file that specifies the name of a package that the current package provides. This can be used to satisfy dependencies of other packages that require the provided package.</li>
+</ul>
+</details>
+</section>
+<section id="old-and-alpha-versions-of-python-from-deadsnakes" class="level3">
+<h3 class="anchored" data-anchor-id="old-and-alpha-versions-of-python-from-deadsnakes">Old and alpha versions of Python, from deadsnakes</h3>
+<p>I’m not actually using these alternative Python packages for AI at the moment.</p>
+<p>However, it’s often useful to be able to use different versions of Python, so it’s an important part of my setup.</p>
+<ul>
+<li>Python 3.11 is the new default version for Debian.</li>
+<li>Python 3.10 is still available in Debian, it’s the one we need to use.</li>
+<li>I have Python 2.7 left over from a previous Debian release.</li>
+<li>I installed 3.7, 3.8, 3.9 and 3.12 from deadsnakes.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><span class="fu" style="color: #4758AB;">sudo</span> apt install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-t</span> jammy python3.7-venv python3.8-venv python3.9-venv</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>python3.7-venv is already the newest version (3.7.16-1+jammy1).
+python3.8-venv is already the newest version (3.8.16-1+jammy1).
+python3.9-venv is already the newest version (3.9.16-1+jammy1).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><span class="fu" style="color: #4758AB;">sudo</span> apt install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-t</span> jammy python3.12-venv</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>python3.12-venv is already the newest version (3.12.0~a5-1+jammy2).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><span class="ex" style="color: null;">apt</span> policy python2<span class="kw" style="color: #003B4F;">;</span> <span class="bu" style="color: null;">echo</span></span>
+<span id="cb34-2"><span class="cf" style="color: #003B4F;">for</span> v <span class="kw" style="color: #003B4F;">in</span> <span class="kw" style="color: #003B4F;">`</span><span class="fu" style="color: #4758AB;">seq</span> 7 12<span class="kw" style="color: #003B4F;">`;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">apt</span> policy python3.<span class="va" style="color: #111111;">$v</span><span class="kw" style="color: #003B4F;">;</span> <span class="bu" style="color: null;">echo</span><span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>python2:
+  Installed: 2.7.18-3
+  Candidate: 2.7.18-3
+  Version table:
+ *** 2.7.18-3 100
+        100 /var/lib/dpkg/status
+
+python3.7:
+  Installed: 3.7.16-1+jammy1
+  Candidate: 3.7.16-1+jammy1
+  Version table:
+ *** 3.7.16-1+jammy1 100
+         80 http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages
+        100 /var/lib/dpkg/status
+
+python3.8:
+  Installed: 3.8.16-1+jammy1
+  Candidate: 3.8.16-1+jammy1
+  Version table:
+ *** 3.8.16-1+jammy1 100
+         80 http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages
+        100 /var/lib/dpkg/status
+
+python3.9:
+  Installed: 3.9.16-1+jammy1
+  Candidate: 3.9.16-1+jammy1
+  Version table:
+ *** 3.9.16-1+jammy1 100
+         80 http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages
+        100 /var/lib/dpkg/status
+
+python3.10:
+  Installed: 3.10.10-2
+  Candidate: 3.10.10-2
+  Version table:
+ *** 3.10.10-2 100
+         90 http://deb.debian.org/debian sid/main amd64 Packages
+        100 /var/lib/dpkg/status
+
+python3.11:
+  Installed: 3.11.2-4
+  Candidate: 3.11.2-4
+  Version table:
+ *** 3.11.2-4 990
+        990 http://deb.debian.org/debian bookworm/main amd64 Packages
+         90 http://deb.debian.org/debian sid/main amd64 Packages
+        100 /var/lib/dpkg/status
+     3.11.2-1+jammy1 80
+         80 http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages
+
+python3.12:
+  Installed: 3.12.0~a5-1+jammy2
+  Candidate: 3.12.0~a5-1+jammy2
+  Version table:
+ *** 3.12.0~a5-1+jammy2 100
+         80 http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages
+        100 /var/lib/dpkg/status
+</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>deadsnakes PPA: A Personal Package Archive (PPA) containing various versions of Python packages, maintained by the deadsnakes team on Launchpad.</li>
+<li>Python 3.11: The new default version of Python for Debian, which is not yet compatible with Torch.</li>
+<li>Python 3.10: A compatible version of Python that is still available in Debian and needed to use Torch.</li>
+<li>Python 2.7: A legacy version of Python that I had installed from a previous Debian release.</li>
+<li>Python 3.7, 3.8, 3.9, 3.12: Alternative versions of Python that I installed from the deadsnakes PPA; not strictly needed for most AI work.</li>
+</ul>
+</details>
+</section>
+<section id="nvidia-cuda" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-cuda">NVIDIA CUDA</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><span class="fu" style="color: #4758AB;">sudo</span> apt <span class="at" style="color: #657422;">-qq</span> install cuda=12.0.1-1 cuda-drivers=525.85.12-1 cuda-11-7 cuda-11-8</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>cuda is already the newest version (12.0.1-1).
+cuda-drivers is already the newest version (525.85.12-1).
+cuda-11-7 is already the newest version (11.7.1-1).
+cuda-11-8 is already the newest version (11.8.0-1).
+0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>NVIDIA CUDA: A parallel computing platform and programming model developed by NVIDIA for general computing on GPUs (graphics processing units).</li>
+<li>CUDA drivers: Software components that enable communication between the CUDA runtime and the hardware.</li>
+<li>CUDA 11-7, CUDA 11-8 and CUDA 12-0: Different versions of the CUDA toolkit that are compatible with different GPU architectures.</li>
+</ul>
+</details>
+</section>
+<section id="nvidia-container-runtime" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-container-runtime">NVIDIA Container Runtime</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><span class="fu" style="color: #4758AB;">sudo</span> apt <span class="at" style="color: #657422;">-qq</span> install nvidia-container-runtime</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>nvidia-container-runtime is already the newest version (3.12.0-1).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>NVIDIA Container Runtime: An open-source container runtime that enables the use of GPUs within containers, allowing applications to leverage the power of NVIDIA GPUs while maintaining the flexibility and portability of containerization. It is designed to work with Docker and other container engines and is optimized for use with NVIDIA GPUs.</li>
+<li>Docker: A popular platform for developing, deploying, and running applications in containers. It provides a way to package an application and its dependencies into a single container that can be easily moved between environments.</li>
+<li>GPU: Short for Graphics Processing Unit, a specialized processor designed to accelerate the rendering of images and video. In recent years, GPUs have become increasingly popular for running compute-intensive workloads, such as machine learning and scientific simulations.</li>
+</ul>
+</details>
+</section>
+<section id="nvidia-cudnn" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-cudnn">NVIDIA cuDNN</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><span class="fu" style="color: #4758AB;">sudo</span> apt <span class="at" style="color: #657422;">-qq</span> install libcudnn8-dev</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>libcudnn8-dev is already the newest version (8.8.0.121-1+cuda12.0).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><span class="fu" style="color: #4758AB;">sudo</span> apt <span class="at" style="color: #657422;">-qq</span> install /var/cudnn-local-repo-ubuntu2204-8.6.0.163/libcudnn8-samples_8.6.0.163-1+cuda11.8_amd64.deb</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>libcudnn8-samples is already the newest version (8.6.0.163-1+cuda11.8).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>NVIDIA cuDNN: A GPU-accelerated library for deep neural networks that is used to improve training and inference performance.</li>
+<li>libcudnn8-dev: A package that provides the development files needed to compile software that uses NVIDIA cuDNN.</li>
+<li>libcudnn8-samples: A package that contains sample code and programs that demonstrate how to use NVIDIA cuDNN in applications.</li>
+</ul>
+</details>
+</section>
+<section id="nvidia-tensorrt" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-tensorrt">NVIDIA TensorRT</h3>
+<p>NVIDIA TensorRT is an inference accelerator for deep learning models. It optimizes and deploys trained neural networks for inferencing on NVIDIA GPUs. In order to use TensorRT, the python3-libnvinfer package needs to be installed.</p>
+<p>Unfortunately, this package has a dependency issue, it requires a version of Python less than 3.11 for the package to work, but I couldn’t downgrade the system’s Python version. To resolve this issue, I modified the package to depend on the <code>python3.10</code> package instead of <code>python3 &lt; 3.11</code>. I did this by copying the package to a local directory, unpacking it, modifying the dependency information, and repacking it. After this, I was able to successfully install the modified package and its development version using the dpkg command.</p>
+<p>Finally, I was able to install the main <code>tensorrt</code> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><span class="fu" style="color: #4758AB;">sudo</span> apt-get <span class="at" style="color: #657422;">-q</span> install python3-libnvinfer-dev</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading package lists...
+Building dependency tree...
+Reading state information...
+Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ python3-libnvinfer : Depends: python3 (&lt; 3.11) but 3.11.2-1 is to be installed
+E: Unable to correct problems, you have held broken packages.</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>: 100</code></pre>
+</div>
+</div>
+<p>I’d like to install it as a python3.10 library at least, but it is demanding that the system Python version, i.e.&nbsp;the version of Debian’s python3 package, should be less than 3.11, and I don’t want to try to change that. So I’ll adjust this <code>python3-libnvinfer</code> package to depend on the <code>python3.10</code> package instead of <code>python3 &lt; 3.11</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><span class="bu" style="color: null;">cd</span> /var/nv-tensorrt-local-repo-ubuntu2204-8.5.3-cuda-11.8</span>
+<span id="cb47-2"><span class="fu" style="color: #4758AB;">ls</span> python3-libnvinfer<span class="pp" style="color: #AD0000;">*</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb
+python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><span class="fu" style="color: #4758AB;">cp</span> <span class="at" style="color: #657422;">-v</span> python3-libnvinfer<span class="pp" style="color: #AD0000;">*</span> ~/soft-ai/</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb' -&gt; '/home/sam/soft-ai/python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb'
+'python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb' -&gt; '/home/sam/soft-ai/python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb'</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><span class="bu" style="color: null;">cd</span> ~/soft-ai</span>
+<span id="cb51-2"><span class="bu" style="color: null;">command</span> rm <span class="at" style="color: #657422;">-rf</span> unpacked</span>
+<span id="cb51-3"><span class="ex" style="color: null;">dpkg-deb</span> <span class="at" style="color: #657422;">-R</span> python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb unpacked</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><span class="fu" style="color: #4758AB;">grep</span> Depends unpacked/DEBIAN/control</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Depends: python3 (&gt;= 3.10), python3 (&lt;&lt; 3.11), libnvinfer8 (= 8.5.3-1+cuda11.8), libnvinfer-plugin8 (= 8.5.3-1+cuda11.8), libnvparsers8 (= 8.5.3-1+cuda11.8), libnvonnxparsers8 (= 8.5.3-1+cuda11.8)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><span class="fu" style="color: #4758AB;">sed</span> <span class="at" style="color: #657422;">-i</span> <span class="st" style="color: #20794D;">'s/python3 (&gt;= 3.10), python3 (&lt;&lt; 3.11), /python3.10, /'</span> unpacked/DEBIAN/control</span>
+<span id="cb54-2"><span class="fu" style="color: #4758AB;">grep</span> Depends unpacked/DEBIAN/control</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Depends: python3.10, libnvinfer8 (= 8.5.3-1+cuda11.8), libnvinfer-plugin8 (= 8.5.3-1+cuda11.8), libnvparsers8 (= 8.5.3-1+cuda11.8), libnvonnxparsers8 (= 8.5.3-1+cuda11.8)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><span class="ex" style="color: null;">dpkg-deb</span> <span class="at" style="color: #657422;">-b</span> unpacked python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dpkg-deb: building package 'python3-libnvinfer' in 'python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb'.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><span class="fu" style="color: #4758AB;">sudo</span> dpkg <span class="at" style="color: #657422;">-i</span> ./python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb ./python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Selecting previously unselected package python3-libnvinfer.
+(Reading database ... 1157567 files and directories currently installed.)
+Preparing to unpack .../python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb ...
+Unpacking python3-libnvinfer (8.5.3-1+cuda11.8) ...
+Selecting previously unselected package python3-libnvinfer-dev.
+Preparing to unpack .../python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb ...
+Unpacking python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...
+Setting up python3-libnvinfer (8.5.3-1+cuda11.8) ...
+Setting up python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><span class="fu" style="color: #4758AB;">sudo</span> apt <span class="at" style="color: #657422;">-qq</span> install tensorrt</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensorrt is already the newest version (8.5.3.1-1+cuda11.8).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>NVIDIA TensorRT: An inference accelerator for deep learning models that optimizes and deploys trained neural networks for inferencing on NVIDIA GPUs.</li>
+<li>python3-libnvinfer package: A package required to use TensorRT but has a dependency issue with the system’s Python version.</li>
+<li>Dependency issue: A problem that arises when a software package requires certain libraries or packages to run, and those libraries or packages are either not installed or not compatible with the system.</li>
+<li>dpkg command: A command used to install Debian packages.</li>
+</ul>
+</details>
+</section>
+</section>
+<section id="install-rust" class="level2">
+<h2 class="anchored" data-anchor-id="install-rust">Install Rust</h2>
+<p>Some Python modules now depend on Rust to build. Also, I wanted to build Anki from source. I decided to install Rust system-wide, in <code>/opt/rust</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><span class="bu" style="color: null;">cd</span> /tmp</span>
+<span id="cb62-2"><span class="ex" style="color: null;">curl</span> <span class="at" style="color: #657422;">--proto</span> <span class="st" style="color: #20794D;">'=https'</span> <span class="at" style="color: #657422;">--tlsv1.2</span> <span class="at" style="color: #657422;">-sSf</span> https://sh.rustup.rs <span class="op" style="color: #5E5E5E;">&gt;</span> install_rust.sh</span>
+<span id="cb62-3"><span class="fu" style="color: #4758AB;">sudo</span> RUSTUP_HOME=/opt/rust CARGO_HOME=/opt/rust sh ./install_rust.sh <span class="at" style="color: #657422;">-y</span> <span class="at" style="color: #657422;">--no-modify-path</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><span class="bu" style="color: null;">.</span> /opt/rust/env</span>
+<span id="cb63-2"><span class="ex" style="color: null;">rustup</span> default stable</span></code></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>Rust: A systems programming language that is known for its speed, reliability, and memory safety features. It is often used for developing web browsers, operating systems, and game engines, and has gained popularity in the field of machine learning for its ease of integration with Python.</li>
+<li>rustup: A command-line tool for managing Rust installations and its various components, such as different toolchains and target platforms.</li>
+<li>CARGO_HOME: An environment variable used by Rust to specify the directory where Cargo, the package manager for Rust, stores its configuration and package cache.</li>
+<li>RUSTUP_HOME: An environment variable used by Rust to specify the directory where rustup stores its configuration and installed toolchains.</li>
+<li>Anki: a popular open-source flashcard application designed to help users learn and memorize information efficiently. It allows users to create digital flashcards containing text, images, audio, and video, and use various study techniques such as spaced repetition to optimize learning and retention. Anki is available for Windows, macOS, Linux, Android, and iOS platforms.</li>
+</ul>
+</details>
+</section>
+<section id="python-environments" class="level2">
+<h2 class="anchored" data-anchor-id="python-environments">Python environments</h2>
+<p>I’m going to add Python venvs under <code>/opt/venvs</code>, and use hard linking to share large files between them.</p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Folder</th>
+<th>Depends</th>
+<th>Uses</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>python3.10-ai</td>
+<td>Debian’s python3.10</td>
+<td>torch stable</td>
+<td>AI development</td>
+</tr>
+<tr class="even">
+<td>python3.10-webui</td>
+<td>python3.10-ai</td>
+<td>torch stable</td>
+<td>stable-diffusion-webui</td>
+</tr>
+</tbody>
+</table>
+<section id="the-base-venv-python3.10-ai" class="level3">
+<h3 class="anchored" data-anchor-id="the-base-venv-python3.10-ai">The base venv python3.10-ai</h3>
+<p>This venv is a base environment for AI development, containing various packages and libraries useful for working with deep learning models and related tasks. These include popular libraries like fastai, PyTorch, TensorFlow, scikit-learn, and NumPy, as well as some more specialized tools. The different packages are described in the glossary for this section.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><span class="fu" style="color: #4758AB;">mkdir</span> <span class="at" style="color: #657422;">-p</span> /opt/venvs</span>
+<span id="cb64-2"><span class="bu" style="color: null;">cd</span> /opt/venvs</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><span class="fu" style="color: #4758AB;">mkdir</span> <span class="at" style="color: #657422;">-p</span> python3.10-ai</span>
+<span id="cb65-2"><span class="ex" style="color: null;">python3.10</span> <span class="at" style="color: #657422;">-m</span> venv python3.10-ai/venv</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><span class="bu" style="color: null;">printf</span> <span class="st" style="color: #20794D;">"%s\n"</span> torch pipdeptree torchvision torchaudio tensorflow <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb66-2">    jupyter jupyterlab ipywidgets bash_kernel jupyter-c-kernel nbdev fastai <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb66-3">    pandas matplotlib scipy scikit-learn scikit-image gradio onnx <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb66-4">    huggingface_hub transformers diffusers accelerate timm safetensors <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb66-5">    numba fastbook <span class="op" style="color: #5E5E5E;">&gt;</span> python3.10-ai/require.txt</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb67-1"><span class="kw" style="color: #003B4F;">(</span></span>
+<span id="cb67-2"><span class="bu" style="color: null;">set</span> <span class="at" style="color: #657422;">-e</span></span>
+<span id="cb67-3"><span class="bu" style="color: null;">.</span> python3.10-ai/venv/bin/activate</span>
+<span id="cb67-4"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> <span class="at" style="color: #657422;">-r</span> python3.10-ai/require.txt</span>
+<span id="cb67-5"><span class="ex" style="color: null;">python</span> <span class="at" style="color: #657422;">-m</span> bash_kernel.install</span>
+<span id="cb67-6"><span class="ex" style="color: null;">install_c_kernel</span></span>
+<span id="cb67-7"><span class="kw" style="color: #003B4F;">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Installing IPython kernel spec
+Installing IPython kernel spec
+/opt/venvs/python3.10-ai/venv/bin/install_c_kernel:32: DeprecationWarning: replace is ignored. Installing a kernelspec always replaces an existing installation
+  KernelSpecManager().install_kernel_spec(td, 'c', user=user, replace=True, prefix=prefix)</code></pre>
+</div>
+</div>
+<p>The pydoc command doesn’t seem to be installed properly in venvs, so I added it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb69-1"><span class="fu" style="color: #4758AB;">cat</span> <span class="op" style="color: #5E5E5E;">&lt;&lt;END</span> <span class="op" style="color: #5E5E5E;">&gt;</span> python3.10-ai/venv/bin/pydoc</span>
+<span id="cb69-2"><span class="st" style="color: #20794D;">#!/bin/sh</span></span>
+<span id="cb69-3"><span class="st" style="color: #20794D;">python -m pydoc "</span><span class="va" style="color: #111111;">$@</span><span class="st" style="color: #20794D;">"</span></span>
+<span id="cb69-4"><span class="op" style="color: #5E5E5E;">END</span></span>
+<span id="cb69-5"></span>
+<span id="cb69-6"><span class="fu" style="color: #4758AB;">chmod</span> +x python3.10-ai/venv/bin/pydoc</span></code></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>Python venvs: Virtual environments created by the Python venv module that allow users to create isolated Python environments with their own packages, versions, and configurations.</li>
+<li>hard linking: A method of creating a new file that shares the same content as an existing file without duplicating it, saving storage space and reducing the time needed to create a copy.</li>
+<li>torch: PyTorch, an open-source machine learning framework for building and training neural networks.</li>
+<li>torchvision: A package that provides access to popular datasets, model architectures, and image transformations for PyTorch.</li>
+<li>torchaudio: A package that provides audio processing functionalities for PyTorch, such as loading and decoding audio files, applying transforms, and computing spectrograms.</li>
+<li>tensorflow: An open-source machine learning framework developed by Google for building and training neural networks.</li>
+<li>jupyter: Jupyter Notebook, an open-source web application that allows users to create and share documents containing live code, equations, visualizations, and narrative text.</li>
+<li>jupyterlab: The next-generation web-based user interface for Jupyter Notebook, featuring a more modern and flexible interface, multiple panes, and support for Jupyter extensions.</li>
+<li>ipywidgets: A library that provides interactive HTML widgets for Jupyter Notebook and JupyterLab, enabling users to create sliders, dropdowns, buttons, and other graphical controls that can be used to modify code outputs and visualizations.</li>
+<li>bash_kernel: A Jupyter kernel that allows users to run Bash commands and scripts in Jupyter Notebook and JupyterLab.</li>
+<li>jupyter-c-kernel: A Jupyter kernel that allows users to run C code in Jupyter Notebook and JupyterLab.</li>
+<li>nbdev: A library that allows users to create Python modules from Jupyter Notebooks, making it easier to develop, test, and publish code.</li>
+<li>fastai: An open-source library built on top of PyTorch that provides high-level abstractions for training and deploying machine learning models, including computer vision, natural language processing, and tabular data analysis.</li>
+<li>pandas: A data analysis library for Python that provides powerful data structures and tools for manipulating and analyzing data.</li>
+<li>matplotlib: A plotting library for Python that provides a variety of visualizations, including line plots, scatter plots, bar charts, histograms, and more.</li>
+<li>scipy: A library for scientific computing in Python that provides a wide range of mathematical algorithms, including optimization, integration, interpolation, signal processing, and more.</li>
+<li>scikit-learn: A machine learning library for Python that provides a variety of supervised and unsupervised learning algorithms, including regression, classification, clustering, and dimensionality reduction.</li>
+<li>scikit-image: An image processing library for Python that provides a variety of algorithms for image enhancement, filtering, segmentation, and feature extraction.</li>
+<li>gradio: An open-source library that allows users to quickly create custom web interfaces for machine learning models, enabling users to interact with models using sliders, dropdowns, text boxes, and other controls.</li>
+<li>onnx: Open Neural Network Exchange, an open-source format for representing machine learning models that allows interoperability between different frameworks and platforms.</li>
+<li>huggingface_hub: A library that provides access to a wide range of pre-trained machine learning models for natural language processing, computer vision, and other tasks, hosted on the Hugging Face Hub.</li>
+<li>transformers: A library that provides state-of-the-art natural language processing models for tasks such as sentiment analysis, question answering, and language translation, based on transformer architectures.</li>
+<li>diffusers: A library that provides a set of PyTorch modules for training diffusion models, a type of probabilistic generative model that can be used for tasks such as image synthesis, denoising, and inpainting.</li>
+<li>pipdeptree: a command-line utility that displays the installed Python packages in the form of a dependency tree</li>
+<li>Accelerate: a library that enables PyTorch code to run across any distributed configuration with just four lines of code</li>
+<li>PyTorch Image Models (timm): a deep-learning library that includes a collection of state-of-the-art computer vision models, layers, utilities, optimizers, schedulers, data-loaders, augmentations, and training/validating scripts with the ability to reproduce ImageNet training results</li>
+<li>Safetensors: a repository that implements a new simple format for storing tensors safely and efficiently, instead of using pickle</li>
+<li>Numba: a high-performance Python compiler that translates Python functions to optimized machine code at runtime using the industry-standard LLVM compiler library; it offers a range of options for parallelizing Python code for CPUs and GPUs, often with only minor code changes</li>
+<li>fastbook: the Fast.ai book published as Jupyter Notebooks, that covers deep learning using fastai and PyTorch</li>
+</ul>
+</details>
+</section>
+<section id="the-secondary-venv-python3.10-webui" class="level3">
+<h3 class="anchored" data-anchor-id="the-secondary-venv-python3.10-webui">The secondary venv python3.10-webui</h3>
+<p>This is a secondary Python venv called python3.10-webui. It will be used to support the stable-diffusion web user interface, and is based on the python3.10-ai venv. Hard linking will be used to share large files between the two venvs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><span class="bu" style="color: null;">cd</span> /opt/venvs</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><span class="fu" style="color: #4758AB;">mkdir</span> <span class="at" style="color: #657422;">-p</span> python3.10-webui</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb72-1"><span class="bu" style="color: null;">command</span> rm <span class="at" style="color: #657422;">-rf</span> python3.10-webui/venv</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb73-1"><span class="fu" style="color: #4758AB;">cp</span> <span class="at" style="color: #657422;">-al</span> python3.10-ai/venv python3.10-webui/venv</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb74-1"><span class="fu" style="color: #4758AB;">yes</span> <span class="kw" style="color: #003B4F;">|</span> <span class="ex" style="color: null;">venv_move</span> python3.10-webui/venv</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb75-1"><span class="kw" style="color: #003B4F;">(</span></span>
+<span id="cb75-2"><span class="fu" style="color: #4758AB;">cat</span> python3.10-ai/require.txt ~/soft-ai/stable-diffusion-webui/requirements.txt </span>
+<span id="cb75-3"><span class="bu" style="color: null;">echo</span> fastapi==0.90.1</span>
+<span id="cb75-4"><span class="kw" style="color: #003B4F;">)</span> <span class="op" style="color: #5E5E5E;">&gt;</span> python3.10-webui/require.txt</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb76-1"><span class="kw" style="color: #003B4F;">(</span></span>
+<span id="cb76-2"><span class="bu" style="color: null;">set</span> <span class="at" style="color: #657422;">-e</span></span>
+<span id="cb76-3"><span class="bu" style="color: null;">.</span> python3.10-webui/venv/bin/activate</span>
+<span id="cb76-4"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> <span class="at" style="color: #657422;">-r</span> python3.10-webui/require.txt</span>
+<span id="cb76-5"><span class="kw" style="color: #003B4F;">)</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb77-1"><span class="fu" style="color: #4758AB;">ln</span> <span class="at" style="color: #657422;">-f</span> python3.10-ai/venv/bin/pydoc python3.10-webui/venv/bin/pydoc</span></code></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>hard linking: a file system feature that allows multiple files to share the same physical storage location on disk. Hard linking a file creates a new file that points to the same location as the original file. This can be used to save disk space and reduce redundancy in a file system.</li>
+<li><a href="https://stackoverflow.com/a/67979710/218294">venv_move</a>: this is a Bash script that is used to move a Python virtual environment (venv) to a new location. The script takes one argument, which is the path to the venv directory that needs to be moved.</li>
+</ul>
+</details>
+</section>
+<section id="stable-diffusion-webui" class="level3">
+<h3 class="anchored" data-anchor-id="stable-diffusion-webui">stable-diffusion-webui</h3>
+<p>In this section, we will install the <a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui">automatic1111 stable-diffusion-webui app</a> and set up custom scripts to update and launch it. The stable-diffusion-webui app is a web user interface for the Stable Diffusion model, which is a deep learning model for image classification. The update script will allow us to easily update the app when new changes are pushed to the Git repository. The launch script will activate the correct virtual environment and launch the web user interface.</p>
+<p>The app works without these custom scripts, but I wanted to allow for careful updates and custom launch options.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb78-1"><span class="bu" style="color: null;">cd</span> ~/soft-ai</span>
+<span id="cb78-2"><span class="bu" style="color: null;">[</span> <span class="ot" style="color: #003B4F;">-d</span> stable-diffusion-webui <span class="bu" style="color: null;">]</span> <span class="kw" style="color: #003B4F;">||</span></span>
+<span id="cb78-3"><span class="fu" style="color: #4758AB;">git</span> clone git@github.com:AUTOMATIC1111/stable-diffusion-webui.git</span>
+<span id="cb78-4"><span class="bu" style="color: null;">cd</span> stable-diffusion-webui</span></code></pre></div>
+</div>
+<section id="my-update-script" class="level4">
+<h4 class="anchored" data-anchor-id="my-update-script">my update script</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb79-1"><span class="fu" style="color: #4758AB;">cat</span> update</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#!/bin/sh
+set -e
+. /opt/venvs/python3.10-webui/venv/bin/activate
+git stash
+git pull
+git stash pop || true
+pip install -r requirements.txt</code></pre>
+</div>
+</div>
+</section>
+<section id="my-launch-script" class="level4">
+<h4 class="anchored" data-anchor-id="my-launch-script">my launch script</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb81-1"><span class="fu" style="color: #4758AB;">cat</span> launch</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#!/bin/bash
+set -ae
+. /opt/venvs/python3.10-webui/venv/bin/activate
+cd "$(dirname "$(readlink -f "$0")")"
+SAFETENSORS_FAST_GPU=1
+COMMANDLINE_ARGS="--xformers --api $*"  # --no-half-vae
+REQS_FILE="requirements.txt"
+python launch.py</code></pre>
+</div>
+</div>
+<p>Next, I launch the webui to install some extra requirements, and check that it works.</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>stable-diffusion-webui: A web user interface for the Stable Diffusion model, a deep learning model for image classification. The stable-diffusion-webui app is installed in this section, along with custom scripts for updating and launching it.</li>
+<li>update script: A custom script for updating the stable-diffusion-webui app. The script activates the correct virtual environment and pulls changes from the Git repository, installs any new requirements, and restarts the app.</li>
+<li>launch script: A custom script for launching the stable-diffusion-webui app. The script activates the correct virtual environment and sets some environment variables before running the launch.py script.</li>
+<li>SAFETENSORS_FAST_GPU=1: an environment variable used with the Safetensors library in deep learning applications. Normally, models are loaded to the CPU and then moved to the GPU, which can involve an additional memory copy step. The “SAFETENSORS_FAST_GPU=1” option allows models to be loaded directly onto the GPU, bypassing the memory copy step and potentially improving performance. However, this option is untested and may not be suitable for all applications.</li>
+<li>COMMANDLINE_ARGS: An environment variable used in the launch script to pass command line arguments to the launch.py script.</li>
+<li>REQS_FILE: An environment variable used in the launch script to specify which requirements file should be used for the stable-diffusion-webui app.</li>
+<li>requirements.txt file: a text file that lists the dependencies of a Python project. It contains a list of package names and optional version numbers that are required for the project to run. This file can be used by the pip package installer to automatically install all required packages and their dependencies, like this: <code>pip install -r requirements.txt</code></li>
+</ul>
+</details>
+</section>
+</section>
+<section id="compare-the-two-venvs" class="level3">
+<h3 class="anchored" data-anchor-id="compare-the-two-venvs">Compare the two venvs</h3>
+<p>In this section, we compare the packages installed in the two Python virtual environments we created earlier. By running the “pip freeze” command in each venv and storing the output in a text file, we can then compare the contents of those files using the “comm” command. The resulting output shows the packages that are installed in one venv but not the other. We can use this information to ensure that both venvs have the necessary packages for our projects.</p>
+<p>Running pip check in both venvs can help ensure that all packages are installed correctly and functioning properly. In the output, we see a package conflict related to the version of protobuf installed, but this does not seem to cause any issues in practice as the app still works.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb83-1"><span class="bu" style="color: null;">cd</span> /opt/venvs</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb84-1"><span class="kw" style="color: #003B4F;">(</span></span>
+<span id="cb84-2"><span class="bu" style="color: null;">.</span> python3.10-ai/venv/bin/activate</span>
+<span id="cb84-3"><span class="ex" style="color: null;">pip</span> freeze <span class="kw" style="color: #003B4F;">|</span> <span class="fu" style="color: #4758AB;">grep</span> <span class="at" style="color: #657422;">-v</span> <span class="st" style="color: #20794D;">'^[#-]'</span> <span class="kw" style="color: #003B4F;">|</span> <span class="fu" style="color: #4758AB;">sort</span> <span class="op" style="color: #5E5E5E;">&gt;</span> python3.10-ai/freeze.txt</span>
+<span id="cb84-4"><span class="ex" style="color: null;">pip</span> check</span>
+<span id="cb84-5"><span class="kw" style="color: #003B4F;">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>No broken requirements found.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb86-1"><span class="kw" style="color: #003B4F;">(</span></span>
+<span id="cb86-2"><span class="bu" style="color: null;">.</span> python3.10-webui/venv/bin/activate</span>
+<span id="cb86-3"><span class="ex" style="color: null;">pip</span> freeze <span class="kw" style="color: #003B4F;">|</span> <span class="fu" style="color: #4758AB;">grep</span> <span class="at" style="color: #657422;">-v</span> <span class="st" style="color: #20794D;">'^[#-]'</span> <span class="kw" style="color: #003B4F;">|</span> <span class="fu" style="color: #4758AB;">sort</span> <span class="op" style="color: #5E5E5E;">&gt;</span> python3.10-webui/freeze.txt</span>
+<span id="cb86-4"><span class="ex" style="color: null;">pip</span> check</span>
+<span id="cb86-5"><span class="kw" style="color: #003B4F;">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensorflow 2.11.0 has requirement protobuf&lt;3.20,&gt;=3.9.2, but you have protobuf 3.20.0.</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>: 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb89-1"><span class="fu" style="color: #4758AB;">comm</span> <span class="at" style="color: #657422;">-3</span> python3.10-ai/freeze.txt python3.10-webui/freeze.txt <span class="kw" style="color: #003B4F;">|</span> <span class="fu" style="color: #4758AB;">tee</span> comm.txt</span></code></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<p>pip freeze: A command used to output the names and versions of installed Python packages in the format required for a requirements.txt file. We use pip freeze to generate the requirements.txt files for both venvs so we can compare them.</p>
+<p>pip check: A command in pip that checks the consistency of installed packages, verifying that all dependencies are met and all files are intact. It will report any issues or conflicts with installed packages, and can help identify packages that need to be updated or removed.</p>
+<p>sort: A Unix utility used to sort the lines of a file alphabetically. We use the sort command to ensure that the lines in the requirements.txt files are in the same order, making it easier to compare them. The comm utility requires that it’s inputs are sorted.</p>
+<p>comm: A Unix utility used to compare two files line by line. In this section, we use the comm command to compare the contents of two requirements.txt files and display the lines that are unique to each file.</p>
+</details>
+</section>
+<section id="check-disk-usage-and-savings" class="level3">
+<h3 class="anchored" data-anchor-id="check-disk-usage-and-savings">Check disk usage and savings</h3>
+<p>In this section, we use the du tool to check the disk usage and savings of the base venv and webui venv. By using hard links, we can see that we are saving nearly 6GB of disk space. We use the du -sh command to show the size of each venv separately and du -csh command to show the total size of both venvs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb90-1"><span class="fu" style="color: #4758AB;">du</span> <span class="at" style="color: #657422;">-sh</span> ./python3.10-ai</span>
+<span id="cb90-2"><span class="fu" style="color: #4758AB;">du</span> <span class="at" style="color: #657422;">-sh</span> ./python3.10-webui</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>5.9G    ./python3.10-ai
+6.2G    ./python3.10-webui</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb92-1"><span class="fu" style="color: #4758AB;">du</span> <span class="at" style="color: #657422;">-csh</span> ./python3.10-<span class="dt" style="color: #AD0000;">{ai</span><span class="op" style="color: #5E5E5E;">,</span><span class="dt" style="color: #AD0000;">webui}</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>5.9G    ./python3.10-ai
+652M    ./python3.10-webui
+6.6G    total</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>du: A command-line tool used to estimate file space usage in a file system. It can display the file size in human-readable format.</li>
+<li>disk usage: The amount of disk space occupied by a file or directory in a file system.</li>
+<li>hard links: A feature of the file system that allows multiple files to share the same data blocks on a storage device. Hard links allow a file to have multiple names in different directories or in the same directory.</li>
+</ul>
+</details>
+</section>
+<section id="save-the-setup-in-a-git-repo" class="level3">
+<h3 class="anchored" data-anchor-id="save-the-setup-in-a-git-repo">Save the setup in a git repo</h3>
+<p>In this section, we initialize a new Git repository to save our virtual environment setup. We create a “.gitignore” file to exclude the venvs from version control, add all files to the Git staging area, and commit the changes with a message. This allows us to easily track and version our venv setup and changes over time.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb94-1"><span class="fu" style="color: #4758AB;">git</span> init</span>
+<span id="cb94-2"><span class="bu" style="color: null;">echo</span> venv <span class="op" style="color: #5E5E5E;">&gt;</span> .gitignore</span>
+<span id="cb94-3"><span class="fu" style="color: #4758AB;">git</span> add <span class="at" style="color: #657422;">-A</span></span>
+<span id="cb94-4"><span class="fu" style="color: #4758AB;">git</span> commit <span class="at" style="color: #657422;">-m</span> <span class="st" style="color: #20794D;">'venvs'</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reinitialized existing shared Git repository in /opt/venvs/.git/
+[main 8fd5a24] venvs
+ 2 files changed, 15 insertions(+), 1 deletion(-)</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>Git: A version control system used for tracking changes to files and collaborating on projects.</li>
+<li>Repository: A central location in which data is stored and managed.</li>
+<li>.gitignore: A file used to exclude files and directories from being tracked by Git.</li>
+<li>Staging area: A place where files are stored before they are committed to the repository.</li>
+<li>Commit: A permanent record of changes to files in the repository, along with a message that describes the changes.</li>
+</ul>
+</details>
+</section>
+</section>
+<section id="optional-extras" class="level1">
+<h1>Optional extras</h1>
+<section id="building-xformers" class="level2">
+<h2 class="anchored" data-anchor-id="building-xformers">Building xformers</h2>
+<p>If you need to build and install <code>xformers</code> from source, this is how to do it. It took nearly half an hour on a fast computer. I think that it didn’t build things in parallel. I used this with stable-diffusion-webui, when the binary packages of xformers weren’t working.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb96-1"><span class="bu" style="color: null;">cd</span> ~/soft-ai</span>
+<span id="cb96-2"><span class="bu" style="color: null;">[</span> <span class="ot" style="color: #003B4F;">-d</span> xformers <span class="bu" style="color: null;">]</span> <span class="kw" style="color: #003B4F;">||</span> <span class="fu" style="color: #4758AB;">git</span> clone https://github.com/facebookresearch/xformers.git</span>
+<span id="cb96-3"><span class="bu" style="color: null;">cd</span> xformers</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb97-1"><span class="fu" style="color: #4758AB;">git</span> submodule update <span class="at" style="color: #657422;">--init</span> <span class="at" style="color: #657422;">--recursive</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb98-1"><span class="fu" style="color: #4758AB;">git</span> pull</span>
+<span id="cb98-2"><span class="fu" style="color: #4758AB;">git</span> submodule update <span class="at" style="color: #657422;">--recursive</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Already up to date.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb100-1"><span class="ex" style="color: null;">python</span> setup.py clean <span class="at" style="color: #657422;">--all</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>running clean
+'build/lib.linux-x86_64-cpython-310' does not exist -- can't clean it
+'build/bdist.linux-x86_64' does not exist -- can't clean it
+'build/scripts-3.10' does not exist -- can't clean it</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb102-1"><span class="bu" style="color: null;">echo</span> <span class="va" style="color: #111111;">$VIRTUAL_ENV</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/opt/venvs/python3.10-ai/venv</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb104-1"><span class="va" style="color: #111111;">CUDA_HOME</span><span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"/usr/local/cuda-11.7"</span> <span class="va" style="color: #111111;">CC</span><span class="op" style="color: #5E5E5E;">=</span>gcc-11 <span class="va" style="color: #111111;">CXX</span><span class="op" style="color: #5E5E5E;">=</span>g++-11 <span class="va" style="color: #111111;">MAKEFLAGS</span><span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"-j</span><span class="va" style="color: #111111;">$(</span><span class="fu" style="color: #4758AB;">nproc</span><span class="va" style="color: #111111;">)</span><span class="st" style="color: #20794D;">"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb104-2"><span class="bu" style="color: null;">time</span> pip install <span class="at" style="color: #657422;">-e</span> . <span class="dv" style="color: #AD0000;">2</span><span class="op" style="color: #5E5E5E;">&gt;&amp;</span><span class="dv" style="color: #AD0000;">1</span> <span class="kw" style="color: #003B4F;">|</span> <span class="fu" style="color: #4758AB;">tee</span> build.log</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Obtaining file:///home/sam/soft-ai/xformers
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Requirement already satisfied: numpy in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from xformers==0.0.17+b89a493.d20230303) (1.23.5)
+Requirement already satisfied: pyre-extensions==0.0.23 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from xformers==0.0.17+b89a493.d20230303) (0.0.23)
+Requirement already satisfied: torch&gt;=1.12 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from xformers==0.0.17+b89a493.d20230303) (1.13.1)
+Requirement already satisfied: typing-extensions in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from pyre-extensions==0.0.23-&gt;xformers==0.0.17+b89a493.d20230303) (4.5.0)
+Requirement already satisfied: typing-inspect in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from pyre-extensions==0.0.23-&gt;xformers==0.0.17+b89a493.d20230303) (0.8.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu11==11.7.99 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (11.7.99)
+Requirement already satisfied: nvidia-cudnn-cu11==8.5.0.96 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (8.5.0.96)
+Requirement already satisfied: nvidia-cuda-runtime-cu11==11.7.99 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (11.7.99)
+Requirement already satisfied: nvidia-cublas-cu11==11.10.3.66 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (11.10.3.66)
+Requirement already satisfied: setuptools in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from nvidia-cublas-cu11==11.10.3.66-&gt;torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (66.1.1)
+Requirement already satisfied: wheel in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from nvidia-cublas-cu11==11.10.3.66-&gt;torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (0.38.4)
+Requirement already satisfied: mypy_extensions&gt;=0.3.0 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from typing-inspect-&gt;pyre-extensions==0.0.23-&gt;xformers==0.0.17+b89a493.d20230303) (1.0.0)
+Installing collected packages: xformers
+  Running setup.py develop for xformers
+Successfully installed xformers-0.0.17+b89a493.d20230303
+1498.23user 47.47system 21:29.43elapsed 119%CPU (0avgtext+0avgdata 1777728maxresident)k
+4848inputs+12701968outputs (64major+40118051minor)pagefaults 0swaps</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>xformers: a library for accelerating transformer-based models in PyTorch.</li>
+<li>CUDA_HOME: an environment variable that specifies the path to the CUDA installation directory.</li>
+<li>gcc-11 and g++-11: the GNU Compiler Collection version 11 for the C and C++ programming languages, respectively. Xformers won’t build with gcc-12, so we need to specify the older version.</li>
+<li>nproc: a command that outputs the number of processing units available to the current process.</li>
+<li>setup.py: a Python script that is used to package and distribute Python modules.</li>
+<li>submodule: a feature in Git that allows a repository to contain another repository as a subdirectory.</li>
+<li>tee: a command that reads standard input and writes it to both standard output and one or more files.</li>
+<li>time: a command that displays the system time for a command to execute.</li>
+</ul>
+</details>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>In this post, I described my journey of setting up a development environment for deep learning on Debian, and the challenges I faced while doing so. I went through various steps, such as setting up apt sources, installing required packages (including Python, NVIDIA CUDA, cuDNN, and TensorRT), installing Rust, and setting up Python virtual environments. I also described how to building Xformers from source. I hope the post can be useful for anyone looking to set up a development environment for deep learning on Debian, in particular I expect it might be useful as a reference for myself in future.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>setup</category>
+  <category>Debian</category>
+  <category>Linux</category>
+  <category>fastai</category>
+  <category>Python</category>
+  <category>PyTorch</category>
+  <category>pip</category>
+  <category>CUDA</category>
+  <guid>https://sam.ucm.dev/blog/posts/setup/setup.html</guid>
+  <pubDate>Thu, 02 Mar 2023 13:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Keyboard shortcuts for Jupyter Lab</title>
-  <dc:creator>Sam Watkins</dc:creator>
   <link>https://sam.ucm.dev/blog/posts/shortcuts/shortcuts.html</link>
   <description><![CDATA[ 
 
@@ -22,7 +1285,7 @@
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>I added some keyboard shortcuts to Jupyter Lab:</p>
+<p>Keyboard shortcuts are a great way to speed up your workflow in Jupyter Lab, but sometimes the default shortcuts don’t quite fit your needs. In this short post, I’ll show you how to add four new keyboard shortcuts to Jupyter Lab that I find useful.</p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -53,45 +1316,50 @@
 <section id="editing-the-settings" class="level2">
 <h2 class="anchored" data-anchor-id="editing-the-settings">Editing the settings</h2>
 <p>Go to Settings → Advanced Settings Editor → JSON Settings Editor</p>
-<p>Then add these shortcuts at the end of the file:</p>
-<pre><code>    {
-        "args": {},
-        "command": "notebook:run-all-above",
-        "keys": [
-            "Ctrl Shift Enter"
-        ],
-        "selector": ".jp-Notebook:focus"
-    },
-    {
-        "args": {},
-        "command": "notebook:clear-all-cell-outputs",
-        "keys": [
-            "Alt L"
-        ],
-        "selector": ".jp-Notebook:focus"
-    },
-    {
-        "args": {},
-        "command": "notebook:render-all-markdown",
-        "keys": [
-            "Alt M"
-        ],
-        "selector": ".jp-Notebook:focus"
-    },
-    {
-        "args": {},
-        "command": "notebook:paste-cell-above",
-        "keys": [
-            "Shift V"
-        ],
-        "selector": ".jp-Notebook:focus"
-    }</code></pre>
+<p>Then add these shortcuts at the end of the file.</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb1-1">        <span class="fu" style="color: #4758AB;">{</span></span>
+<span id="cb1-2">            <span class="dt" style="color: #AD0000;">"args"</span><span class="fu" style="color: #4758AB;">:</span> <span class="fu" style="color: #4758AB;">{},</span></span>
+<span id="cb1-3">            <span class="dt" style="color: #AD0000;">"command"</span><span class="fu" style="color: #4758AB;">:</span> <span class="st" style="color: #20794D;">"notebook:run-all-above"</span><span class="fu" style="color: #4758AB;">,</span></span>
+<span id="cb1-4">            <span class="dt" style="color: #AD0000;">"keys"</span><span class="fu" style="color: #4758AB;">:</span> <span class="ot" style="color: #003B4F;">[</span></span>
+<span id="cb1-5">                <span class="st" style="color: #20794D;">"Ctrl Shift Enter"</span></span>
+<span id="cb1-6">            <span class="ot" style="color: #003B4F;">]</span><span class="fu" style="color: #4758AB;">,</span></span>
+<span id="cb1-7">            <span class="dt" style="color: #AD0000;">"selector"</span><span class="fu" style="color: #4758AB;">:</span> <span class="st" style="color: #20794D;">".jp-Notebook:focus"</span></span>
+<span id="cb1-8">        <span class="fu" style="color: #4758AB;">}</span><span class="er" style="color: #AD0000;">,</span></span>
+<span id="cb1-9">        <span class="fu" style="color: #4758AB;">{</span></span>
+<span id="cb1-10">            <span class="dt" style="color: #AD0000;">"args"</span><span class="fu" style="color: #4758AB;">:</span> <span class="fu" style="color: #4758AB;">{},</span></span>
+<span id="cb1-11">            <span class="dt" style="color: #AD0000;">"command"</span><span class="fu" style="color: #4758AB;">:</span> <span class="st" style="color: #20794D;">"notebook:clear-all-cell-outputs"</span><span class="fu" style="color: #4758AB;">,</span></span>
+<span id="cb1-12">            <span class="dt" style="color: #AD0000;">"keys"</span><span class="fu" style="color: #4758AB;">:</span> <span class="ot" style="color: #003B4F;">[</span></span>
+<span id="cb1-13">                <span class="st" style="color: #20794D;">"Alt L"</span></span>
+<span id="cb1-14">            <span class="ot" style="color: #003B4F;">]</span><span class="fu" style="color: #4758AB;">,</span></span>
+<span id="cb1-15">            <span class="dt" style="color: #AD0000;">"selector"</span><span class="fu" style="color: #4758AB;">:</span> <span class="st" style="color: #20794D;">".jp-Notebook:focus"</span></span>
+<span id="cb1-16">        <span class="fu" style="color: #4758AB;">}</span><span class="er" style="color: #AD0000;">,</span></span>
+<span id="cb1-17">        <span class="fu" style="color: #4758AB;">{</span></span>
+<span id="cb1-18">            <span class="dt" style="color: #AD0000;">"args"</span><span class="fu" style="color: #4758AB;">:</span> <span class="fu" style="color: #4758AB;">{},</span></span>
+<span id="cb1-19">            <span class="dt" style="color: #AD0000;">"command"</span><span class="fu" style="color: #4758AB;">:</span> <span class="st" style="color: #20794D;">"notebook:render-all-markdown"</span><span class="fu" style="color: #4758AB;">,</span></span>
+<span id="cb1-20">            <span class="dt" style="color: #AD0000;">"keys"</span><span class="fu" style="color: #4758AB;">:</span> <span class="ot" style="color: #003B4F;">[</span></span>
+<span id="cb1-21">                <span class="st" style="color: #20794D;">"Alt M"</span></span>
+<span id="cb1-22">            <span class="ot" style="color: #003B4F;">]</span><span class="fu" style="color: #4758AB;">,</span></span>
+<span id="cb1-23">            <span class="dt" style="color: #AD0000;">"selector"</span><span class="fu" style="color: #4758AB;">:</span> <span class="st" style="color: #20794D;">".jp-Notebook:focus"</span></span>
+<span id="cb1-24">        <span class="fu" style="color: #4758AB;">}</span><span class="er" style="color: #AD0000;">,</span></span>
+<span id="cb1-25">        <span class="fu" style="color: #4758AB;">{</span></span>
+<span id="cb1-26">            <span class="dt" style="color: #AD0000;">"args"</span><span class="fu" style="color: #4758AB;">:</span> <span class="fu" style="color: #4758AB;">{},</span></span>
+<span id="cb1-27">            <span class="dt" style="color: #AD0000;">"command"</span><span class="fu" style="color: #4758AB;">:</span> <span class="st" style="color: #20794D;">"notebook:paste-cell-above"</span><span class="fu" style="color: #4758AB;">,</span></span>
+<span id="cb1-28">            <span class="dt" style="color: #AD0000;">"keys"</span><span class="fu" style="color: #4758AB;">:</span> <span class="ot" style="color: #003B4F;">[</span></span>
+<span id="cb1-29">                <span class="st" style="color: #20794D;">"Shift V"</span></span>
+<span id="cb1-30">            <span class="ot" style="color: #003B4F;">]</span><span class="fu" style="color: #4758AB;">,</span></span>
+<span id="cb1-31">            <span class="dt" style="color: #AD0000;">"selector"</span><span class="fu" style="color: #4758AB;">:</span> <span class="st" style="color: #20794D;">".jp-Notebook:focus"</span></span>
+<span id="cb1-32">        <span class="fu" style="color: #4758AB;">}</span></span></code></pre></div>
 <p>Remember to add a trailing comma on the previous entry, and no comma after the final entry.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>With these new keyboard shortcuts, you can quickly run all the cells above your current selection, clear all cell outputs, render all markdown cells, and paste cells above your current selection. By customizing your shortcuts to fit your needs, you can save time and increase your productivity in Jupyter Lab.</p>
 
 
 </section>
 
  ]]></description>
+  <category>setup</category>
   <category>Jupyter</category>
   <category>shortcuts</category>
   <guid>https://sam.ucm.dev/blog/posts/shortcuts/shortcuts.html</guid>
@@ -99,7 +1367,6 @@
 </item>
 <item>
   <title>Startup script for my Linux desktop</title>
-  <dc:creator>Sam Watkins</dc:creator>
   <link>https://sam.ucm.dev/blog/posts/startup/startup.html</link>
   <description><![CDATA[ 
 
@@ -129,13 +1396,18 @@
 <li>Anki - learning with flashcards</li>
 <li>Swatch - my system monitor script</li>
 </ol>
-<p>I am using these workspaces:</p>
+<p>I am currently using these workspaces:</p>
 <ol type="1">
 <li>Entertainment
 <ul>
 <li>playing music</li>
 <li>watching movies</li>
 <li>xterm with GNU screen</li>
+</ul></li>
+<li>Chat and Social
+<ul>
+<li>Discord</li>
+<li>Slack</li>
 </ul></li>
 <li>Miscellaneous
 <ul>
@@ -174,11 +1446,10 @@
 <span id="cb5-2"><span class="st" style="color: #20794D;">"https://trello.com/b/dnuAgKw1/ai"</span> <span class="dt" style="color: #AD0000;">\</span></span>
 <span id="cb5-3"><span class="st" style="color: #20794D;">"https://trello.com/b/y16reUe3/misc"</span> <span class="dt" style="color: #AD0000;">\</span></span>
 <span id="cb5-4"><span class="st" style="color: #20794D;">"https://chat.openai.com/chat"</span> <span class="dt" style="color: #AD0000;">\</span></span>
-<span id="cb5-5"><span class="kw" style="color: #003B4F;">&amp;</span></span>
-<span id="cb5-6"><span class="ex" style="color: null;">chrome_profile</span> Sam <span class="at" style="color: #657422;">--new-window</span> <span class="dt" style="color: #AD0000;">\</span></span>
-<span id="cb5-7"><span class="st" style="color: #20794D;">"https://miniflux.ucm.dev/unread"</span> <span class="dt" style="color: #AD0000;">\</span></span>
-<span id="cb5-8"><span class="st" style="color: #20794D;">"https://www.youtube.com/playlist?list=PLqkzs79RU9yUrYAN083Jbiza9DMqQE1dq"</span> <span class="dt" style="color: #AD0000;">\</span></span>
-<span id="cb5-9"><span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
+<span id="cb5-5"><span class="st" style="color: #20794D;">"https://chat.openai.com/chat"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb5-6"><span class="st" style="color: #20794D;">"https://miniflux.ucm.dev/unread"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb5-7"><span class="st" style="color: #20794D;">"https://www.youtube.com/playlist?list=PLqkzs79RU9yUrYAN083Jbiza9DMqQE1dq"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb5-8"><span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;">gnome-pomodoro</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
@@ -197,17 +1468,16 @@
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Trello <span class="at" style="color: #657422;">-e</span> 0,960,0,960,1080</span>
 <span id="cb8-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> pomodoro <span class="at" style="color: #657422;">-e</span> 0,0,0,400,400</span>
 <span id="cb8-3"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Barrier <span class="at" style="color: #657422;">-e</span> 0,400,0,400,400</span>
-<span id="cb8-4"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Anki <span class="at" style="color: #657422;">-e</span> 0,0,0,960,540</span>
-<span id="cb8-5"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Miniflux <span class="at" style="color: #657422;">-e</span> 0,0,540,960,540</span>
-<span id="cb8-6"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> swatch windowmove 600 100</span>
-<span id="cb8-7"></span>
-<span id="cb8-8"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> Trello pomodoro Anki swatch Trello Miniflux<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span></span>
-<span id="cb8-9">    <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> <span class="st" style="color: #20794D;">"</span><span class="va" style="color: #111111;">$app</span><span class="st" style="color: #20794D;">"</span> <span class="at" style="color: #657422;">-b</span> add,sticky</span>
-<span id="cb8-10"><span class="cf" style="color: #003B4F;">done</span></span>
-<span id="cb8-11"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> pomodoro <span class="at" style="color: #657422;">-b</span> add,above</span>
-<span id="cb8-12"></span>
-<span id="cb8-13"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> barrier<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-c</span> <span class="va" style="color: #111111;">$app</span><span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span>
-<span id="cb8-14"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> swatch pomodoro<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="va" style="color: #111111;">$app</span> windowminimize %@<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span></code></pre></div>
+<span id="cb8-4"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Anki <span class="at" style="color: #657422;">-e</span> 0,0,0,960,1080</span>
+<span id="cb8-5"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> swatch windowmove 600 100</span>
+<span id="cb8-6"></span>
+<span id="cb8-7"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> Trello pomodoro Anki swatch Trello Miniflux<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span></span>
+<span id="cb8-8">    <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> <span class="st" style="color: #20794D;">"</span><span class="va" style="color: #111111;">$app</span><span class="st" style="color: #20794D;">"</span> <span class="at" style="color: #657422;">-b</span> add,sticky</span>
+<span id="cb8-9"><span class="cf" style="color: #003B4F;">done</span></span>
+<span id="cb8-10"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> pomodoro <span class="at" style="color: #657422;">-b</span> add,above</span>
+<span id="cb8-11"></span>
+<span id="cb8-12"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> barrier<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-c</span> <span class="va" style="color: #111111;">$app</span><span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span>
+<span id="cb8-13"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> swatch pomodoro<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="va" style="color: #111111;">$app</span> windowminimize %@<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;">gnome-pomodoro</span> <span class="at" style="color: #657422;">--start</span></span></code></pre></div>
@@ -219,59 +1489,75 @@
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">'. entertain'</span> <span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
 </div>
 </section>
-<section id="apps-on-workspace-2-miscellaneous" class="level3">
-<h3 class="anchored" data-anchor-id="apps-on-workspace-2-miscellaneous">Apps on Workspace 2: Miscellaneous</h3>
+<section id="apps-on-workspace-2-chat-and-social" class="level3">
+<h3 class="anchored" data-anchor-id="apps-on-workspace-2-chat-and-social">Apps on Workspace 2: Chat and Social</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
 <span id="cb11-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-s</span> 1</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;">chrome_profile</span> Sam <span class="at" style="color: #657422;">--new-window</span> <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 1 <span class="kw" style="color: #003B4F;">;</span> <span class="ex" style="color: null;">xtile</span> <span class="at" style="color: #657422;">-w</span> <span class="kw" style="color: #003B4F;">`</span><span class="ex" style="color: null;">xactivewindow</span><span class="kw" style="color: #003B4F;">`</span> /2 1 1</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;">slack</span> <span class="kw" style="color: #003B4F;">&amp;</span> <span class="co" style="color: #5E5E5E;"># --startup &amp;</span></span>
+<span id="cb12-2"><span class="ex" style="color: null;">discord</span> <span class="kw" style="color: #003B4F;">&amp;</span> <span class="co" style="color: #5E5E5E;"># --start-minimized &amp;</span></span>
+<span id="cb12-3"><span class="ex" style="color: null;">chrome_profile</span> Sam <span class="at" style="color: #657422;">--new-window</span> <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 1 <span class="kw" style="color: #003B4F;">;</span> <span class="ex" style="color: null;">xtile</span> <span class="at" style="color: #657422;">-w</span> <span class="kw" style="color: #003B4F;">`</span><span class="ex" style="color: null;">xactivewindow</span><span class="kw" style="color: #003B4F;">`</span> /2 1 1</span>
+<span id="cb12-4"><span class="fu" style="color: #4758AB;">sleep</span> 5</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
-<span id="cb13-2"><span class="ex" style="color: null;">slack</span> <span class="kw" style="color: #003B4F;">&amp;</span> <span class="co" style="color: #5E5E5E;">#--startup &amp;</span></span>
-<span id="cb13-3"><span class="ex" style="color: null;">nautilus</span> ~/plan.dev <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 1<span class="kw" style="color: #003B4F;">;</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> plan.dev <span class="at" style="color: #657422;">-e</span> 0,3640,0,400,400</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Slack <span class="at" style="color: #657422;">-e</span> 0,0,0,960,1080</span>
+<span id="cb13-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Discord <span class="at" style="color: #657422;">-e</span> 0,960,0,960,1080</span></code></pre></div>
+</div>
+</section>
+<section id="apps-on-workspace-2-miscellaneous" class="level3">
+<h3 class="anchored" data-anchor-id="apps-on-workspace-2-miscellaneous">Apps on Workspace 2: Miscellaneous</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb14-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-s</span> 2</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="ex" style="color: null;">sw</span> misc sh</span>
-<span id="cb14-2"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">"stty -ixon; xtile /2+1 1 1 ; sxw misc sh ; exec </span><span class="va" style="color: #111111;">$SHELL</span><span class="st" style="color: #20794D;">"</span> <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 2</span>
-<span id="cb14-3"><span class="ex" style="color: null;">sstuff</span> misc sh <span class="st" style="color: #20794D;">"^L"</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><span class="ex" style="color: null;">chrome_profile</span> Sam <span class="at" style="color: #657422;">--new-window</span> <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 1 <span class="kw" style="color: #003B4F;">;</span> <span class="ex" style="color: null;">xtile</span> <span class="at" style="color: #657422;">-w</span> <span class="kw" style="color: #003B4F;">`</span><span class="ex" style="color: null;">xactivewindow</span><span class="kw" style="color: #003B4F;">`</span> /2 1 1</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb16-2"><span class="ex" style="color: null;">nautilus</span> ~/plan.dev <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 1<span class="kw" style="color: #003B4F;">;</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> plan.dev <span class="at" style="color: #657422;">-e</span> 0,3640,0,400,400</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="ex" style="color: null;">sw</span> misc sh</span>
+<span id="cb17-2"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">"stty -ixon; xtile /2+1 1 1 ; sxw misc sh ; exec </span><span class="va" style="color: #111111;">$SHELL</span><span class="st" style="color: #20794D;">"</span> <span class="kw" style="color: #003B4F;">&amp;</span> <span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb17-3"><span class="ex" style="color: null;">sstuff</span> misc sh <span class="st" style="color: #20794D;">"^L"</span></span></code></pre></div>
 </div>
 </section>
 <section id="apps-on-workspace-3-ai-study" class="level3">
 <h3 class="anchored" data-anchor-id="apps-on-workspace-3-ai-study">Apps on Workspace 3: AI Study</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
-<span id="cb15-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-s</span> 2</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb18-2"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-s</span> 3</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="ex" style="color: null;">zotero</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
-<span id="cb16-2"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">'. ai'</span> <span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><span class="ex" style="color: null;">zotero</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb19-2"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">'. ai'</span> <span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
-<span id="cb17-2"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> zotero windowminimize %@</span>
-<span id="cb17-3"><span class="ex" style="color: null;">discord</span> <span class="kw" style="color: #003B4F;">&amp;</span> <span class="co" style="color: #5E5E5E;">#--start-minimized &amp;</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb20-2"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> zotero windowminimize %@</span></code></pre></div>
 </div>
 </section>
 </section>
 <section id="exporting-the-shell-script" class="level2">
 <h2 class="anchored" data-anchor-id="exporting-the-shell-script">Exporting the shell script</h2>
+<p>I might put this in a separate script or tool later; as it is, I can run it from the notebook.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><span class="co" style="color: #5E5E5E;"># __END__</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><span class="co" style="color: #5E5E5E;"># __END__</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><span class="ex" style="color: null;">jupyter</span> nbconvert <span class="at" style="color: #657422;">--no-prompt</span> <span class="at" style="color: #657422;">--to</span> script startup.ipynb <span class="at" style="color: #657422;">--stdout</span> <span class="dt" style="color: #AD0000;">\</span></span>
-<span id="cb19-2">--TemplateExporter.exclude_raw=True <span class="kw" style="color: #003B4F;">|</span></span>
-<span id="cb19-3"><span class="fu" style="color: #4758AB;">sed</span> <span class="at" style="color: #657422;">-n</span> <span class="st" style="color: #20794D;">'/^# __END__/q; p'</span> <span class="op" style="color: #5E5E5E;">&gt;</span> startup.sh</span>
-<span id="cb19-4"><span class="fu" style="color: #4758AB;">chmod</span> +x startup.sh</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><span class="ex" style="color: null;">jupyter</span> nbconvert <span class="at" style="color: #657422;">--no-prompt</span> <span class="at" style="color: #657422;">--to</span> script startup.ipynb <span class="at" style="color: #657422;">--stdout</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb22-2">--TemplateExporter.exclude_raw=True <span class="kw" style="color: #003B4F;">|</span></span>
+<span id="cb22-3"><span class="fu" style="color: #4758AB;">sed</span> <span class="at" style="color: #657422;">-n</span> <span class="st" style="color: #20794D;">'/^# __END__/q; p'</span> <span class="op" style="color: #5E5E5E;">&gt;</span> startup.sh</span>
+<span id="cb22-4"><span class="fu" style="color: #4758AB;">chmod</span> +x startup.sh</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[NbConvertApp] Converting notebook startup.ipynb to script</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><span class="fu" style="color: #4758AB;">mv</span> <span class="at" style="color: #657422;">-v</span> ./startup.sh ~/local/x/startup.sh</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><span class="fu" style="color: #4758AB;">mv</span> <span class="at" style="color: #657422;">-v</span> ./startup.sh ~/local/x/startup.sh</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>renamed './startup.sh' -&gt; '/home/sam/local/x/startup.sh'</code></pre>
 </div>
@@ -279,25 +1565,88 @@
 </section>
 <section id="logging-out-to-test-the-script" class="level2">
 <h2 class="anchored" data-anchor-id="logging-out-to-test-the-script">Logging out to test the script</h2>
+<p>This notebook can helpfully kill itself, an unusual characteristic for a notebook!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="st" style="color: #20794D;">'Chrome'</span> windowclose %@</span>
-<span id="cb23-2"><span class="fu" style="color: #4758AB;">sleep</span> 1</span>
-<span id="cb23-3"><span class="fu" style="color: #4758AB;">killall</span> screen Xorg</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="st" style="color: #20794D;">'Chrome'</span> windowclose %@</span>
+<span id="cb26-2"><span class="fu" style="color: #4758AB;">sleep</span> 1</span>
+<span id="cb26-3"><span class="fu" style="color: #4758AB;">killall</span> screen Xorg</span></code></pre></div>
 </div>
+<details>
+<summary>
+See also
+</summary>
+<ul>
+<li><a href="https://www.lifeline.org.au/">Lifeline Australia</a></li>
+</ul>
+</details>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In this blog post, I’ve shared my <code>startup.sh</code> script for my Linux desktop, which opens various apps and webpages when I log in and arranges them on my workspaces. I’ve also explained how I test and debug the script, and shown how I am developing it as a Jupyter notebook with the Bash kernel. By exporting the shell script from the notebook, I can easily run it whenever I need to. I hope that this script is useful as an example to others who want to automate their desktop environment and increase their productivity; or at least a little interesting.</p>
+<p>I like this script in that helps me keep my workspaces organized right away when I log in. However, I spend too much time tweaking it, which can eat up valuable time that could be spent on actual work.</p>
+<p>To be honest, I think it was fairly bonkers of me to go to this level of effort to set up my windows just so at startup. You probably shouldn’t imitate such bizarre nerdish behaviour!</p>
+<p>Thanks for reading.</p>
+</section>
+<section id="appendix-1-tools-and-programs-that-i-use-here" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-1-tools-and-programs-that-i-use-here">Appendix 1: tools and programs that I use here</h2>
+<ul>
+<li><a href="https://jupyter.org/">Jupyter notebook</a> with the <a href="https://github.com/takluyver/bash_kernel">Bash kernel</a> for developing and testing my startup script</li>
+<li><a href="https://www.gnu.org/software/bash/">Bash</a> shell scripting language</li>
+<li><a href="https://www.gnome.org/">Gnome</a> desktop environment</li>
+<li><a href="https://www.x.org/">Xorg</a> display server</li>
+<li><a href="http://tripie.sweb.cz/utils/wmctrl/">wmctrl</a> for controlling windows on your desktop</li>
+<li><a href="https://www.semicomplete.com/projects/xdotool/">xdotool</a> for simulating keyboard and mouse input, and controlling windows</li>
+<li><a href="https://www.google.com/chrome/">Chrome</a> web browser</li>
+<li><a href="https://trello.com/">Trello</a> for task planning</li>
+<li><a href="https://github.com/tonyduan/ChatGPT">ChatGPT</a> for an AI assistant</li>
+<li><a href="https://miniflux.app/">Miniflux</a> for a blog reader</li>
+<li><a href="https://apps.ankiweb.net/">Anki</a> for learning with flashcards</li>
+<li><a href="https://github.com/dthree/cash/blob/master/src/commands/swatch.md">Swatch</a> for displaying system information</li>
+<li><a href="https://www.perl.org/">Perl</a> programming language for the xtile script</li>
+<li><a href="https://www.gnu.org/software/screen/">Screen</a> for creating and managing terminal sessions</li>
+<li><a href="https://slack.com/">Slack</a> for team communication</li>
+<li><a href="https://discord.com/">Discord</a> for voice and text chat</li>
+<li><a href="https://wiki.gnome.org/Apps/Nautilus">Nautilus</a> file manager</li>
+<li><a href="https://www.zotero.org/">Zotero</a> for reference management</li>
+<li><a href="https://gnomepomodoro.org/">Gnome Pomodoro</a> for timing my work and taking breaks</li>
+<li><a href="https://en.wikipedia.org/wiki/Xterm">xterm</a> for a command line with a nice bitmap font (misc fixed 6x13)</li>
+<li><a href="https://www.openssh.com/">ssh</a> for connecting to remote servers using the command-line interface.</li>
+<li><a href="https://github.com/debauchee/barrier">Barrier</a> for sharing a keyboard and mouse across multiple computers as a software KVM switch.</li>
+</ul>
+</section>
+<section id="appendix-2-scripts-that-i-wrote-and-used-here" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-2-scripts-that-i-wrote-and-used-here">Appendix 2: scripts that I wrote and used here</h2>
+<ul>
+<li><a href="https://ucm.dev/b/gnome-dark">gnome-dark</a>: A Bash script that sets the Gnome desktop environment to use the Adwaita-dark theme and a dark color scheme.</li>
+<li><a href="https://ucm.dev/b/gnome-light">gnome-light</a>: A Bash script that sets the Gnome desktop environment to use the Adwaita theme and a light color scheme.</li>
+<li><a href="https://ucm.dev/b/connects">connects</a>: A Bash script that connects to several remote hosts using the connect command and runs them in the background.</li>
+<li><a href="https://ucm.dev/b/connect">connect</a>: A Bash script that uses ssh to connect to remote servers specified as command-line arguments, with some connection options set.</li>
+<li><a href="https://ucm.dev/b/chrome_profile">chrome_profile</a>: A Bash script that launches Google Chrome with a specific profile.</li>
+<li><a href="https://ucm.dev/b/chrome_profile_key">chrome_profile_key</a>: A Bash script that returns the key for a specific Chrome profile.</li>
+<li><a href="https://ucm.dev/b/chrome_profiles_list">chrome_profiles_list</a>: A Bash script that lists all Chrome profiles and their keys.</li>
+<li><a href="https://ucm.dev/b/swatch">swatch</a>: A Bash script that launches a terminal window and displays system information using the watch command and other tools.</li>
+<li><a href="https://ucm.dev/t/bin.x11/xtile">xtile</a>: A Perl script that tiles a window on a specific screen, with options for the window size and position.</li>
+<li><a href="https://ucm.dev/t/bin.screen/s">s</a>: A Bash script that launches the screen command with some default options, and any additional arguments.</li>
+<li><a href="https://ucm.dev/t/bin.screen/sw">sw</a>: A Bash script that creates a new screen and window, with an optional directory.</li>
+<li><a href="https://ucm.dev/t/bin.screen/sxw">sxw</a>: A Bash script that attaches to a specific screen window using the screen command.</li>
+<li><a href="https://ucm.dev/t/bin.screen/sstuff">sstuff</a>: A Bash script that sends keystrokes to a specific screen window using the screen command.</li>
+</ul>
 
 
 </section>
 
  ]]></description>
-  <category>startup</category>
+  <category>bad</category>
+  <category>setup</category>
   <category>Linux</category>
   <category>X11</category>
+  <category>tools</category>
+  <category>apps</category>
   <guid>https://sam.ucm.dev/blog/posts/startup/startup.html</guid>
   <pubDate>Thu, 23 Feb 2023 13:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Blogging AI with Jupyter and Quarto</title>
-  <dc:creator>Sam Watkins</dc:creator>
   <link>https://sam.ucm.dev/blog/posts/blogging/blogging.html</link>
   <description><![CDATA[ 
 
@@ -306,39 +1655,56 @@
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>I am starting this blog to record my AI studies, particularly with the <a href="https://fast.ai">fast.ai</a> book and courses.</p>
-<p>In this first post, I’ll detail why and how I’m setting up this blog.</p>
+<p>Welcome to my blog! My name is <a href="https://sam.ucm.dev/">Sam Watkins</a>, and I am a programmer and math enthusiast with a keen interest in artificial intelligence. As part of my journey to learn more about AI, I am starting this blog to document my studies, particularly with the <a href="https://fast.ai">fast.ai</a> book and courses.</p>
+<p>In this first post, I will provide an overview of why I am starting this blog and share some details on how I plan to use Jupyter, Quarto, and nbdev2 tools to create software libraries, documentation, apps, and blog posts. I believe that blogging will not only help me solidify my understanding of AI but also provide a platform to share my insights and get feedback from others in the community. Blogging can be a powerful tool for learning, networking, and personal development.</p>
+<p>I want to note from the beginning, that I am using ChatGPT to help me write better blog posts; but I’m doing most of the work!</p>
 </section>
 <section id="why-write-a-blog" class="level2">
 <h2 class="anchored" data-anchor-id="why-write-a-blog">Why write a blog?</h2>
-<p>It’s important for me to record what I’m learning. If I publish these notes as a blog, I can get feedback and possibly help other people too.</p>
-<p>See also:</p>
+<p>In a previous post on dev.to, I discussed the benefits of keeping a development log. Writing about my progress helps me learn more effectively, and the feedback I receive can be invaluable. I’ve also learned from the success of other developers, like the creator of the game <a href="https://www.pentadact.com/category/making-games/gunpoint/?orderby=date&amp;order=ASC">Gunpoint</a>, who grew a community around his blog and received feedback at every step of his project.</p>
+<p>I hope that by starting this blog, I can experience some of the benefits of blogging for myself and maybe help others in the process. Please leave a comment using the <a href="https://hypothes.is/">hypothes.is</a> plugin on the right side, if you have any thoughts on the topic or suggestions for me as I begin this journey.</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
 <li>This previous post of mine on dev.to: <a href="https://dev.to/gamedev/why-write-a-dev-log-27nh">Why Write a Dev Log?</a></li>
 <li>Rachael Thomas’s post: <a href="https://www.fast.ai/posts/2017-04-06-alternatives.html#why-you-yes-you-should-blog">Why you (yes, you) should blog</a></li>
 <li>Another post from Rachael: <a href="https://www.fast.ai/posts/2019-05-13-blogging-advice.html">Advice for Better Blog Posts</a></li>
+<li>An exemplary dev log: <a href="https://www.pentadact.com/category/making-games/gunpoint/?orderby=date&amp;order=ASC">Gunpoint dev log</a></li>
+<li>An exemplary dev retrospective: <a href="https://www.pentadact.com/2013-10-15-gunpoint-development-breakdown/">Gunpoint dev breakdown</a></li>
 </ul>
+</details>
 </section>
 <section id="why-use-jupyter-and-quarto" class="level2">
 <h2 class="anchored" data-anchor-id="why-use-jupyter-and-quarto">Why use Jupyter and Quarto?</h2>
 <p>The <a href="https://fast.ai">fast.ai</a> team recommends to work in <a href="https://jupyter.org/">Jupyter</a> and blog using <a href="https://quarto.org/">Quarto</a>. Their <a href="https://nbdev.fast.ai/">nbdev2</a> tool also makes use of Quarto. We can work on a notebooks in Jupyter, then run them through nbdev2 and Quarto to produce software libraries, documentation, apps, blog posts, papers, and even books.</p>
-<p>See also:</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
-<li><a href="https://www.fast.ai/posts/2022-07-28-nbdev2.html">nbdev+Quarto: A new secret weapon for productivity</a></li>
+<li><a href="https://www.fast.ai/">fast.ai</a>: A company that provides practical deep learning courses and libraries, as well as open source software tools for building and deploying deep learning models.</li>
+<li><a href="https://www.fast.ai/posts/2022-07-28-nbdev2.html">nbdev+Quarto: A new secret weapon for productivity</a>: The blog post recommending to use Jupyter with nbdev and Quarto.</li>
+<li><a href="https://jupyter.org/">Jupyter</a>: A web-based interactive development environment for creating notebooks, code, and data visualizations. Supports multiple programming languages.</li>
+<li><a href="https://quarto.org/">Quarto</a>: A document automation tool that can be used for creating books, reports, and blogs using Markdown, Jupyter Notebooks, and other file formats.</li>
+<li><a href="https://nbdev.fast.ai/">nbdev</a>: A tool that helps you develop Python packages using Jupyter Notebooks.</li>
 </ul>
+</details>
 </section>
 <section id="installing-the-software" class="level2">
 <h2 class="anchored" data-anchor-id="installing-the-software">Installing the software</h2>
 <p>I am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU. I’ll write more about my setup in another post.</p>
 <p>I downloaded Quarto from their <a href="https://quarto.org/docs/get-started/">Get Started</a> page, and installed it.</p>
-<p>This command installs or upgrades the other software we need:</p>
+<p>To manage the installation of Python packages, I’m using pip, which is a package installer for Python. It’s a command-line utility that helps you install and manage software packages written in Python. You can learn more about pip and its usage from the <a href="https://pip.pypa.io/en/stable/">official pip documentation</a>.</p>
+<p>This command installs or upgrades Jupyter, fastbook, and nbdev Python packages, which I’ll need to use for AI experiments and to help me write my blog.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> jupyter fastbook nbdev</span></code></pre></div>
 </div>
 </section>
 <section id="setting-up-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="setting-up-the-blog">Setting up the blog</h2>
-<p>I already had a git repo called <code>ai</code> in my home directory. The following commands would create it, and don’t do any harm if it’s already there.</p>
+<p>To set up the blog, I first created a Git repository called <code>ai</code> in my home directory. I used the following commands to create the blog project.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="bu" style="color: null;">cd</span></span>
 <span id="cb2-2"><span class="fu" style="color: #4758AB;">mkdir</span> <span class="at" style="color: #657422;">-p</span> ai</span>
@@ -362,45 +1728,65 @@
   - Created posts/_metadata.yml</code></pre>
 </div>
 </div>
-<p>I ran <code>nbdev_install_hooks</code>, which prevents unnecessary git merge conflicts, and allows us to resolve conflicts in Jupyter.</p>
+<p>I also ran the command <code>nbdev_install_hooks</code> to prevent unnecessary Git merge conflicts and enable conflict resolution in Jupyter.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;">nbdev_install_hooks</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Hooks are installed.</code></pre>
 </div>
 </div>
-<p>See also:</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
 <li><a href="https://quarto.org/docs/websites/website-blog.html">Quarto - Creating a Blog</a></li>
 <li><a href="https://www.fast.ai/posts/2022-08-25-jupyter-git.html">The Jupyter+git problem is now solved</a></li>
 <li><a href="https://nbdev.fast.ai/tutorials/git_friendly_jupyter.html">Git-Friendly Jupyter</a></li>
+<li><a href="https://git-scm.com/docs">Git documentation</a></li>
+<li><a href="https://guides.github.com/introduction/git-handbook/">Git Handbook</a></li>
+<li><a href="https://www.codecademy.com/learn/learn-git">Codecademy’s “Learn Git” course</a></li>
+<li><a href="http://tldp.org/LDP/Bash-Beginners-Guide/html/">Bash Guide for Beginners</a></li>
 </ul>
+</details>
 </section>
 <section id="adding-this-post-to-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="adding-this-post-to-the-blog">Adding this post to the blog</h2>
 <p>I had already started writing this post in a Jupyter Lab notebook <code>blogging.ipynb</code>. Now I needed to put it in the right place, so I made a directory for it:</p>
+<p>I started writing this post in a Jupyter Lab notebook called <code>blogging.ipynb</code>. When I got to this point, I needed to put it in the right directory to include it in the blog. I first created a directory called <code>blog/posts/blogging</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="fu" style="color: #4758AB;">mkdir</span> <span class="at" style="color: #657422;">-p</span> blog/posts/blogging</span></code></pre></div>
 </div>
-<p>I then moved this notebook <code>blogging.ipynb</code> into that new <code>blog/posts/blogging</code> directory, directly in Jupyter Lab. There was no need to close the notebook.</p>
+<p>Then I simply moved the <code>blogging.ipynb</code> file to that directory using Jupyter Lab’s file browser. This allowed me to easily include the post in the blog without even having to close the notebook.</p>
 </section>
 <section id="previewing-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="previewing-the-blog">Previewing the blog</h2>
-<p>We can preview the blog, by running this in a terminal:</p>
+<p>Once you’ve set up your blog, you can preview it by running the following command in a terminal:</p>
 <div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;">quarto</span> preview blog</span></code></pre></div>
-<p>Don’t run it in a Jupyter cell, because it doesn’t exit and will hang Jupyter!</p>
-<p>I’m using a few extra options that suit my setup:</p>
+<p>Make sure to run this command outside of Jupyter, as it can cause Jupyter to hang if run in a cell.</p>
+<p>You can also use additional options to customize the preview. For example, if you don’t want to launch a browser, you can use the –no-browser option. If you want to specify a custom port, you can use the –port option followed by the desired port number. Here’s an example of how to use both options:</p>
 <div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;">quarto</span> preview blog <span class="at" style="color: #657422;">--no-browser</span> <span class="at" style="color: #657422;">--port</span> 4242</span></code></pre></div>
+<p>This will start the preview on port 4242 and prevent it from automatically launching a browser. I do it this way myself, because I open the preview window from a separate startup script.</p>
 </section>
 <section id="finishing-up" class="level2">
 <h2 class="anchored" data-anchor-id="finishing-up">Finishing up</h2>
-<p>I removed the example posts, changed the settings, filled in the about page, added links to my socials, and added a profile picture.</p>
-<p>I followed the Quarto doc to enable comments using <a href="https://web.hypothes.is/">Hypothesis</a>, and an RSS feed.</p>
-<p>See also:</p>
+<p>To clean up the blog ready for publishing my first post, I removed the example posts, changed the settings, filled in the about page, added links to my social media profiles, and added a profile picture.</p>
+<p>I also followed the Quarto documentation to enable comments using Hypothesis and an RSS feed for the blog.</p>
+<p>The Hypothesis annotation tool to allow readers to leave comments and annotations on the blog posts. This feature required me to create an Hypothesis account and link it to the blog. It’s functional, but looks and feels different from regular commenting. Please try it out and leave a comment for me.</p>
+<p>For the RSS feed, I followed the Quarto guide to add an RSS feed to the blog. This enables readers to subscribe to the blog and receive updates whenever new posts are published. Personally I am using the Miniflux RSS reader; Newsblur is another good option. After a bit of research, I found that I can follow the comments on my blog using <a href="https://hypothes.is/stream.rss?wildcard_uri=https://sam.ucm.dev/*">this RSS stream</a>.</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
 <li><a href="https://quarto.org/docs/output-formats/html-basics.html#commenting">Quarto - HTML Basics - Commenting</a></li>
 <li><a href="https://quarto.org/docs/websites/website-blog.html#rss-feed">Quarto - Creating a Blog - RSS Feed</a></li>
+<li><a href="https://web.hypothes.is/">Hypothesis</a>: A web-based annotation tool that allows users to highlight and comment on web pages.</li>
+<li><a href="https://en.wikipedia.org/wiki/RSS">RSS</a>: A web feed format used to publish frequently updated content such as blog entries, news headlines, and podcasts.</li>
+<li><a href="https://miniflux.app/">Miniflux</a>: A minimalist and open source RSS reader.</li>
+<li><a href="https://www.newsblur.com/">NewsBlur</a>: A personal news reader that brings people together to talk about the world.</li>
 </ul>
+</details>
 </section>
 <section id="committing-to-git" class="level2">
 <h2 class="anchored" data-anchor-id="committing-to-git">Committing to git</h2>
@@ -415,24 +1801,40 @@
 <span id="cb11-7"><span class="fu" style="color: #4758AB;">git</span> push pi</span></code></pre></div>
 </div>
 <p>I pushed to github, and my two servers <em>opal</em> and <em>pi</em>.</p>
-<p>See also:</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
 <li><a href="https://quarto.org/docs/websites/">Quarto - Websites</a></li>
+<li><a href="https://github.com/">GitHub</a></li>
 </ul>
+</details>
 </section>
 <section id="publishing-the-blog" class="level2">
 <h2 class="anchored" data-anchor-id="publishing-the-blog">Publishing the blog</h2>
-<p>I used a symlink to put the rendered blog into my website at <a href="https://sam.ucm.dev/blog">sam.ucm.dev/blog</a>:</p>
+<p>I used a symlink on my server to put the rendered blog into my website at <a href="https://sam.ucm.dev/blog">sam.ucm.dev/blog</a>:</p>
 <div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="fu" style="color: #4758AB;">ln</span> <span class="at" style="color: #657422;">-s</span> ~/ai/blog/_site ~/www/sam.ucm.dev/blog</span></code></pre></div>
-<p>See also:</p>
+<details>
+<summary>
+See also
+</summary>
 <ul>
 <li><a href="https://quarto.org/docs/publishing/">Quarto - Publishing</a></li>
 </ul>
+</details>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In this post, we’ve seen how to set up a blog using Quarto and Jupyter. These tools allow us to write and publish blog posts as Jupyter notebooks, which can be converted to various formats such as HTML, PDF, and LaTeX, among others. We’ve also looked at using Hypothesis for comments and annotations, and how to commit our changes to git and deploy our blog on a personal server. By following these steps, we can create a blog that showcases our AI studies and provides a platform for getting feedback, sharing knowledge, and building a community.</p>
+<p>One thing I would like to explore further, is a way that I can automatically link to other AI bloggers in the community. Link sharing and discovery is one of the benefits of posting on an off-the-shelf playform, such as <em>Towards Data Science</em>; it would be good to have something similar for indie bloggers. Maybe just an RSS aggregator plugin that would show links to other recent posts from selected friends and communities…</p>
+<p>If you have any questions or suggestions, please leave a comment, if you can figure out how to use Hypothesis. Thanks for reading!</p>
 
 
 </section>
 
  ]]></description>
+  <category>setup</category>
   <category>fastai</category>
   <category>blogging</category>
   <category>Jupyter</category>
