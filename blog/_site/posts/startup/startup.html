@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Sam Watkins">
 <meta name="dcterms.date" content="2023-02-24">
 
 <title>Sam’s AI Blog - Startup script for my Linux desktop</title>
@@ -129,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -150,17 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://sigmoid.social/@sswam"><i class="bi bi-mastodon" role="img">
-</i> 
- <span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://www.linkedin.com/in/ultracode/"><i class="bi bi-linkedin" role="img">
-</i> 
- <span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/sswam/"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://sam.ucm.dev/"><i class="bi bi-house" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -179,11 +168,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Startup script for my Linux desktop</h1>
+      <div class="quarto-title-block"><div><h1 class="title">Startup script for my Linux desktop</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/sswam/ai/blob/main/blog/posts/startup/startup.ipynb"><i class="bi"></i> Code</button></div></div>
                                 <div class="quarto-categories">
-                <div class="quarto-category">startup</div>
-                <div class="quarto-category">Linux</div>
-                <div class="quarto-category">X11</div>
+                <div class="quarto-category">bad</div>
+                <div class="quarto-category">setup</div>
+                <div class="quarto-category">Debian</div>
+                <div class="quarto-category">tools</div>
               </div>
                   </div>
   </div>
@@ -191,12 +181,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   
   <div class="quarto-title-meta">
 
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Sam Watkins </p>
-            </div>
-    </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
@@ -205,6 +189,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">March 3, 2023</p>
+      </div>
+    </div>
       
     </div>
     
@@ -212,7 +202,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#workspaces-and-apps" id="toc-workspaces-and-apps" class="nav-link" data-scroll-target="#workspaces-and-apps">Workspaces and Apps</a></li>
+  <li><a href="#the-startup-script" id="toc-the-startup-script" class="nav-link" data-scroll-target="#the-startup-script">The startup script</a>
+  <ul class="collapse">
+  <li><a href="#common-apps-on-the-left-monitor" id="toc-common-apps-on-the-left-monitor" class="nav-link" data-scroll-target="#common-apps-on-the-left-monitor">Common apps on the left monitor</a></li>
+  <li><a href="#apps-on-workspace-1-entertainment" id="toc-apps-on-workspace-1-entertainment" class="nav-link" data-scroll-target="#apps-on-workspace-1-entertainment">Apps on Workspace 1: Entertainment</a></li>
+  <li><a href="#apps-on-workspace-2-chat-and-social" id="toc-apps-on-workspace-2-chat-and-social" class="nav-link" data-scroll-target="#apps-on-workspace-2-chat-and-social">Apps on Workspace 2: Chat and Social</a></li>
+  <li><a href="#apps-on-workspace-2-miscellaneous" id="toc-apps-on-workspace-2-miscellaneous" class="nav-link" data-scroll-target="#apps-on-workspace-2-miscellaneous">Apps on Workspace 2: Miscellaneous</a></li>
+  <li><a href="#apps-on-workspace-3-ai-study" id="toc-apps-on-workspace-3-ai-study" class="nav-link" data-scroll-target="#apps-on-workspace-3-ai-study">Apps on Workspace 3: AI Study</a></li>
+  </ul></li>
+  <li><a href="#exporting-the-shell-script" id="toc-exporting-the-shell-script" class="nav-link" data-scroll-target="#exporting-the-shell-script">Exporting the shell script</a></li>
+  <li><a href="#logging-out-to-test-the-script" id="toc-logging-out-to-test-the-script" class="nav-link" data-scroll-target="#logging-out-to-test-the-script">Logging out to test the script</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#appendix-1-tools-and-programs-that-i-use-here" id="toc-appendix-1-tools-and-programs-that-i-use-here" class="nav-link" data-scroll-target="#appendix-1-tools-and-programs-that-i-use-here">Appendix 1: tools and programs that I use here</a></li>
+  <li><a href="#appendix-2-scripts-that-i-wrote-and-used-here" id="toc-appendix-2-scripts-that-i-wrote-and-used-here" class="nav-link" data-scroll-target="#appendix-2-scripts-that-i-wrote-and-used-here">Appendix 2: scripts that I wrote and used here</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -242,13 +254,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Anki - learning with flashcards</li>
 <li>Swatch - my system monitor script</li>
 </ol>
-<p>I am using these workspaces:</p>
+<p>I am currently using these workspaces:</p>
 <ol type="1">
 <li>Entertainment
 <ul>
 <li>playing music</li>
 <li>watching movies</li>
 <li>xterm with GNU screen</li>
+</ul></li>
+<li>Chat and Social
+<ul>
+<li>Discord</li>
+<li>Slack</li>
 </ul></li>
 <li>Miscellaneous
 <ul>
@@ -287,97 +304,118 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="st">"https://trello.com/b/dnuAgKw1/ai"</span> <span class="dt">\</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">"https://trello.com/b/y16reUe3/misc"</span> <span class="dt">\</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">"https://chat.openai.com/chat"</span> <span class="dt">\</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&amp;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">chrome_profile</span> Sam <span class="at">--new-window</span> <span class="dt">\</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">"https://miniflux.ucm.dev/unread"</span> <span class="dt">\</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">"https://www.youtube.com/playlist?list=PLqkzs79RU9yUrYAN083Jbiza9DMqQE1dq"</span> <span class="dt">\</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">"https://chat.openai.com/chat"</span> <span class="dt">\</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">"https://miniflux.ucm.dev/unread"</span> <span class="dt">\</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">"https://www.youtube.com/playlist?list=PLqkzs79RU9yUrYAN083Jbiza9DMqQE1dq"</span> <span class="dt">\</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gnome-pomodoro</span> <span class="kw">&amp;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">barrier</span> <span class="kw">&amp;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">anki</span> <span class="kw">&amp;</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">swatch</span> <span class="kw">&amp;</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">flameshot</span> <span class="kw">&amp;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># flameshot &amp;</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># miniflux &amp;</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># chatgpt &amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">discord</span> <span class="at">--start-minimized</span> <span class="kw">&amp;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">slack</span> <span class="at">--startup</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sleep for a bit, and try to get out of the Activities Overview</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 5<span class="kw">;</span> <span class="ex">xdotool</span> key <span class="st">'Super'</span><span class="kw">;</span> <span class="fu">sleep</span> 1 <span class="kw">;</span> <span class="ex">xdotool</span> key <span class="st">'Escape'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sleep for a bit, and try to get out of the Activities Overview</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 5<span class="kw">;</span> <span class="ex">xdotool</span> key <span class="st">'Super'</span><span class="kw">;</span> <span class="fu">sleep</span> 1 <span class="kw">;</span> <span class="ex">xdotool</span> key <span class="st">'Escape'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Trello <span class="at">-e</span> 0,960,0,960,1080</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> pomodoro <span class="at">-e</span> 0,0,0,400,400</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Barrier <span class="at">-e</span> 0,400,0,400,400</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Anki <span class="at">-e</span> 0,0,0,960,1080</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">xdotool</span> search <span class="at">--name</span> swatch windowmove 600 100</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> Trello pomodoro Anki swatch Trello Miniflux<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">wmctrl</span> <span class="at">-r</span> <span class="st">"</span><span class="va">$app</span><span class="st">"</span> <span class="at">-b</span> add,sticky</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> pomodoro <span class="at">-b</span> add,above</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> barrier<span class="kw">;</span> <span class="cf">do</span> <span class="ex">wmctrl</span> <span class="at">-c</span> <span class="va">$app</span><span class="kw">;</span> <span class="cf">done</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> swatch pomodoro<span class="kw">;</span> <span class="cf">do</span> <span class="ex">xdotool</span> search <span class="at">--name</span> <span class="va">$app</span> windowminimize %@<span class="kw">;</span> <span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Trello <span class="at">-e</span> 0,960,0,960,1080</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> pomodoro <span class="at">-e</span> 0,0,0,400,400</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Barrier <span class="at">-e</span> 0,400,0,400,400</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Anki <span class="at">-e</span> 0,0,0,960,540</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Miniflux <span class="at">-e</span> 0,0,540,960,540</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">xdotool</span> search <span class="at">--name</span> swatch windowmove 600 100</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> Trello pomodoro Anki swatch Trello Miniflux<span class="kw">;</span> <span class="cf">do</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">wmctrl</span> <span class="at">-r</span> <span class="st">"</span><span class="va">$app</span><span class="st">"</span> <span class="at">-b</span> add,sticky</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> pomodoro <span class="at">-b</span> add,above</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> barrier<span class="kw">;</span> <span class="cf">do</span> <span class="ex">wmctrl</span> <span class="at">-c</span> <span class="va">$app</span><span class="kw">;</span> <span class="cf">done</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> swatch pomodoro<span class="kw">;</span> <span class="cf">do</span> <span class="ex">xdotool</span> search <span class="at">--name</span> <span class="va">$app</span> windowminimize %@<span class="kw">;</span> <span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gnome-pomodoro</span> <span class="at">--start</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gnome-pomodoro</span> <span class="at">--start</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="apps-on-workspace-1-entertainment" class="level3">
 <h3 class="anchored" data-anchor-id="apps-on-workspace-1-entertainment">Apps on Workspace 1: Entertainment</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">'. entertain'</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">'. entertain'</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="apps-on-workspace-2-chat-and-social" class="level3">
+<h3 class="anchored" data-anchor-id="apps-on-workspace-2-chat-and-social">Apps on Workspace 2: Chat and Social</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slack</span> <span class="kw">&amp;</span> <span class="co"># --startup &amp;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">discord</span> <span class="kw">&amp;</span> <span class="co"># --start-minimized &amp;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">chrome_profile</span> Sam <span class="at">--new-window</span> <span class="kw">&amp;</span> <span class="fu">sleep</span> 1 <span class="kw">;</span> <span class="ex">xtile</span> <span class="at">-w</span> <span class="kw">`</span><span class="ex">xactivewindow</span><span class="kw">`</span> /2 1 1</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Slack <span class="at">-e</span> 0,0,0,960,1080</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Discord <span class="at">-e</span> 0,960,0,960,1080</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="apps-on-workspace-2-miscellaneous" class="level3">
 <h3 class="anchored" data-anchor-id="apps-on-workspace-2-miscellaneous">Apps on Workspace 2: Miscellaneous</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nautilus</span> ~/plan.dev <span class="kw">&amp;</span> <span class="fu">sleep</span> 1<span class="kw">;</span> <span class="ex">wmctrl</span> <span class="at">-r</span> plan.dev <span class="at">-e</span> 0,1920,0,400,400</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">chrome_profile</span> Sam <span class="at">--new-window</span> <span class="kw">&amp;</span> <span class="fu">sleep</span> 1 <span class="kw">;</span> <span class="ex">xtile</span> <span class="at">-w</span> <span class="kw">`</span><span class="ex">xactivewindow</span><span class="kw">`</span> /2 1 1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nautilus</span> ~/plan.dev <span class="kw">&amp;</span> <span class="fu">sleep</span> 1<span class="kw">;</span> <span class="ex">wmctrl</span> <span class="at">-r</span> plan.dev <span class="at">-e</span> 0,3640,0,400,400</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sw</span> misc sh</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">"stty -ixon; xtile /2+1 1 1 ; sxw misc sh ; exec </span><span class="va">$SHELL</span><span class="st">"</span> <span class="kw">&amp;</span> <span class="fu">sleep</span> 2</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ex">sstuff</span> misc sh <span class="st">"^L"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="apps-on-workspace-3-ai-study" class="level3">
 <h3 class="anchored" data-anchor-id="apps-on-workspace-3-ai-study">Apps on Workspace 3: AI Study</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">zotero</span> <span class="kw">&amp;</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">'. ai'</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">zotero</span> <span class="kw">&amp;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">'. ai'</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xdotool</span> search <span class="at">--name</span> zotero windowminimize %@</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xdotool</span> search <span class="at">--name</span> zotero windowminimize %@</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="exporting-the-shell-script" class="level2">
 <h2 class="anchored" data-anchor-id="exporting-the-shell-script">Exporting the shell script</h2>
+<p>I might put this in a separate script or tool later; as it is, I can run it from the notebook.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># __END__</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># __END__</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> nbconvert <span class="at">--no-prompt</span> <span class="at">--to</span> script startup.ipynb <span class="at">--stdout</span> <span class="dt">\</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>--TemplateExporter.exclude_raw=True <span class="kw">|</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-n</span> <span class="st">'/^# __END__/q; p'</span> <span class="op">&gt;</span> startup.sh</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x startup.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> nbconvert <span class="at">--no-prompt</span> <span class="at">--to</span> script startup.ipynb <span class="at">--stdout</span> <span class="dt">\</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>--TemplateExporter.exclude_raw=True <span class="kw">|</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-n</span> <span class="st">'/^# __END__/q; p'</span> <span class="op">&gt;</span> startup.sh</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x startup.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[NbConvertApp] Converting notebook startup.ipynb to script</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="at">-v</span> ./startup.sh ~/local/x/startup.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="at">-v</span> ./startup.sh ~/local/x/startup.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>renamed './startup.sh' -&gt; '/home/sam/local/x/startup.sh'</code></pre>
 </div>
@@ -385,11 +423,72 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="logging-out-to-test-the-script" class="level2">
 <h2 class="anchored" data-anchor-id="logging-out-to-test-the-script">Logging out to test the script</h2>
+<p>This notebook can helpfully kill itself, an unusual characteristic for a notebook!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xdotool</span> search <span class="at">--name</span> <span class="st">'Chrome'</span> windowclose %@</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 1</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">killall</span> screen Xorg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xdotool</span> search <span class="at">--name</span> <span class="st">'Chrome'</span> windowclose %@</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 1</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">killall</span> screen Xorg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<details>
+<summary>
+See also
+</summary>
+<ul>
+<li><a href="https://www.lifeline.org.au/">Lifeline Australia</a></li>
+</ul>
+</details>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In this blog post, I’ve shared my <code>startup.sh</code> script for my Linux desktop, which opens various apps and webpages when I log in and arranges them on my workspaces. I’ve also explained how I test and debug the script, and shown how I am developing it as a Jupyter notebook with the Bash kernel. By exporting the shell script from the notebook, I can easily run it whenever I need to. I hope that this script is useful as an example to others who want to automate their desktop environment and increase their productivity; or at least a little interesting.</p>
+<p>I like this script in that helps me keep my workspaces organized right away when I log in. However, I spend too much time tweaking it, which can eat up valuable time that could be spent on actual work.</p>
+<p>To be honest, I think it was fairly bonkers of me to go to this level of effort to set up my windows just so at startup. You probably shouldn’t imitate such bizarre nerdish behaviour!</p>
+<p>Thanks for reading.</p>
+</section>
+<section id="appendix-1-tools-and-programs-that-i-use-here" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-1-tools-and-programs-that-i-use-here">Appendix 1: tools and programs that I use here</h2>
+<ul>
+<li><a href="https://jupyter.org/">Jupyter notebook</a> with the <a href="https://github.com/takluyver/bash_kernel">Bash kernel</a> for developing and testing my startup script</li>
+<li><a href="https://www.gnu.org/software/bash/">Bash</a> shell scripting language</li>
+<li><a href="https://www.gnome.org/">Gnome</a> desktop environment</li>
+<li><a href="https://www.x.org/">Xorg</a> display server</li>
+<li><a href="http://tripie.sweb.cz/utils/wmctrl/">wmctrl</a> for controlling windows on your desktop</li>
+<li><a href="https://www.semicomplete.com/projects/xdotool/">xdotool</a> for simulating keyboard and mouse input, and controlling windows</li>
+<li><a href="https://www.google.com/chrome/">Chrome</a> web browser</li>
+<li><a href="https://trello.com/">Trello</a> for task planning</li>
+<li><a href="https://github.com/tonyduan/ChatGPT">ChatGPT</a> for an AI assistant</li>
+<li><a href="https://miniflux.app/">Miniflux</a> for a blog reader</li>
+<li><a href="https://apps.ankiweb.net/">Anki</a> for learning with flashcards</li>
+<li><a href="https://github.com/dthree/cash/blob/master/src/commands/swatch.md">Swatch</a> for displaying system information</li>
+<li><a href="https://www.perl.org/">Perl</a> programming language for the xtile script</li>
+<li><a href="https://www.gnu.org/software/screen/">Screen</a> for creating and managing terminal sessions</li>
+<li><a href="https://slack.com/">Slack</a> for team communication</li>
+<li><a href="https://discord.com/">Discord</a> for voice and text chat</li>
+<li><a href="https://wiki.gnome.org/Apps/Nautilus">Nautilus</a> file manager</li>
+<li><a href="https://www.zotero.org/">Zotero</a> for reference management</li>
+<li><a href="https://gnomepomodoro.org/">Gnome Pomodoro</a> for timing my work and taking breaks</li>
+<li><a href="https://en.wikipedia.org/wiki/Xterm">xterm</a> for a command line with a nice bitmap font (misc fixed 6x13)</li>
+<li><a href="https://www.openssh.com/">ssh</a> for connecting to remote servers using the command-line interface.</li>
+<li><a href="https://github.com/debauchee/barrier">Barrier</a> for sharing a keyboard and mouse across multiple computers as a software KVM switch.</li>
+</ul>
+</section>
+<section id="appendix-2-scripts-that-i-wrote-and-used-here" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-2-scripts-that-i-wrote-and-used-here">Appendix 2: scripts that I wrote and used here</h2>
+<ul>
+<li><a href="https://ucm.dev/b/gnome-dark">gnome-dark</a>: A Bash script that sets the Gnome desktop environment to use the Adwaita-dark theme and a dark color scheme.</li>
+<li><a href="https://ucm.dev/b/gnome-light">gnome-light</a>: A Bash script that sets the Gnome desktop environment to use the Adwaita theme and a light color scheme.</li>
+<li><a href="https://ucm.dev/b/connects">connects</a>: A Bash script that connects to several remote hosts using the connect command and runs them in the background.</li>
+<li><a href="https://ucm.dev/b/connect">connect</a>: A Bash script that uses ssh to connect to remote servers specified as command-line arguments, with some connection options set.</li>
+<li><a href="https://ucm.dev/b/chrome_profile">chrome_profile</a>: A Bash script that launches Google Chrome with a specific profile.</li>
+<li><a href="https://ucm.dev/b/chrome_profile_key">chrome_profile_key</a>: A Bash script that returns the key for a specific Chrome profile.</li>
+<li><a href="https://ucm.dev/b/chrome_profiles_list">chrome_profiles_list</a>: A Bash script that lists all Chrome profiles and their keys.</li>
+<li><a href="https://ucm.dev/b/swatch">swatch</a>: A Bash script that launches a terminal window and displays system information using the watch command and other tools.</li>
+<li><a href="https://ucm.dev/t/bin.x11/xtile">xtile</a>: A Perl script that tiles a window on a specific screen, with options for the window size and position.</li>
+<li><a href="https://ucm.dev/t/bin.screen/s">s</a>: A Bash script that launches the screen command with some default options, and any additional arguments.</li>
+<li><a href="https://ucm.dev/t/bin.screen/sw">sw</a>: A Bash script that creates a new screen and window, with an optional directory.</li>
+<li><a href="https://ucm.dev/t/bin.screen/sxw">sxw</a>: A Bash script that attaches to a specific screen window using the screen command.</li>
+<li><a href="https://ucm.dev/t/bin.screen/sstuff">sstuff</a>: A Bash script that sends keystrokes to a specific screen window using the screen command.</li>
+</ul>
 
 
 </section>
@@ -460,6 +559,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,

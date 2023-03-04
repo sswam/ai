@@ -4,12 +4,18 @@ image: profile.jpg
 about:
   template: jolla
   links:
+    - icon: house
+      text: sam.ucm.dev
+      href: https://sam.ucm.dev/
     - icon: mastodon
       text: Mastodon
       href: https://sigmoid.social/@sswam
-#    - icon: twitter
-#      text: Twitter
-#      href: https://twitter.com/ultracodemonkey
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/ultracodemonkey
+    - icon: facebook
+      text: Faceboook
+      href: https://www.facebook.com/sswam
     - icon: linkedin
       text: LinkedIn
       href: https://www.linkedin.com/in/ultracode/
@@ -19,8 +25,8 @@ about:
 
 ---
 
-I'm Sam Watkins, from Melbourne, Australia.
+I'm Sam Watkins, an AI enthusiast based in Melbourne, Australia. I come from a background in computer science and I am interested in helping people to learn using technology. I believe AI has the potential to make a positive impact on society if it doesn't annihilate us all by accident.
 
-I'm recording my AI studies in this blog, specifically with the [fast.ai](https://fast.ai) book and courses.
+In this blog, I'll be sharing my notes and insights from studying the [fast.ai](https://fast.ai) book and courses. My goal is to document my learning journey and provide a resource for others who are interested in learning about AI. Whether you're a beginner or an experienced practitioner, you'll likely be horrified, confused or overwhelmed if you read any of my blog posts!  But maybe you'll find something useful here.
 
-It's important for me to record what I'm learning. If I publish these notes as a blog, I can get feedback and possibly help other people too.
+I'm active on various social networks, so feel free to connect with me on any of these platforms.

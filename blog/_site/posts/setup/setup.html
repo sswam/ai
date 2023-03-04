@@ -6,10 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Sam Watkins">
-<meta name="dcterms.date" content="2023-02-24">
+<meta name="dcterms.date" content="2023-03-03">
 
-<title>Sam’s AI Blog - My setup for AI work on my Linux PC</title>
+<title>Sam’s AI Blog - My setup for AI work on my Debian PC</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -129,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -150,17 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://sigmoid.social/@sswam"><i class="bi bi-mastodon" role="img">
-</i> 
- <span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://www.linkedin.com/in/ultracode/"><i class="bi bi-linkedin" role="img">
-</i> 
- <span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/sswam/"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://sam.ucm.dev/"><i class="bi bi-house" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -179,12 +168,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">My setup for AI work on my Linux PC</h1>
+      <div class="quarto-title-block"><div><h1 class="title">My setup for AI work on my Debian PC</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/sswam/ai/blob/main/blog/posts/setup/setup.ipynb"><i class="bi"></i> Code</button></div></div>
                                 <div class="quarto-categories">
-                <div class="quarto-category">fastai</div>
                 <div class="quarto-category">setup</div>
+                <div class="quarto-category">Debian</div>
+                <div class="quarto-category">fastai</div>
                 <div class="quarto-category">Python</div>
-                <div class="quarto-category">pip</div>
+                <div class="quarto-category">CUDA</div>
               </div>
                   </div>
   </div>
@@ -192,17 +182,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   
   <div class="quarto-title-meta">
 
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Sam Watkins </p>
-            </div>
-    </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">February 24, 2023</p>
+        <p class="date">March 3, 2023</p>
       </div>
     </div>
     
@@ -213,37 +197,288 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#disclaimer-what-you-should-do-instead" id="toc-disclaimer-what-you-should-do-instead" class="nav-link active" data-scroll-target="#disclaimer-what-you-should-do-instead">Disclaimer: What you should do instead</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#debian-apt-setup" id="toc-debian-apt-setup" class="nav-link" data-scroll-target="#debian-apt-setup">Debian apt setup</a>
+  <ul class="collapse">
+  <li><a href="#dont-break-debian-release-pinning" id="toc-dont-break-debian-release-pinning" class="nav-link" data-scroll-target="#dont-break-debian-release-pinning">Don’t break Debian: release pinning</a></li>
+  <li><a href="#my-main-apt-sources.list" id="toc-my-main-apt-sources.list" class="nav-link" data-scroll-target="#my-main-apt-sources.list">My main apt sources.list</a></li>
+  <li><a href="#apt-sources-for-nvidia-cuda-cudnn-tensorrt-and-containers" id="toc-apt-sources-for-nvidia-cuda-cudnn-tensorrt-and-containers" class="nav-link" data-scroll-target="#apt-sources-for-nvidia-cuda-cudnn-tensorrt-and-containers">Apt sources for NVIDIA CUDA, cuDNN, TensorRT, and containers</a></li>
+  <li><a href="#apt-sources-for-old-versions-of-python" id="toc-apt-sources-for-old-versions-of-python" class="nav-link" data-scroll-target="#apt-sources-for-old-versions-of-python">Apt sources for old versions of Python</a></li>
+  </ul></li>
+  <li><a href="#install-required-debian-packages" id="toc-install-required-debian-packages" class="nav-link" data-scroll-target="#install-required-debian-packages">Install required Debian packages</a>
+  <ul class="collapse">
+  <li><a href="#python-3.10" id="toc-python-3.10" class="nav-link" data-scroll-target="#python-3.10">Python 3.10</a></li>
+  <li><a href="#old-and-alpha-versions-of-python-from-deadsnakes" id="toc-old-and-alpha-versions-of-python-from-deadsnakes" class="nav-link" data-scroll-target="#old-and-alpha-versions-of-python-from-deadsnakes">Old and alpha versions of Python, from deadsnakes</a></li>
+  <li><a href="#nvidia-cuda" id="toc-nvidia-cuda" class="nav-link" data-scroll-target="#nvidia-cuda">NVIDIA CUDA</a></li>
+  <li><a href="#nvidia-container-runtime" id="toc-nvidia-container-runtime" class="nav-link" data-scroll-target="#nvidia-container-runtime">NVIDIA Container Runtime</a></li>
+  <li><a href="#nvidia-cudnn" id="toc-nvidia-cudnn" class="nav-link" data-scroll-target="#nvidia-cudnn">NVIDIA cuDNN</a></li>
+  <li><a href="#nvidia-tensorrt" id="toc-nvidia-tensorrt" class="nav-link" data-scroll-target="#nvidia-tensorrt">NVIDIA TensorRT</a></li>
+  </ul></li>
+  <li><a href="#install-rust" id="toc-install-rust" class="nav-link" data-scroll-target="#install-rust">Install Rust</a></li>
+  <li><a href="#python-environments" id="toc-python-environments" class="nav-link" data-scroll-target="#python-environments">Python environments</a>
+  <ul class="collapse">
+  <li><a href="#the-base-venv-python3.10-ai" id="toc-the-base-venv-python3.10-ai" class="nav-link" data-scroll-target="#the-base-venv-python3.10-ai">The base venv python3.10-ai</a></li>
+  <li><a href="#the-secondary-venv-python3.10-webui" id="toc-the-secondary-venv-python3.10-webui" class="nav-link" data-scroll-target="#the-secondary-venv-python3.10-webui">The secondary venv python3.10-webui</a></li>
+  <li><a href="#stable-diffusion-webui" id="toc-stable-diffusion-webui" class="nav-link" data-scroll-target="#stable-diffusion-webui">stable-diffusion-webui</a></li>
+  <li><a href="#compare-the-two-venvs" id="toc-compare-the-two-venvs" class="nav-link" data-scroll-target="#compare-the-two-venvs">Compare the two venvs</a></li>
+  <li><a href="#check-disk-usage-and-savings" id="toc-check-disk-usage-and-savings" class="nav-link" data-scroll-target="#check-disk-usage-and-savings">Check disk usage and savings</a></li>
+  <li><a href="#save-the-setup-in-a-git-repo" id="toc-save-the-setup-in-a-git-repo" class="nav-link" data-scroll-target="#save-the-setup-in-a-git-repo">Save the setup in a git repo</a></li>
+  </ul></li>
+  <li><a href="#optional-extras" id="toc-optional-extras" class="nav-link" data-scroll-target="#optional-extras">Optional extras</a>
+  <ul class="collapse">
+  <li><a href="#building-xformers" id="toc-building-xformers" class="nav-link" data-scroll-target="#building-xformers">Building xformers</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
+<section id="disclaimer-what-you-should-do-instead" class="level2">
+<h2 class="anchored" data-anchor-id="disclaimer-what-you-should-do-instead">Disclaimer: What you should do instead</h2>
+<ul>
+<li>This post on the Fastai forum is helpful: <a href="https://forums.fast.ai/t/for-those-who-run-their-own-ai-box-or-want-to/96064">For those who run their own AI box, or want to</a>.</li>
+<li>If you use Ubuntu, <a href="https://lambdalabs.com/lambda-stack-deep-learning-software">Lambda Stack</a> looks good.</li>
+</ul>
+</section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>I am using my home PC, with Debian 12 “bookworm” (testing) and an NVIDIA GPU.</p>
-<p>The following setup is <strong>not recommended</strong> unless you know what you’re doing with Linux, and probably not even then.</p>
-<p>I decided not to use conda, virtualenv, or docker. Instead, I installed the necessary Python modules under <code>/usr/local</code> with <code>pip</code>. This way I can use my AI tools directly from the command line and other scripts, like any other tools.</p>
+<p>This blog post is highly technical, so with the help of <em>ChatGPT</em> I have included a glossary of terms and concepts for each section. Thanks <em>ChatGPT</em>, I wouldn’t have done that without you!</p>
+<p>I am using my home PC for AI work, with Debian GNU/Linux 12 “bookworm” (testing) and an NVIDIA GPU.</p>
+<p>The main AI tools that I use are:</p>
+<ul>
+<li><a href="https://jupyter.org/">Jupyter</a> for experiments, development and blogging;</li>
+<li><a href="https://www.fast.ai/">fastai</a> for training neural networks;</li>
+<li>Huggingface tools such as transformers and diffusers;</li>
+<li>PyTorch, Tensorflow and other lower-level AI libraries; and</li>
+<li><a href="https://github.com/AUTOMATIC1111">stable-diffusion-webui</a> for experimenting with AI image generation.</li>
+</ul>
+<p>This document is mostly for my own reference. It wasn’t so easy getting everything working nicely and I want to have a record of how I did it. I don’t recommend that you try to do this unless you are experienced with Debian, and you don’t mind taking time to deal with problems when they occur.</p>
+<p>I wanted to avoid using docker, conda, or Python venvs. Instead, I installed the necessary Python modules under <code>/usr/local</code> with <code>pip</code>. I was thinking that I would be able to use my AI tools directly from the command line and other scripts, like any other tools.</p>
+<p>This worked for a little while, but then Debian started using Python 3.11 for their default Python. Torch isn’t compatible with Python 3.11 yet, and everything broke for me.</p>
+<p>After trying to fix it for a while and encountering numerous problems, I decided to switch to using Python 3.10. After more problems, I switched to using Python 3.10 venvs. I think that the original method of installing under <code>/usr/local</code> could work, but the Debian python packages are in a <del>mess</del> state of flux at the moment.</p>
+<p>As they say, using a virtual environment is a best practice in Python development and can help avoid issues with package conflicts and dependency management. So, venvs it is!</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>conda: a package management system and environment management system for installing multiple versions of software packages and their dependencies, including both Python and non-Python packages.</li>
+<li>Debian: a free and open-source operating system based on the Linux kernel, widely used for servers and workstations</li>
+<li>Debian “testing”: a rolling release version of Debian that is in the process of being tested for the next stable release, and contains newer packages than the current stable release. It is not recommended for production use.</li>
+<li>dependency management: the process of identifying and resolving dependencies between software packages, to ensure that they can be installed and run together without conflicts</li>
+<li>docker: a platform for developing, shipping, and running applications using containers, which are lightweight, portable, and self-contained environments that run applications and their dependencies.</li>
+<li>Fastai: a free, open-source deep learning library built on top of PyTorch that provides a high-level API and a range of state-of-the-art models and techniques</li>
+<li>GNU: A project started by Richard Stallman in 1983 to create a free and open-source operating system, consisting of a complete set of tools and utilities to replace proprietary software. GNU stands for “GNU’s Not Unix”.</li>
+<li>GNU/Linux: A term used to describe the operating system that consists of the GNU tools and the Linux kernel. The GNU tools provide the user interface and the software development tools, while the Linux kernel provides the low-level system functions, such as process management, memory management, and device drivers.</li>
+<li>Hugging Face 🤗: a company that develops tools for building machine learning apps, with a focus on natural language processing (NLP).</li>
+<li>Hugging Face Diffusers: a popular open-source library that provides pretrained vision and audio diffusion models, and serves as a modular toolbox for inference and training</li>
+<li>Hugging Face Hub: a platform that allows users to share machine learning models and datasets.</li>
+<li>Jupyter: an open-source web application that allows users to create and share documents that contain live code, equations, visualizations and narrative text</li>
+<li>Linux: A kernel, or the core component of an operating system, originally created by Linus Torvalds in 1991. Linux is based on Unix, and is released under an open-source license, which allows anyone to modify and distribute the source code. The combination of the Linux kernel and the GNU tools forms the GNU/Linux operating system.</li>
+<li>Neural networks: a machine learning technique that allows computers to learn from data by adjusting the strengths of connections between neurons</li>
+<li>NVIDIA GPU: a graphics processing unit manufactured by NVIDIA that is commonly used for machine learning and other compute-intensive tasks</li>
+<li>package conflicts: situations where two or more Python packages require different versions of the same dependency, leading to issues when trying to install or run the packages together</li>
+<li>pip: a package installer for Python that allows you to easily install and manage third-party packages and their dependencies. It is commonly used with virtual environments to manage Python package dependencies.</li>
+<li>PyTorch: a popular open-source machine learning library based on the Torch library</li>
+<li>Stable-diffusion-webui: an open-source web user interface for state-of-the-art image generation b based on stable diffusion, by automatic1111</li>
+<li>Tensorflow: an open-source machine learning library developed by Google Brain Team</li>
+<li>transformers: a state-of-the-art library for natural language processing (NLP) tasks such as text classification and question answering, built by Huggingface</li>
+<li>/usr/local: a directory in Unix-like operating systems that is typically used for installing software manually, outside of the system package manager.</li>
+<li>virtual environment (venv): a self-contained Python environment that allows you to install and manage packages without affecting the system-level Python installation or other virtual environments</li>
+</ul>
+</details>
 </section>
-<section id="allow-myself-to-install-packages-to-usrlocal" class="level2">
-<h2 class="anchored" data-anchor-id="allow-myself-to-install-packages-to-usrlocal">Allow myself to install packages to /usr/local</h2>
-<p>It’s not safe to run <code>pip install -U</code> as root. It will merrily remove files from Debian-packaged Python modules under <code>/usr/lib</code>, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under <code>/usr/local</code> via the <code>staff</code> group. I do the same for <code>/opt</code> because I want to upgrade Rust from my own user ID also:</p>
+<section id="debian-apt-setup" class="level2">
+<h2 class="anchored" data-anchor-id="debian-apt-setup">Debian apt setup</h2>
+<p>I installed some NVIDIA packages and alternative Python versions from repositories which are intended for Ubuntu, which is a bit hacky, but it can work. The following shows how to create a <a href="https://wiki.debian.org/DontBreakDebian#Don.27t_make_a_FrankenDebian">FrankenDebian</a> install using some packages that were intended for Ubuntu, without totally trashing your system.</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>FrankenDebian: a term used to describe a Debian installation that has been modified or customized in non-standard ways, often resulting in instability or other issues</li>
+<li>NVIDIA packages: software components and drivers provided by NVIDIA Corporation to support their graphics processing units (GPUs)</li>
+<li>Python versions: different releases of the Python programming language, each with its own set of features and bug fixes</li>
+<li>repositories: online locations where software packages can be downloaded and installed from, typically maintained by a software distributor or community</li>
+<li>Ubuntu: a popular distribution of the GNU/Linux operating system, known for its ease of use and large user community</li>
+</ul>
+</details>
+<section id="dont-break-debian-release-pinning" class="level3">
+<h3 class="anchored" data-anchor-id="dont-break-debian-release-pinning">Don’t break Debian: release pinning</h3>
+<p>Release pinning in Debian is a way of specifying which versions of packages to install from which Debian releases. The code snippet provided shows a file I added called <code>99dontbreakdebian</code> in the <code>/etc/apt/preferences.d/</code> directory, with pins for various package releases. These pins specify a release or origin and a priority, which determines which package version to install if multiple versions are available. By setting these pins, I can ensure that my system installs packages from the desired release and avoid accidentally breaking the system by installing incompatible package versions, while still being able to install packages from other sources as needed.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> adduser <span class="va">$USER</span> staff</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chgrp <span class="at">-R</span> staff /usr/local /opt</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chmod <span class="at">-R</span> g+w /usr/local /opt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /etc/apt/preferences.d/99dontbreakdebian</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Package: *
+Pin: release o=Debian,a=experimental
+Pin-Priority: 1
+
+Package: *
+Pin: release o=Debian,a=unstable
+Pin-Priority: 90
+
+Package: *
+Pin: release a=focal
+Pin-Priority: 70
+
+Package: *
+Pin: release a=jammy
+Pin-Priority: 80
+
+Package: *
+Pin: release o=LP-PPA-deadsnakes
+Pin-Priority: 90
+
+Package: *
+Pin: origin ppa.launchpad.net
+Pin-Priority: 90
+
+Package: *
+Pin: release o=Debian
+Pin-Priority: 990</code></pre>
 </div>
-<p>This is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.</p>
-<p>In order to upgrade a pip package where the same package was also installed in <code>/usr/lib</code> by dpkg, I need to use <code>pip -I -U packagename</code>. The <code>-I</code> flag tells it to ignore installed packages, i.e.&nbsp;don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.</p>
-<p>This setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.</p>
-<p>If you try to downgrade a package, and If multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, the sym</p>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>Release pinning: A way of specifying which versions of packages to install from which Debian releases.</li>
+<li>/etc/apt/preferences.d/: A directory in Debian where you can add files to specify package release pins.</li>
+<li>Pin: A rule that specifies a release or origin and a priority for a package.</li>
+<li>Experimental: The Debian release channel where packages are the least stable, but often contain the latest features and updates.</li>
+<li>Unstable: The Debian release channel where packages are more stable than experimental, but still not considered release quality.</li>
+<li>Focal and Jammy: Ubuntu release code names.</li>
+<li>LP-PPA-deadsnakes: A Personal Package Archive (PPA) on Launchpad for providing alternative versions of Python for Ubuntu and Debian systems.</li>
+</ul>
+</details>
 </section>
-<section id="enable-switching-the-system-python-version" class="level2">
-<h2 class="anchored" data-anchor-id="enable-switching-the-system-python-version">Enable switching the system python version</h2>
-<p>The default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet:</p>
+<section id="my-main-apt-sources.list" class="level3">
+<h3 class="anchored" data-anchor-id="my-main-apt-sources.list">My main apt sources.list</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.11</span> <span class="at">-m</span> pip install torchvision</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /etc/apt/sources.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb http://deb.debian.org/debian/ bookworm main contrib non-free
+deb http://deb.debian.org/debian/ sid main contrib non-free
+deb-src http://deb.debian.org/debian/ bookworm main contrib non-free
+deb-src http://deb.debian.org/debian/ sid main contrib non-free
+
+deb http://security.debian.org/debian-security bookworm-security main contrib non-free
+deb-src http://security.debian.org/debian-security bookworm-security main contrib non-free
+
+deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free
+deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free
+
+deb http://deb.debian.org/debian/ bookworm-backports main contrib non-free
+deb-src http://deb.debian.org/debian/ bookworm-backports main contrib non-free
+
+deb http://deb.debian.org/debian/ experimental main contrib non-free
+deb-src http://deb.debian.org/debian/ experimental main contrib non-free</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>sources.list: a configuration file in Debian-based systems that specifies the package repositories from which the system can download and install software.</li>
+<li>deb: a Debian binary package format used to distribute software packages for Debian and its derivatives, including Ubuntu and Mint.</li>
+<li>bookworm: This is the codename for the Debian 12 release, currently in testing, which will become the next stable release.</li>
+<li>sid: the codename for Debian’s unstable release.</li>
+<li>main: This is one of the Debian software repositories, which contains the core packages that make up the Debian operating system.</li>
+<li>contrib and non-free: two categories of software packages in Debian that include packages with dependencies on non-free or proprietary software. deb-src: This stands for “debian source”. It refers to the software source code repositories for Debian, which users can access in order to download, modify, and compile the source code of various packages.</li>
+<li>security: This is the Debian repository that contains security updates for Debian packages. It is important to include this repository in your sources.list file to ensure that your system stays secure.</li>
+<li>backports: This is the Debian repository that contains newer versions of packages that have been backported from newer Debian releases.</li>
+<li>experimental repo: This is the Debian repository that contains packages that are still in the testing phase and are not yet stable enough for inclusion in the main Debian repositories.</li>
+</ul>
+</details>
+</section>
+<section id="apt-sources-for-nvidia-cuda-cudnn-tensorrt-and-containers" class="level3">
+<h3 class="anchored" data-anchor-id="apt-sources-for-nvidia-cuda-cudnn-tensorrt-and-containers">Apt sources for NVIDIA CUDA, cuDNN, TensorRT, and containers</h3>
+<p>We will use some packages that were built for Ubuntu, but it doesn’t seem to cause a problem.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /etc/apt/sources.list.d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> cuda-debian11-x86_64.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/ /</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> cudnn-local-debian11-8.6.0.163.list </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb [signed-by=/usr/share/keyrings/cudnn-local-C922C4FD-keyring.gpg] file:///var/cudnn-local-repo-debian11-8.6.0.163 /</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> nv-tensorrt-local-ubuntu2204-8.5.3-cuda-11.8.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb [signed-by=/usr/share/keyrings/nv-tensorrt-local-3E951519-keyring.gpg] file:///var/nv-tensorrt-local-repo-ubuntu2204-8.5.3-cuda-11.8 /</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> nvidia-container-runtime.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb https://nvidia.github.io/libnvidia-container/stable/debian11/$(ARCH) /
+# deb https://nvidia.github.io/libnvidia-container/experimental/debian10/$(ARCH) /
+deb https://nvidia.github.io/nvidia-container-runtime/stable/debian11/$(ARCH) /
+# deb https://nvidia.github.io/nvidia-container-runtime/experimental/debian10/$(ARCH) /</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>NVIDIA CUDA: a parallel computing platform and programming model for NVIDIA GPUs</li>
+<li>cuDNN: a GPU-accelerated library for deep neural networks</li>
+<li>TensorRT: a high-performance deep learning inference optimizer and runtime library</li>
+<li>Containers: lightweight, standalone executables that include everything needed to run a piece of software, including the code, libraries, and system tools</li>
+<li>NVIDIA container runtime: a platform developed by NVIDIA to support containerized applications that require access to GPU resources.</li>
+</ul>
+</details>
+</section>
+<section id="apt-sources-for-old-versions-of-python" class="level3">
+<h3 class="anchored" data-anchor-id="apt-sources-for-old-versions-of-python">Apt sources for old versions of Python</h3>
+<p>The “deadsnakes” PPA was built for Ubuntu, but works fine on Debian too.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> deadsnakes.list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>deb http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy main
+deb-src http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy main</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>deadsnakes: A Personal Package Archive (PPA) on Launchpad for providing alternative versions of Python for Ubuntu and Debian systems.</li>
+<li>PPA: Stands for Personal Package Archive, a software repository for Ubuntu users that allows them to distribute software and updates that are not available in official Ubuntu repositories.</li>
+<li>jammy: The code name for Ubuntu 22.04.2 LTS (Jammy Jellyfish), the version of Ubuntu that the deadsnakes PPA was built for.</li>
+</ul>
+</details>
+</section>
+</section>
+<section id="install-required-debian-packages" class="level2">
+<h2 class="anchored" data-anchor-id="install-required-debian-packages">Install required Debian packages</h2>
+<section id="python-3.10" class="level3">
+<h3 class="anchored" data-anchor-id="python-3.10">Python 3.10</h3>
+<p>As I mentioned, Debian recently started using Python 3.11 for their default Python, and Torch isn’t compatible with Python 3.11 yet:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.11</span> <span class="at">-m</span> pip install <span class="at">--break-system-packages</span> torchvision</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>ERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)
 ERROR: No matching distribution found for torchvision
@@ -253,162 +488,302 @@ ERROR: No matching distribution found for torchvision
 <pre><code>: 1</code></pre>
 </div>
 </div>
-<p>I’m leaving this section in, however I have since switched to using Python 3.11 and nightly builds of torch.</p>
-<p>Anyway, let’s enable switching the system Python version back to 3.10, using <code>update-alternatives</code>.</p>
-<p>First, note that we can undo this change later, if necessary, as follows:</p>
+<p>I tried using nightly Torch, but there were more compatibility problems. So I decided to go back to using Python 3.10 for AI work:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> python3</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--remove-all</span> pydoc3</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> python3.11 /usr/bin/python3</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-sf</span> pydoc3.11 /usr/bin/pydoc3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>We can set up alternatives for <code>python3</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.11 11</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/python3 python3 /usr/bin/python3.10 10</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sudo update-alternatives --set python3 /usr/bin/python3.10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-qq</span> python3.10-venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>update-alternatives: using /usr/bin/python3.11 to provide /usr/bin/python3 (python3) in auto mode
-update-alternatives: using /usr/bin/python3.10 to provide /usr/bin/python3 (python3) in manual mode</code></pre>
+<pre><code>Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ python3.10-venv : Depends: python3.10-distutils but it is not installable
+E: Unable to correct problems, you have held broken packages.</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>: 100</code></pre>
 </div>
 </div>
-<p>and do the same for <code>pydoc3</code>:</p>
+<p>Unfortunately, the packaging for <code>python3.10-venv</code> is currently broken. I solved this by making a <code>python3.10-distutils-bogus</code> package, like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-alternatives <span class="at">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/pkg</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> python3.10-distutils-bogus</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>update-alternatives: using /usr/bin/pydoc3.11 to provide /usr/bin/pydoc3 (pydoc3) in auto mode
-update-alternatives: using /usr/bin/pydoc3.10 to provide /usr/bin/pydoc3 (pydoc3) in manual mode</code></pre>
+<pre><code>Section: python
+Priority: optional
+Standards-Version: 3.9.2
+
+Package: python3.10-distutils-bogus
+Version: 1.0
+Maintainer: Sam Watkins &lt;sam@ucm.dev&gt;
+Provides: python3.10-distutils
+Description: Dummy package to satisfy python3.10-distutils</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">update-alternatives</span> <span class="at">--list</span> python3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">equivs-build</span> python3.10-distutils-bogus</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>/usr/bin/python3.10
-/usr/bin/python3.11</code></pre>
+<pre><code>dpkg-buildpackage: info: source package python3.10-distutils-bogus
+dpkg-buildpackage: info: source version 1.0
+dpkg-buildpackage: info: source distribution unstable
+dpkg-buildpackage: info: source changed by Sam Watkins &lt;sam@ucm.dev&gt;
+dpkg-buildpackage: info: host architecture amd64
+ dpkg-source --before-build .
+ debian/rules clean
+dh clean
+   dh_clean
+ debian/rules binary
+dh binary
+   dh_update_autotools_config
+   dh_autoreconf
+   create-stamp debian/debhelper-build-stamp
+   dh_prep
+   dh_auto_install --destdir=debian/python3.10-distutils-bogus/
+   dh_install
+   dh_installdocs
+   dh_installchangelogs
+   dh_perl
+   dh_link
+   dh_strip_nondeterminism
+   dh_compress
+   dh_fixperms
+   dh_missing
+   dh_installdeb
+   dh_gencontrol
+   dh_md5sums
+   dh_builddeb
+dpkg-deb: building package 'python3.10-distutils-bogus' in '../python3.10-distutils-bogus_1.0_all.deb'.
+ dpkg-genbuildinfo --build=binary -O../python3.10-distutils-bogus_1.0_amd64.buildinfo
+ dpkg-genchanges --build=binary -O../python3.10-distutils-bogus_1.0_amd64.changes
+dpkg-genchanges: info: binary-only upload (no source code included)
+ dpkg-source --after-build .
+dpkg-buildpackage: info: binary-only upload (no source included)
+
+The package has been created.
+Attention, the package has been created in the current directory,
+not in ".." as indicated by the message above!</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">update-alternatives</span> <span class="at">--list</span> pydoc3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./python3.10-distutils-bogus_1.0_all.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>/usr/bin/pydoc3.10
-/usr/bin/pydoc3.11</code></pre>
+<pre><code>(Reading database ... 1158515 files and directories currently installed.)
+Preparing to unpack .../python3.10-distutils-bogus_1.0_all.deb ...
+Unpacking python3.10-distutils-bogus (1.0) over (1.0) ...
+Setting up python3.10-distutils-bogus (1.0) ...</code></pre>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get <span class="at">-q</span> install python3.10-venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading package lists...
+Building dependency tree...
+Reading state information...
+python3.10-venv is already the newest version (3.10.10-2).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>Debian package dependencies: packages that are required for a specific package to install and function properly</li>
+<li>python3.11: the default version of Python now used in “bookworm” the latest Debian testing release, and “sid” (unstable))</li>
+<li>python3.10-venv: A package that provides the “venv” module for Python 3.10, which is used to create Python virtual environments.</li>
+<li>python3.10-distutils: a module in Python 3.10 that provides tools for building and installing Python modules and packages</li>
+<li>equivs-build: a tool for creating Debian packages that provide empty or dummy packages to satisfy dependencies</li>
+<li>dpkg-buildpackage: a tool for building Debian packages from source code</li>
+<li>broken packages: Packages that cannot be installed due to missing dependencies or conflicts with other packages.</li>
+<li>Torch: A popular machine learning library, which is not compatible with Python 3.11 yet.</li>
+<li>Python 3.10: A version of Python that is compatible with Torch.</li>
+<li>Maintainer: The person or organization responsible for maintaining a package in the Debian package repository.</li>
+<li>Provides: A field in a Debian package control file that specifies the name of a package that the current package provides. This can be used to satisfy dependencies of other packages that require the provided package.</li>
+</ul>
+</details>
 </section>
-<section id="install-rust" class="level2">
-<h2 class="anchored" data-anchor-id="install-rust">Install Rust</h2>
-<p>Some Python modules now depend on Rust to build. I want to install Rust system-wide, in <code>/opt/rust</code>:</p>
+<section id="old-and-alpha-versions-of-python-from-deadsnakes" class="level3">
+<h3 class="anchored" data-anchor-id="old-and-alpha-versions-of-python-from-deadsnakes">Old and alpha versions of Python, from deadsnakes</h3>
+<p>I’m not actually using these alternative Python packages for AI at the moment.</p>
+<p>However, it’s often useful to be able to use different versions of Python, so it’s an important part of my setup.</p>
+<ul>
+<li>Python 3.11 is the new default version for Debian.</li>
+<li>Python 3.10 is still available in Debian, it’s the one we need to use.</li>
+<li>I have Python 2.7 left over from a previous Debian release.</li>
+<li>I installed 3.7, 3.8, 3.9 and 3.12 from deadsnakes.</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /tmp</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> https://sh.rustup.rs <span class="op">&gt;</span> install_rust.sh</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> RUSTUP_HOME=/opt/rust CARGO_HOME=/opt/rust sh ./install_rust.sh <span class="at">-y</span> <span class="at">--no-modify-path</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-qq</span> <span class="at">-t</span> jammy python3.7-venv python3.8-venv python3.9-venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>info: downloading installer
-info: profile set to 'default'
-info: default host triple is x86_64-unknown-linux-gnu
-warning: Updating existing toolchain, profile choice will be ignored
-info: syncing channel updates for 'stable-x86_64-unknown-linux-gnu'
-info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
-
-  stable-x86_64-unknown-linux-gnu unchanged - rustc 1.67.1 (d5a82bbd2 2023-02-07)
-
-
-Rust is installed now. Great!
-
-To get started you need Cargo's bin directory (/opt/rust/bin) in your PATH
-environment variable. This has not been done automatically.
-
-To configure your current shell, run:
-source "/opt/rust/env"</code></pre>
+<pre><code>python3.7-venv is already the newest version (3.7.16-1+jammy1).
+python3.8-venv is already the newest version (3.8.16-1+jammy1).
+python3.9-venv is already the newest version (3.9.16-1+jammy1).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/rust/env</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rustup</span> default stable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-qq</span> <span class="at">-t</span> jammy python3.12-venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>info: using existing install for 'stable-x86_64-unknown-linux-gnu'
-info: default toolchain set to 'stable-x86_64-unknown-linux-gnu'
+<pre><code>python3.12-venv is already the newest version (3.12.0~a5-1+jammy2).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="ex">apt</span> policy python2<span class="kw">;</span> <span class="bu">echo</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> v <span class="kw">in</span> <span class="kw">`</span><span class="fu">seq</span> 7 12<span class="kw">`;</span> <span class="cf">do</span> <span class="ex">apt</span> policy python3.<span class="va">$v</span><span class="kw">;</span> <span class="bu">echo</span><span class="kw">;</span> <span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>python2:
+  Installed: 2.7.18-3
+  Candidate: 2.7.18-3
+  Version table:
+ *** 2.7.18-3 100
+        100 /var/lib/dpkg/status
 
-  stable-x86_64-unknown-linux-gnu unchanged - rustc 1.67.1 (d5a82bbd2 2023-02-07)
+python3.7:
+  Installed: 3.7.16-1+jammy1
+  Candidate: 3.7.16-1+jammy1
+  Version table:
+ *** 3.7.16-1+jammy1 100
+         80 http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages
+        100 /var/lib/dpkg/status
+
+python3.8:
+  Installed: 3.8.16-1+jammy1
+  Candidate: 3.8.16-1+jammy1
+  Version table:
+ *** 3.8.16-1+jammy1 100
+         80 http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages
+        100 /var/lib/dpkg/status
+
+python3.9:
+  Installed: 3.9.16-1+jammy1
+  Candidate: 3.9.16-1+jammy1
+  Version table:
+ *** 3.9.16-1+jammy1 100
+         80 http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages
+        100 /var/lib/dpkg/status
+
+python3.10:
+  Installed: 3.10.10-2
+  Candidate: 3.10.10-2
+  Version table:
+ *** 3.10.10-2 100
+         90 http://deb.debian.org/debian sid/main amd64 Packages
+        100 /var/lib/dpkg/status
+
+python3.11:
+  Installed: 3.11.2-4
+  Candidate: 3.11.2-4
+  Version table:
+ *** 3.11.2-4 990
+        990 http://deb.debian.org/debian bookworm/main amd64 Packages
+         90 http://deb.debian.org/debian sid/main amd64 Packages
+        100 /var/lib/dpkg/status
+     3.11.2-1+jammy1 80
+         80 http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages
+
+python3.12:
+  Installed: 3.12.0~a5-1+jammy2
+  Candidate: 3.12.0~a5-1+jammy2
+  Version table:
+ *** 3.12.0~a5-1+jammy2 100
+         80 http://ppa.launchpad.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages
+        100 /var/lib/dpkg/status
 </code></pre>
 </div>
 </div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>deadsnakes PPA: A Personal Package Archive (PPA) containing various versions of Python packages, maintained by the deadsnakes team on Launchpad.</li>
+<li>Python 3.11: The new default version of Python for Debian, which is not yet compatible with Torch.</li>
+<li>Python 3.10: A compatible version of Python that is still available in Debian and needed to use Torch.</li>
+<li>Python 2.7: A legacy version of Python that I had installed from a previous Debian release.</li>
+<li>Python 3.7, 3.8, 3.9, 3.12: Alternative versions of Python that I installed from the deadsnakes PPA; not strictly needed for most AI work.</li>
+</ul>
+</details>
 </section>
-<section id="install-packages-for-torch-fastai-and-jupyter" class="level2">
-<h2 class="anchored" data-anchor-id="install-packages-for-torch-fastai-and-jupyter">Install packages for torch, fastai and jupyter</h2>
+<section id="nvidia-cuda" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-cuda">NVIDIA CUDA</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> fastbook jupyter jupyterlab tensorflow ipywidgets</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>At some point I saw a warning about compatibility between fastai and torch.</p>
-<pre><code>fastai 2.7.11 has requirement torch&lt;1.14,&gt;=1.7, but you have torch 2.0.0.dev20230220+cu117</code></pre>
-<p>I decided to try using it with nightly torch anyway:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> <span class="at">--pre</span> torch torchvision torchaudio <span class="at">--index-url</span> https://download.pytorch.org/whl/nightly/cu117</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Extra packages: nbdev, and kernels for bash and C:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> nbdev bash_kernel jupyter-c-kernel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> bash_kernel.install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-qq</span> install cuda=12.0.1-1 cuda-drivers=525.85.12-1 cuda-11-7 cuda-11-8</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Installing IPython kernel spec</code></pre>
+<pre><code>cuda is already the newest version (12.0.1-1).
+cuda-drivers is already the newest version (525.85.12-1).
+cuda-11-7 is already the newest version (11.7.1-1).
+cuda-11-8 is already the newest version (11.8.0-1).
+0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">install_c_kernel</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Installing IPython kernel spec
-/usr/local/bin/install_c_kernel:32: DeprecationWarning: replace is ignored. Installing a kernelspec always replaces an existing installation
-  KernelSpecManager().install_kernel_spec(td, 'c', user=user, replace=True, prefix=prefix)</code></pre>
-</div>
-</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>NVIDIA CUDA: A parallel computing platform and programming model developed by NVIDIA for general computing on GPUs (graphics processing units).</li>
+<li>CUDA drivers: Software components that enable communication between the CUDA runtime and the hardware.</li>
+<li>CUDA 11-7, CUDA 11-8 and CUDA 12-0: Different versions of the CUDA toolkit that are compatible with different GPU architectures.</li>
+</ul>
+</details>
 </section>
-<section id="untold-difficulties" class="level2">
-<h2 class="anchored" data-anchor-id="untold-difficulties">Untold difficulties</h2>
-<p>I haven’t described all of the various problems I’ve had to deal with, due to using this approach. There were plenty of problems! I guess I’m learning something from it, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would be a lot easier than this. Maybe I should give it a try on Debian anyway, and see what happens.</p>
+<section id="nvidia-container-runtime" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-container-runtime">NVIDIA Container Runtime</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-qq</span> install nvidia-container-runtime</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>nvidia-container-runtime is already the newest version (3.12.0-1).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>NVIDIA Container Runtime: An open-source container runtime that enables the use of GPUs within containers, allowing applications to leverage the power of NVIDIA GPUs while maintaining the flexibility and portability of containerization. It is designed to work with Docker and other container engines and is optimized for use with NVIDIA GPUs.</li>
+<li>Docker: A popular platform for developing, deploying, and running applications in containers. It provides a way to package an application and its dependencies into a single container that can be easily moved between environments.</li>
+<li>GPU: Short for Graphics Processing Unit, a specialized processor designed to accelerate the rendering of images and video. In recent years, GPUs have become increasingly popular for running compute-intensive workloads, such as machine learning and scientific simulations.</li>
+</ul>
+</details>
 </section>
-<section id="use-the-old-pip-resolver-if-necessary" class="level2">
-<h2 class="anchored" data-anchor-id="use-the-old-pip-resolver-if-necessary">Use the old pip resolver, if necessary</h2>
-<p>As of pip 20.3, a new resolver has been introduced, which doesn’t always work. As of pip 21.0 the old working resolver is unsupported and slated for removal dependent on pip team resources.</p>
+<section id="nvidia-cudnn" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-cudnn">NVIDIA cuDNN</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-qq</span> install libcudnn8-dev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>pip 23.0 from /usr/lib/python3/dist-packages/pip (python 3.11)</code></pre>
+<pre><code>libcudnn8-dev is already the newest version (8.8.0.121-1+cuda12.0).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
 </div>
 </div>
-<p>With this version of pip, it’s possible to use the “legacy resolver” with the following option:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-U</span> <span class="at">-r</span> requirements.txt <span class="at">--use-deprecated</span><span class="op">=</span>legacy-resolver</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Or, I can downgrade pip to version 20.2.4, before they switched to the new resolver.</p>
-<p>Refer to https://stackoverflow.com/a/67408694 for more info.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install pip==20.2.4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-qq</span> install /var/cudnn-local-repo-ubuntu2204-8.6.0.163/libcudnn8-samples_8.6.0.163-1+cuda11.8_amd64.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Collecting pip==20.2.4
-  Using cached pip-20.2.4-py2.py3-none-any.whl (1.5 MB)
-Installing collected packages: pip
-  Attempting uninstall: pip
-    Found existing installation: pip 23.0
-    Not uninstalling pip at /usr/lib/python3/dist-packages, outside environment /usr
-    Can't uninstall 'pip'. No files were found to uninstall.
-Successfully installed pip-20.2.4</code></pre>
+<pre><code>libcudnn8-samples is already the newest version (8.6.0.163-1+cuda11.8).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>pip 20.2.4 from /usr/local/lib/python3.10/dist-packages/pip (python 3.10)</code></pre>
-</div>
-</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>NVIDIA cuDNN: A GPU-accelerated library for deep neural networks that is used to improve training and inference performance.</li>
+<li>libcudnn8-dev: A package that provides the development files needed to compile software that uses NVIDIA cuDNN.</li>
+<li>libcudnn8-samples: A package that contains sample code and programs that demonstrate how to use NVIDIA cuDNN in applications.</li>
+</ul>
+</details>
 </section>
-<section id="nvidia-tensorrt-is-not-ready-for-python3.11" class="level2">
-<h2 class="anchored" data-anchor-id="nvidia-tensorrt-is-not-ready-for-python3.11">NVIDIA tensorrt is not ready for python3.11</h2>
+<section id="nvidia-tensorrt" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-tensorrt">NVIDIA TensorRT</h3>
+<p>NVIDIA TensorRT is an inference accelerator for deep learning models. It optimizes and deploys trained neural networks for inferencing on NVIDIA GPUs. In order to use TensorRT, the python3-libnvinfer package needs to be installed.</p>
+<p>Unfortunately, this package has a dependency issue, it requires a version of Python less than 3.11 for the package to work, but I couldn’t downgrade the system’s Python version. To resolve this issue, I modified the package to depend on the <code>python3.10</code> package instead of <code>python3 &lt; 3.11</code>. I did this by copying the package to a local directory, unpacking it, modifying the dependency information, and repacking it. After this, I was able to successfully install the modified package and its development version using the dpkg command.</p>
+<p>Finally, I was able to install the main <code>tensorrt</code> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get <span class="at">-q</span> install python3-libnvinfer-dev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get <span class="at">-q</span> install python3-libnvinfer-dev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading package lists...
 Building dependency tree...
@@ -420,7 +795,7 @@ or been moved out of Incoming.
 The following information may help to resolve the situation:
 
 The following packages have unmet dependencies:
- python3-libnvinfer : Depends: python3 (&lt; 3.11) but 3.11.1-3 is to be installed
+ python3-libnvinfer : Depends: python3 (&lt; 3.11) but 3.11.2-1 is to be installed
 E: Unable to correct problems, you have held broken packages.</code></pre>
 </div>
 <div class="cell-output cell-output-error">
@@ -429,48 +804,49 @@ E: Unable to correct problems, you have held broken packages.</code></pre>
 </div>
 <p>I’d like to install it as a python3.10 library at least, but it is demanding that the system Python version, i.e.&nbsp;the version of Debian’s python3 package, should be less than 3.11, and I don’t want to try to change that. So I’ll adjust this <code>python3-libnvinfer</code> package to depend on the <code>python3.10</code> package instead of <code>python3 &lt; 3.11</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /var/nv-tensorrt-local-repo-ubuntu2204-8.5.3-cuda-11.8</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> python3-libnvinfer<span class="pp">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /var/nv-tensorrt-local-repo-ubuntu2204-8.5.3-cuda-11.8</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> python3-libnvinfer<span class="pp">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb
 python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-v</span> python3-libnvinfer<span class="pp">*</span> ~/soft-ai/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-v</span> python3-libnvinfer<span class="pp">*</span> ~/soft-ai/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb' -&gt; '/home/sam/soft-ai/python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb'
 'python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb' -&gt; '/home/sam/soft-ai/python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb'</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/soft-ai</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="ex">dpkg-deb</span> <span class="at">-R</span> python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb unpacked</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/soft-ai</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> rm <span class="at">-rf</span> unpacked</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="ex">dpkg-deb</span> <span class="at">-R</span> python3-libnvinfer_8.5.3-1+cuda11.8_amd64.deb unpacked</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> Depends unpacked/DEBIAN/control</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> Depends unpacked/DEBIAN/control</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Depends: python3 (&gt;= 3.10), python3 (&lt;&lt; 3.11), libnvinfer8 (= 8.5.3-1+cuda11.8), libnvinfer-plugin8 (= 8.5.3-1+cuda11.8), libnvparsers8 (= 8.5.3-1+cuda11.8), libnvonnxparsers8 (= 8.5.3-1+cuda11.8)</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-i</span> <span class="st">'s/python3 (&gt;= 3.10), python3 (&lt;&lt; 3.11), /python3.10, /'</span> unpacked/DEBIAN/control</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> Depends unpacked/DEBIAN/control</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-i</span> <span class="st">'s/python3 (&gt;= 3.10), python3 (&lt;&lt; 3.11), /python3.10, /'</span> unpacked/DEBIAN/control</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> Depends unpacked/DEBIAN/control</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Depends: python3.10, libnvinfer8 (= 8.5.3-1+cuda11.8), libnvinfer-plugin8 (= 8.5.3-1+cuda11.8), libnvparsers8 (= 8.5.3-1+cuda11.8), libnvonnxparsers8 (= 8.5.3-1+cuda11.8)</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dpkg-deb</span> <span class="at">-b</span> unpacked python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dpkg-deb</span> <span class="at">-b</span> unpacked python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>dpkg-deb: building package 'python3-libnvinfer' in 'python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb'.</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb ./python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb ./python3-libnvinfer-dev_8.5.3-1+cuda11.8_amd64.deb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Selecting previously unselected package python3-libnvinfer.
-(Reading database ... 1135689 files and directories currently installed.)
+(Reading database ... 1157567 files and directories currently installed.)
 Preparing to unpack .../python3-libnvinfer_8.5.3-1+cuda11.8_amd64_fixed.deb ...
 Unpacking python3-libnvinfer (8.5.3-1+cuda11.8) ...
 Selecting previously unselected package python3-libnvinfer-dev.
@@ -480,13 +856,54 @@ Setting up python3-libnvinfer (8.5.3-1+cuda11.8) ...
 Setting up python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...</code></pre>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-qq</span> install tensorrt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensorrt is already the newest version (8.5.3.1-1+cuda11.8).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>NVIDIA TensorRT: An inference accelerator for deep learning models that optimizes and deploys trained neural networks for inferencing on NVIDIA GPUs.</li>
+<li>python3-libnvinfer package: A package required to use TensorRT but has a dependency issue with the system’s Python version.</li>
+<li>Dependency issue: A problem that arises when a software package requires certain libraries or packages to run, and those libraries or packages are either not installed or not compatible with the system.</li>
+<li>dpkg command: A command used to install Debian packages.</li>
+</ul>
+</details>
 </section>
-<section id="pypi-does-not-include-onnxruntime-for-python3.11" class="level2">
-<h2 class="anchored" data-anchor-id="pypi-does-not-include-onnxruntime-for-python3.11">PyPI does not include onnxruntime for python3.11</h2>
 </section>
-<section id="stacked-python-environments" class="level2">
-<h2 class="anchored" data-anchor-id="stacked-python-environments">Stacked Python environments</h2>
-<p>I’m going to try setting up a series of Python environments under <code>/opt</code>, and adding them to the PYTHONPATH as appropriate.</p>
+<section id="install-rust" class="level2">
+<h2 class="anchored" data-anchor-id="install-rust">Install Rust</h2>
+<p>Some Python modules now depend on Rust to build. Also, I wanted to build Anki from source. I decided to install Rust system-wide, in <code>/opt/rust</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /tmp</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> https://sh.rustup.rs <span class="op">&gt;</span> install_rust.sh</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> RUSTUP_HOME=/opt/rust CARGO_HOME=/opt/rust sh ./install_rust.sh <span class="at">-y</span> <span class="at">--no-modify-path</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/rust/env</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rustup</span> default stable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>Rust: A systems programming language that is known for its speed, reliability, and memory safety features. It is often used for developing web browsers, operating systems, and game engines, and has gained popularity in the field of machine learning for its ease of integration with Python.</li>
+<li>rustup: A command-line tool for managing Rust installations and its various components, such as different toolchains and target platforms.</li>
+<li>CARGO_HOME: An environment variable used by Rust to specify the directory where Cargo, the package manager for Rust, stores its configuration and package cache.</li>
+<li>RUSTUP_HOME: An environment variable used by Rust to specify the directory where rustup stores its configuration and installed toolchains.</li>
+<li>Anki: a popular open-source flashcard application designed to help users learn and memorize information efficiently. It allows users to create digital flashcards containing text, images, audio, and video, and use various study techniques such as spaced repetition to optimize learning and retention. Anki is available for Windows, macOS, Linux, Android, and iOS platforms.</li>
+</ul>
+</details>
+</section>
+<section id="python-environments" class="level2">
+<h2 class="anchored" data-anchor-id="python-environments">Python environments</h2>
+<p>I’m going to add Python venvs under <code>/opt/venvs</code>, and use hard linking to share large files between them.</p>
 <table class="table">
 <colgroup>
 <col style="width: 25%">
@@ -499,84 +916,400 @@ Setting up python3-libnvinfer-dev (8.5.3-1+cuda11.8) ...</code></pre>
 <th>Folder</th>
 <th>Depends</th>
 <th>Uses</th>
-<th>Conflicts</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>/usr/local/lib/python3.11</td>
-<td>Debian’s default python3.11</td>
-<td>torch 2 (nightly)</td>
-<td>fastai, tensorrt</td>
-</tr>
-<tr class="even">
-<td>/opt/python3.10-ai</td>
-<td>Debian’s python3.10</td>
-<td>torch stable ()</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>/opt/python3.10-fastai</td>
-<td>python3.10-fastai</td>
-<td>torch stable ()</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>/opt/python3.10-webui</td>
 <td>python3.10-ai</td>
-<td>torch stable ()</td>
-<td></td>
+<td>Debian’s python3.10</td>
+<td>torch stable</td>
+<td>AI development</td>
+</tr>
+<tr class="even">
+<td>python3.10-webui</td>
+<td>python3.10-ai</td>
+<td>torch stable</td>
+<td>stable-diffusion-webui</td>
 </tr>
 </tbody>
 </table>
+<section id="the-base-venv-python3.10-ai" class="level3">
+<h3 class="anchored" data-anchor-id="the-base-venv-python3.10-ai">The base venv python3.10-ai</h3>
+<p>This venv is a base environment for AI development, containing various packages and libraries useful for working with deep learning models and related tasks. These include popular libraries like fastai, PyTorch, TensorFlow, scikit-learn, and NumPy, as well as some more specialized tools. The different packages are described in the glossary for this section.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_python_env()</span> <span class="kw">{</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="va">$VIRTUAL_ENV</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-V</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">which</span> python</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">namei</span> <span class="kw">`</span><span class="fu">which</span> python<span class="kw">`</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="at">-n</span> <span class="st">'/-&gt;/ { s/.*-&gt; //; p; }'</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-c</span> <span class="st">'import sys; print(sys.path)'</span></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="ex">show_python_env</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /opt/venvs</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt/venvs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> python3.10-ai</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.10</span> <span class="at">-m</span> venv python3.10-ai/venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">"%s\n"</span> torch pipdeptree torchvision torchaudio tensorflow <span class="dt">\</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>    jupyter jupyterlab ipywidgets bash_kernel jupyter-c-kernel nbdev fastai <span class="dt">\</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>    pandas matplotlib scipy scikit-learn scikit-image gradio onnx <span class="dt">\</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    huggingface_hub transformers diffusers accelerate timm safetensors <span class="dt">\</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    numba fastbook <span class="op">&gt;</span> python3.10-ai/require.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-e</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> python3.10-ai/venv/bin/activate</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> <span class="at">-r</span> python3.10-ai/require.txt</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> bash_kernel.install</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a><span class="ex">install_c_kernel</span></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Python 3.11.1
-/usr/local/bin/python
-/usr/bin/python
-python3
-/etc/alternatives/python3
-/usr/bin/python3.11
-['', '/usr/lib/python311.zip', '/usr/lib/python3.11', '/usr/lib/python3.11/lib-dynload', '/usr/local/lib/python3.11/dist-packages', '/usr/lib/python3/dist-packages', '/usr/lib/python3.11/dist-packages']</code></pre>
+<pre><code>Installing IPython kernel spec
+Installing IPython kernel spec
+/opt/venvs/python3.10-ai/venv/bin/install_c_kernel:32: DeprecationWarning: replace is ignored. Installing a kernelspec always replaces an existing installation
+  KernelSpecManager().install_kernel_spec(td, 'c', user=user, replace=True, prefix=prefix)</code></pre>
 </div>
 </div>
+<p>Upgrade to the latest ipywidgets. This supposedly conflicts with fastbook, but is needed for Jupyter Lab.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.10</span> <span class="at">-m</span> venv python3.10-ai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/python3.10-ai/bin/activate</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> bin/activate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-e</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> python3.10-ai/venv/bin/activate</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> ipywidgets</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>(python3.10-ai) 
-(python3.10-ai) </code></pre>
+<pre><code>ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+fastbook 0.0.29 requires ipywidgets&lt;8, but you have ipywidgets 8.0.4 which is incompatible.
+</code></pre>
+</div>
+</div>
+<p>The pydoc command doesn’t seem to be installed properly in venvs, so I added it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&lt;&lt;END</span> <span class="op">&gt;</span> python3.10-ai/venv/bin/pydoc</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="st">#!/bin/sh</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="st">python -m pydoc "</span><span class="va">$@</span><span class="st">"</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="op">END</span></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x python3.10-ai/venv/bin/pydoc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>Python venvs: Virtual environments created by the Python venv module that allow users to create isolated Python environments with their own packages, versions, and configurations.</li>
+<li>hard linking: A method of creating a new file that shares the same content as an existing file without duplicating it, saving storage space and reducing the time needed to create a copy.</li>
+<li>torch: PyTorch, an open-source machine learning framework for building and training neural networks.</li>
+<li>torchvision: A package that provides access to popular datasets, model architectures, and image transformations for PyTorch.</li>
+<li>torchaudio: A package that provides audio processing functionalities for PyTorch, such as loading and decoding audio files, applying transforms, and computing spectrograms.</li>
+<li>tensorflow: An open-source machine learning framework developed by Google for building and training neural networks.</li>
+<li>jupyter: Jupyter Notebook, an open-source web application that allows users to create and share documents containing live code, equations, visualizations, and narrative text.</li>
+<li>jupyterlab: The next-generation web-based user interface for Jupyter Notebook, featuring a more modern and flexible interface, multiple panes, and support for Jupyter extensions.</li>
+<li>ipywidgets: A library that provides interactive HTML widgets for Jupyter Notebook and JupyterLab, enabling users to create sliders, dropdowns, buttons, and other graphical controls that can be used to modify code outputs and visualizations.</li>
+<li>bash_kernel: A Jupyter kernel that allows users to run Bash commands and scripts in Jupyter Notebook and JupyterLab.</li>
+<li>jupyter-c-kernel: A Jupyter kernel that allows users to run C code in Jupyter Notebook and JupyterLab.</li>
+<li>nbdev: A library that allows users to create Python modules from Jupyter Notebooks, making it easier to develop, test, and publish code.</li>
+<li>fastai: An open-source library built on top of PyTorch that provides high-level abstractions for training and deploying machine learning models, including computer vision, natural language processing, and tabular data analysis.</li>
+<li>pandas: A data analysis library for Python that provides powerful data structures and tools for manipulating and analyzing data.</li>
+<li>matplotlib: A plotting library for Python that provides a variety of visualizations, including line plots, scatter plots, bar charts, histograms, and more.</li>
+<li>scipy: A library for scientific computing in Python that provides a wide range of mathematical algorithms, including optimization, integration, interpolation, signal processing, and more.</li>
+<li>scikit-learn: A machine learning library for Python that provides a variety of supervised and unsupervised learning algorithms, including regression, classification, clustering, and dimensionality reduction.</li>
+<li>scikit-image: An image processing library for Python that provides a variety of algorithms for image enhancement, filtering, segmentation, and feature extraction.</li>
+<li>gradio: An open-source library that allows users to quickly create custom web interfaces for machine learning models, enabling users to interact with models using sliders, dropdowns, text boxes, and other controls.</li>
+<li>onnx: Open Neural Network Exchange, an open-source format for representing machine learning models that allows interoperability between different frameworks and platforms.</li>
+<li>huggingface_hub: A library that provides access to a wide range of pre-trained machine learning models for natural language processing, computer vision, and other tasks, hosted on the Hugging Face Hub.</li>
+<li>transformers: A library that provides state-of-the-art natural language processing models for tasks such as sentiment analysis, question answering, and language translation, based on transformer architectures.</li>
+<li>diffusers: A library that provides a set of PyTorch modules for training diffusion models, a type of probabilistic generative model that can be used for tasks such as image synthesis, denoising, and inpainting.</li>
+<li>pipdeptree: a command-line utility that displays the installed Python packages in the form of a dependency tree</li>
+<li>Accelerate: a library that enables PyTorch code to run across any distributed configuration with just four lines of code</li>
+<li>PyTorch Image Models (timm): a deep-learning library that includes a collection of state-of-the-art computer vision models, layers, utilities, optimizers, schedulers, data-loaders, augmentations, and training/validating scripts with the ability to reproduce ImageNet training results</li>
+<li>Safetensors: a repository that implements a new simple format for storing tensors safely and efficiently, instead of using pickle</li>
+<li>Numba: a high-performance Python compiler that translates Python functions to optimized machine code at runtime using the industry-standard LLVM compiler library; it offers a range of options for parallelizing Python code for CPUs and GPUs, often with only minor code changes</li>
+<li>fastbook: the Fast.ai book published as Jupyter Notebooks, that covers deep learning using fastai and PyTorch</li>
+</ul>
+</details>
+</section>
+<section id="the-secondary-venv-python3.10-webui" class="level3">
+<h3 class="anchored" data-anchor-id="the-secondary-venv-python3.10-webui">The secondary venv python3.10-webui</h3>
+<p>This is a secondary Python venv called python3.10-webui. It will be used to support the stable-diffusion web user interface, and is based on the python3.10-ai venv. Hard linking will be used to share large files between the two venvs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt/venvs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> python3.10-webui</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> rm <span class="at">-rf</span> python3.10-webui/venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-al</span> python3.10-ai/venv python3.10-webui/venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">yes</span> <span class="kw">|</span> <span class="ex">venv_move</span> python3.10-webui/venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> python3.10-ai/require.txt ~/soft-ai/stable-diffusion-webui/requirements.txt </span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> fastapi==0.90.1</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span> <span class="op">&gt;</span> python3.10-webui/require.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-e</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> python3.10-webui/venv/bin/activate</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-qq</span> <span class="at">-U</span> <span class="at">-r</span> python3.10-webui/require.txt</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-f</span> python3.10-ai/venv/bin/pydoc python3.10-webui/venv/bin/pydoc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>hard linking: a file system feature that allows multiple files to share the same physical storage location on disk. Hard linking a file creates a new file that points to the same location as the original file. This can be used to save disk space and reduce redundancy in a file system.</li>
+<li><a href="https://stackoverflow.com/a/67979710/218294">venv_move</a>: this is a Bash script that is used to move a Python virtual environment (venv) to a new location. The script takes one argument, which is the path to the venv directory that needs to be moved.</li>
+</ul>
+</details>
+</section>
+<section id="stable-diffusion-webui" class="level3">
+<h3 class="anchored" data-anchor-id="stable-diffusion-webui">stable-diffusion-webui</h3>
+<p>In this section, we will install the <a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui">automatic1111 stable-diffusion-webui app</a> and set up custom scripts to update and launch it. The stable-diffusion-webui app is a web user interface for the Stable Diffusion model, which is a deep learning model for image classification. The update script will allow us to easily update the app when new changes are pushed to the Git repository. The launch script will activate the correct virtual environment and launch the web user interface.</p>
+<p>The app works without these custom scripts, but I wanted to allow for careful updates and custom launch options.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/soft-ai</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> <span class="ot">-d</span> stable-diffusion-webui <span class="bu">]</span> <span class="kw">||</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone git@github.com:AUTOMATIC1111/stable-diffusion-webui.git</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> stable-diffusion-webui</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="my-update-script" class="level4">
+<h4 class="anchored" data-anchor-id="my-update-script">my update script</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> update</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#!/bin/sh
+set -e
+. /opt/venvs/python3.10-webui/venv/bin/activate
+git stash
+git pull
+git stash pop || true
+pip install -r requirements.txt</code></pre>
+</div>
+</div>
+</section>
+<section id="my-launch-script" class="level4">
+<h4 class="anchored" data-anchor-id="my-launch-script">my launch script</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> launch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#!/bin/bash
+set -ae
+. /opt/venvs/python3.10-webui/venv/bin/activate
+cd "$(dirname "$(readlink -f "$0")")"
+SAFETENSORS_FAST_GPU=1
+COMMANDLINE_ARGS="--xformers --api $*"  # --no-half-vae
+REQS_FILE="requirements.txt"
+python launch.py</code></pre>
+</div>
+</div>
+<p>Next, I launch the webui to install some extra requirements, and check that it works.</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>stable-diffusion-webui: A web user interface for the Stable Diffusion model, a deep learning model for image classification. The stable-diffusion-webui app is installed in this section, along with custom scripts for updating and launching it.</li>
+<li>update script: A custom script for updating the stable-diffusion-webui app. The script activates the correct virtual environment and pulls changes from the Git repository, installs any new requirements, and restarts the app.</li>
+<li>launch script: A custom script for launching the stable-diffusion-webui app. The script activates the correct virtual environment and sets some environment variables before running the launch.py script.</li>
+<li>SAFETENSORS_FAST_GPU=1: an environment variable used with the Safetensors library in deep learning applications. Normally, models are loaded to the CPU and then moved to the GPU, which can involve an additional memory copy step. The “SAFETENSORS_FAST_GPU=1” option allows models to be loaded directly onto the GPU, bypassing the memory copy step and potentially improving performance. However, this option is untested and may not be suitable for all applications.</li>
+<li>COMMANDLINE_ARGS: An environment variable used in the launch script to pass command line arguments to the launch.py script.</li>
+<li>REQS_FILE: An environment variable used in the launch script to specify which requirements file should be used for the stable-diffusion-webui app.</li>
+<li>requirements.txt file: a text file that lists the dependencies of a Python project. It contains a list of package names and optional version numbers that are required for the project to run. This file can be used by the pip package installer to automatically install all required packages and their dependencies, like this: <code>pip install -r requirements.txt</code></li>
+</ul>
+</details>
+</section>
+</section>
+<section id="compare-the-two-venvs" class="level3">
+<h3 class="anchored" data-anchor-id="compare-the-two-venvs">Compare the two venvs</h3>
+<p>In this section, we compare the packages installed in the two Python virtual environments we created earlier. By running the “pip freeze” command in each venv and storing the output in a text file, we can then compare the contents of those files using the “comm” command. The resulting output shows the packages that are installed in one venv but not the other. We can use this information to ensure that both venvs have the necessary packages for our projects.</p>
+<p>Running pip check in both venvs can help ensure that all packages are installed correctly and functioning properly. In the output, we see a package conflict related to the version of protobuf installed, but this does not seem to cause any issues in practice as the app still works.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /opt/venvs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> python3.10-ai/venv/bin/activate</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> freeze <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> <span class="st">'^[#-]'</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> python3.10-ai/freeze.txt</span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> check</span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>No broken requirements found.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> python3.10-webui/venv/bin/activate</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> freeze <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> <span class="st">'^[#-]'</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> python3.10-webui/freeze.txt</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> check</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensorflow 2.11.0 has requirement protobuf&lt;3.20,&gt;=3.9.2, but you have protobuf 3.20.0.</code></pre>
 </div>
 <div class="cell-output cell-output-error">
 <pre><code>: 1</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="ex">deactivate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comm</span> <span class="at">-3</span> python3.10-ai/freeze.txt python3.10-webui/freeze.txt <span class="kw">|</span> <span class="fu">tee</span> comm.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<details>
+<summary>
+Glossary
+</summary>
+<p>pip freeze: A command used to output the names and versions of installed Python packages in the format required for a requirements.txt file. We use pip freeze to generate the requirements.txt files for both venvs so we can compare them.</p>
+<p>pip check: A command in pip that checks the consistency of installed packages, verifying that all dependencies are met and all files are intact. It will report any issues or conflicts with installed packages, and can help identify packages that need to be updated or removed.</p>
+<p>sort: A Unix utility used to sort the lines of a file alphabetically. We use the sort command to ensure that the lines in the requirements.txt files are in the same order, making it easier to compare them. The comm utility requires that it’s inputs are sorted.</p>
+<p>comm: A Unix utility used to compare two files line by line. In this section, we use the comm command to compare the contents of two requirements.txt files and display the lines that are unique to each file.</p>
+</details>
 </section>
-<section id="maybe-use-usrlocal-installs-first-then-opt-venv-installs-based-on-those" class="level2">
-<h2 class="anchored" data-anchor-id="maybe-use-usrlocal-installs-first-then-opt-venv-installs-based-on-those">Maybe use /usr/local installs first then /opt venv installs based on those</h2>
+<section id="check-disk-usage-and-savings" class="level3">
+<h3 class="anchored" data-anchor-id="check-disk-usage-and-savings">Check disk usage and savings</h3>
+<p>In this section, we use the du tool to check the disk usage and savings of the base venv and webui venv. By using hard links, we can see that we are saving nearly 6GB of disk space. We use the du -sh command to show the size of each venv separately and du -csh command to show the total size of both venvs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">du</span> <span class="at">-sh</span> ./python3.10-ai</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">du</span> <span class="at">-sh</span> ./python3.10-webui</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>5.9G    ./python3.10-ai
+6.2G    ./python3.10-webui</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">du</span> <span class="at">-csh</span> ./python3.10-<span class="dt">{ai</span><span class="op">,</span><span class="dt">webui}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>5.9G    ./python3.10-ai
+652M    ./python3.10-webui
+6.6G    total</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
 <ul>
-<li>/usr/local/lib/python3.11/dist-packages</li>
-<li>/usr/local/lib/python3.10/dist-packages</li>
+<li>du: A command-line tool used to estimate file space usage in a file system. It can display the file size in human-readable format.</li>
+<li>disk usage: The amount of disk space occupied by a file or directory in a file system.</li>
+<li>hard links: A feature of the file system that allows multiple files to share the same data blocks on a storage device. Hard links allow a file to have multiple names in different directories or in the same directory.</li>
 </ul>
+</details>
+</section>
+<section id="save-the-setup-in-a-git-repo" class="level3">
+<h3 class="anchored" data-anchor-id="save-the-setup-in-a-git-repo">Save the setup in a git repo</h3>
+<p>In this section, we initialize a new Git repository to save our virtual environment setup. We create a “.gitignore” file to exclude the venvs from version control, add all files to the Git staging area, and commit the changes with a message. This allows us to easily track and version our venv setup and changes over time.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> venv <span class="op">&gt;</span> .gitignore</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">'venvs'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reinitialized existing shared Git repository in /opt/venvs/.git/
+[main 8fd5a24] venvs
+ 2 files changed, 15 insertions(+), 1 deletion(-)</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>Git: A version control system used for tracking changes to files and collaborating on projects.</li>
+<li>Repository: A central location in which data is stored and managed.</li>
+<li>.gitignore: A file used to exclude files and directories from being tracked by Git.</li>
+<li>Staging area: A place where files are stored before they are committed to the repository.</li>
+<li>Commit: A permanent record of changes to files in the repository, along with a message that describes the changes.</li>
+</ul>
+</details>
+</section>
+</section>
+<section id="optional-extras" class="level1">
+<h1>Optional extras</h1>
+<section id="building-xformers" class="level2">
+<h2 class="anchored" data-anchor-id="building-xformers">Building xformers</h2>
+<p>If you need to build and install <code>xformers</code> from source, this is how to do it. It took nearly half an hour on a fast computer. I think that it didn’t build things in parallel. I used this with stable-diffusion-webui, when the binary packages of xformers weren’t working.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/soft-ai</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> <span class="ot">-d</span> xformers <span class="bu">]</span> <span class="kw">||</span> <span class="fu">git</span> clone https://github.com/facebookresearch/xformers.git</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> xformers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> submodule update <span class="at">--init</span> <span class="at">--recursive</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> submodule update <span class="at">--recursive</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Already up to date.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> setup.py clean <span class="at">--all</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>running clean
+'build/lib.linux-x86_64-cpython-310' does not exist -- can't clean it
+'build/bdist.linux-x86_64' does not exist -- can't clean it
+'build/scripts-3.10' does not exist -- can't clean it</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$VIRTUAL_ENV</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/opt/venvs/python3.10-ai/venv</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="va">CUDA_HOME</span><span class="op">=</span><span class="st">"/usr/local/cuda-11.7"</span> <span class="va">CC</span><span class="op">=</span>gcc-11 <span class="va">CXX</span><span class="op">=</span>g++-11 <span class="va">MAKEFLAGS</span><span class="op">=</span><span class="st">"-j</span><span class="va">$(</span><span class="fu">nproc</span><span class="va">)</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> pip install <span class="at">-e</span> . <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">tee</span> build.log</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Obtaining file:///home/sam/soft-ai/xformers
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Requirement already satisfied: numpy in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from xformers==0.0.17+b89a493.d20230303) (1.23.5)
+Requirement already satisfied: pyre-extensions==0.0.23 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from xformers==0.0.17+b89a493.d20230303) (0.0.23)
+Requirement already satisfied: torch&gt;=1.12 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from xformers==0.0.17+b89a493.d20230303) (1.13.1)
+Requirement already satisfied: typing-extensions in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from pyre-extensions==0.0.23-&gt;xformers==0.0.17+b89a493.d20230303) (4.5.0)
+Requirement already satisfied: typing-inspect in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from pyre-extensions==0.0.23-&gt;xformers==0.0.17+b89a493.d20230303) (0.8.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu11==11.7.99 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (11.7.99)
+Requirement already satisfied: nvidia-cudnn-cu11==8.5.0.96 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (8.5.0.96)
+Requirement already satisfied: nvidia-cuda-runtime-cu11==11.7.99 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (11.7.99)
+Requirement already satisfied: nvidia-cublas-cu11==11.10.3.66 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (11.10.3.66)
+Requirement already satisfied: setuptools in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from nvidia-cublas-cu11==11.10.3.66-&gt;torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (66.1.1)
+Requirement already satisfied: wheel in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from nvidia-cublas-cu11==11.10.3.66-&gt;torch&gt;=1.12-&gt;xformers==0.0.17+b89a493.d20230303) (0.38.4)
+Requirement already satisfied: mypy_extensions&gt;=0.3.0 in /opt/venvs/python3.10-ai/venv/lib/python3.10/site-packages (from typing-inspect-&gt;pyre-extensions==0.0.23-&gt;xformers==0.0.17+b89a493.d20230303) (1.0.0)
+Installing collected packages: xformers
+  Running setup.py develop for xformers
+Successfully installed xformers-0.0.17+b89a493.d20230303
+1498.23user 47.47system 21:29.43elapsed 119%CPU (0avgtext+0avgdata 1777728maxresident)k
+4848inputs+12701968outputs (64major+40118051minor)pagefaults 0swaps</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>xformers: a library for accelerating transformer-based models in PyTorch.</li>
+<li>CUDA_HOME: an environment variable that specifies the path to the CUDA installation directory.</li>
+<li>gcc-11 and g++-11: the GNU Compiler Collection version 11 for the C and C++ programming languages, respectively. Xformers won’t build with gcc-12, so we need to specify the older version.</li>
+<li>nproc: a command that outputs the number of processing units available to the current process.</li>
+<li>setup.py: a Python script that is used to package and distribute Python modules.</li>
+<li>submodule: a feature in Git that allows a repository to contain another repository as a subdirectory.</li>
+<li>tee: a command that reads standard input and writes it to both standard output and one or more files.</li>
+<li>time: a command that displays the system time for a command to execute.</li>
+</ul>
+</details>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>In this post, I described my journey of setting up a development environment for deep learning on Debian, and the challenges I faced while doing so. I went through various steps, such as setting up apt sources, installing required packages (including Python, NVIDIA CUDA, cuDNN, and TensorRT), installing Rust, and setting up Python virtual environments. I also described how I set up stable-diffusion-webui, a how I built Xformers from source.</p>
+<p>I hope the post can be useful for anyone looking to set up a development environment for deep learning on Debian, if only as a cautionary tale of what not to do; and in particular I expect that this might be useful as a reference for myself in future.</p>
 
 
 </section>
@@ -647,6 +1380,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
   function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
