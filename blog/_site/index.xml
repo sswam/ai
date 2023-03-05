@@ -9,193 +9,8 @@
 <link>https://sam.ucm.dev/blog/index.html</link>
 <atom:link href="https://sam.ucm.dev/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>recording my AI studies</description>
-<generator>quarto-1.2.280</generator>
+<generator>quarto-1.2.335</generator>
 <lastBuildDate>Thu, 02 Mar 2023 13:00:00 GMT</lastBuildDate>
-<item>
-  <title>Graveyard of bad setup ideas</title>
-  <link>https://sam.ucm.dev/blog/posts/bad_ideas/bad_ideas.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Here is a list of other things I tried for my Debian AI setup, which didn’t work out so well. They didn’t cause disasters for me, but they didn’t solve my setup problems either. Here be dragons!</p>
-</section>
-<section id="allow-myself-to-install-packages-to-usrlocal" class="level2">
-<h2 class="anchored" data-anchor-id="allow-myself-to-install-packages-to-usrlocal">Allow myself to install packages to /usr/local</h2>
-<p>Since I wrote this section, Debian has modified their pip so that it refuses to install to <code>/usr/local</code>, unless we use the <code>--break-system-packages</code> flag.</p>
-<p>It’s not safe to run <code>pip install -U</code> as root. It will merrily remove files from Debian-packaged Python modules under <code>/usr/lib</code>, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under <code>/usr/local</code> via the <code>staff</code> group. I do the same for <code>/opt</code> because I want to upgrade Rust from my own user ID also:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;">sudo</span> adduser <span class="va" style="color: #111111;">$USER</span> staff</span>
-<span id="cb1-2"><span class="fu" style="color: #4758AB;">sudo</span> chgrp <span class="at" style="color: #657422;">-R</span> staff /usr/local /opt</span>
-<span id="cb1-3"><span class="fu" style="color: #4758AB;">sudo</span> chmod <span class="at" style="color: #657422;">-R</span> g+w /usr/local /opt</span></code></pre></div>
-</div>
-<p>This is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.</p>
-<p>In order to upgrade a pip package where the same package was also installed in <code>/usr/lib</code> by dpkg, I need to use <code>pip -I -U packagename</code>. The <code>-I</code> flag tells it to ignore installed packages, i.e.&nbsp;don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.</p>
-<p>This setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.</p>
-<p>If you try to downgrade a package, and if multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, it can get confused, so watch out for that. You might need to manually remove one of the versions.</p>
-<details>
-<summary>
-Glossary
-</summary>
-<ul>
-<li>pip: A package manager for Python packages that allows users to easily install, upgrade, and remove Python packages.</li>
-<li>/usr/local: A directory on Unix-like systems where locally installed software is usually placed, separate from the operating system’s own packages.</li>
-<li>Debian: A popular Linux distribution known for its stability and ease of use.</li>
-<li>–break-system-packages: A flag used with pip to force installation of packages that conflict with system packages, even though this can cause problems.</li>
-<li>root: The default administrative user in Unix-like operating systems, with full permissions to all system files and directories.</li>
-<li>permissions: The settings that control who can access and modify files and directories on a computer.</li>
-<li>staff group: A group on Unix-like systems that provides additional permissions to users who belong to it.</li>
-<li>chgrp: A Unix command used to change the group ownership of a file or directory.</li>
-<li>chmod: A Unix command used to change the permissions of a file or directory.</li>
-<li>security concern: A potential risk to the security of a system, data, or user privacy.</li>
-<li>dpkg: A package manager for Debian-based Linux distributions.</li>
-<li>upgrade: The process of installing a newer version of a software package over an existing version to get new features or bug fixes.</li>
-<li>downgrade: The process of installing an older version of a software package over a newer version.</li>
-</ul>
-</details>
-</section>
-<section id="enable-switching-the-system-python-version" class="level2">
-<h2 class="anchored" data-anchor-id="enable-switching-the-system-python-version">Enable switching the system python version</h2>
-<p>The default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;">python3.11</span> <span class="at" style="color: #657422;">-m</span> pip install <span class="at" style="color: #657422;">--break-system-packages</span> torchvision</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>ERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)
-ERROR: No matching distribution found for torchvision
-</code></pre>
-</div>
-<div class="cell-output cell-output-error">
-<pre><code>: 1</code></pre>
-</div>
-</div>
-<p>I decided to try switch the system Python version back to 3.10. This is not recommended, but at least it’s easy to undo!</p>
-<p>Anyway, let’s enable switching the system Python version back to 3.10, using <code>update-alternatives</code>.</p>
-<p>First, note that we can undo this change later, if necessary, as follows:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--remove-all</span> python3</span>
-<span id="cb5-2"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--remove-all</span> pydoc3</span>
-<span id="cb5-3"><span class="fu" style="color: #4758AB;">sudo</span> ln <span class="at" style="color: #657422;">-sf</span> python3.11 /usr/bin/python3</span>
-<span id="cb5-4"><span class="fu" style="color: #4758AB;">sudo</span> ln <span class="at" style="color: #657422;">-sf</span> pydoc3.11 /usr/bin/pydoc3</span></code></pre></div>
-</div>
-<p>We can set up alternatives for <code>python3</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/python3 python3 /usr/bin/python3.11 11</span>
-<span id="cb6-2"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/python3 python3 /usr/bin/python3.10 10</span>
-<span id="cb6-3"><span class="co" style="color: #5E5E5E;"># sudo update-alternatives --set python3 /usr/bin/python3.10</span></span></code></pre></div>
-</div>
-<p>and do the same for <code>pydoc3</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11</span>
-<span id="cb7-2"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10</span>
-<span id="cb7-3"><span class="co" style="color: #5E5E5E;"># sudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10</span></span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;">update-alternatives</span> <span class="at" style="color: #657422;">--list</span> python3</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;">update-alternatives</span> <span class="at" style="color: #657422;">--list</span> pydoc3</span></code></pre></div>
-</div>
-<details>
-<summary>
-Glossary
-</summary>
-<ul>
-<li>torchvision: a PyTorch library containing popular datasets, model architectures, and common image transformations for computer vision.</li>
-<li>update-alternatives: a Debian/Ubuntu tool for managing alternative versions of executables, such as Python or Pydoc.</li>
-<li>system Python: the version of Python installed on a Debian/Ubuntu system and used by default for system-level processes.</li>
-<li>break-system-packages: a pip option that allows installation of packages that may break other system packages.</li>
-<li>ln -s: a command for creating symbolic links between files.</li>
-<li>pydoc: a Python documentation tool.</li>
-</ul>
-</details>
-</section>
-<section id="install-nightly-torch-with-python-3.11" class="level2">
-<h2 class="anchored" data-anchor-id="install-nightly-torch-with-python-3.11">Install nightly torch with Python 3.11</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> fastbook jupyter jupyterlab tensorflow ipywidgets</span></code></pre></div>
-</div>
-<p>At some point I saw a warning about compatibility between fastai and torch.</p>
-<pre><code>fastai 2.7.11 has requirement torch&lt;1.14,&gt;=1.7, but you have torch 2.0.0.dev20230220+cu117</code></pre>
-<p>I decided to try using it with nightly torch anyway:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> <span class="at" style="color: #657422;">--pre</span> torch torchvision torchaudio <span class="at" style="color: #657422;">--index-url</span> https://download.pytorch.org/whl/nightly/cu117</span></code></pre></div>
-</div>
-<p>Extra packages: nbdev, and kernels for bash and C:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> nbdev bash_kernel jupyter-c-kernel</span></code></pre></div>
-</div>
-</section>
-<section id="use-the-old-pip-resolver-if-necessary" class="level2">
-<h2 class="anchored" data-anchor-id="use-the-old-pip-resolver-if-necessary">Use the old pip resolver, if necessary</h2>
-<p>As of pip 20.3, a new resolver has been introduced, which doesn’t always work. As of pip 21.0 the old working resolver is unsupported and slated for removal dependent on pip team resources.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="ex" style="color: null;">pip</span> <span class="at" style="color: #657422;">--version</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>pip 23.0 from /usr/lib/python3/dist-packages/pip (python 3.11)</code></pre>
-</div>
-</div>
-<p>With this version of pip, it’s possible to use the “legacy resolver” with the following option:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-U</span> <span class="at" style="color: #657422;">-r</span> requirements.txt <span class="at" style="color: #657422;">--use-deprecated</span><span class="op" style="color: #5E5E5E;">=</span>legacy-resolver</span></code></pre></div>
-</div>
-<p>Or, I can downgrade pip to version 20.2.4, before they switched to the new resolver.</p>
-<p>Refer to https://stackoverflow.com/a/67408694 for more info.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="ex" style="color: null;">pip</span> install pip==20.2.4</span></code></pre></div>
-</div>
-<details>
-<summary>
-Glossary
-</summary>
-<ul>
-<li>resolver: Part of pip responsible for resolving package dependencies and deciding which versions to install.</li>
-<li>legacy resolver: The older version of pip’s resolver algorithm, which is still supported in some versions of pip but has been deprecated and is no longer the default.</li>
-</ul>
-</details>
-</section>
-<section id="pypi-does-not-include-onnxruntime-for-python3.11" class="level2">
-<h2 class="anchored" data-anchor-id="pypi-does-not-include-onnxruntime-for-python3.11">PyPI does not include onnxruntime for python3.11</h2>
-<p>At one point I was hoping to use python3.11 rather than python3.10. I attempted to build onnxruntime from source, but didn’t persevere with it.</p>
-<details>
-<summary>
-Glossary
-</summary>
-<ul>
-<li>PyPI: PyPI (Python Package Index) is a repository of software for the Python programming language. It contains packages of software developed by various authors that are published and shared with the wider Python community.</li>
-<li>onnxruntime: onnxruntime is an open-source engine for executing machine learning models that are defined in the Open Neural Network Exchange (ONNX) format. It provides high performance and supports multiple platforms, including CPU, GPU, and FPGA.</li>
-<li>Source code is the human-readable code that programmers write to create computer programs. It needs to be compiled or interpreted to run on a computer.</li>
-<li>Build: Building refers to the process of compiling or otherwise preparing source code for execution on a specific platform or architecture.</li>
-<li>Open Neural Network Exchange (ONNX): ONNX is an open-source format for representing machine learning models. It is designed to be interoperable across different frameworks and platforms, allowing models to be easily transferred and executed on different hardware.</li>
-<li>FPGA: FPGA stands for Field-Programmable Gate Array. It is an integrated circuit that can be programmed to perform a wide range of computing tasks, including machine learning inference.</li>
-</ul>
-</details>
-</section>
-<section id="untold-difficulties" class="level2">
-<h2 class="anchored" data-anchor-id="untold-difficulties">Untold difficulties! 😭</h2>
-<p>I haven’t described all of the various problems I had to deal with, due to trying various hacky approaches rather than venvs. There were plenty of problems! I guess I learned something from the experience, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would have been a lot easier than this!</p>
-<details>
-<summary>
-Glossary
-</summary>
-<ul>
-<li>hacky approaches: Informal or unconventional methods used to solve a problem or complete a task, often using shortcuts or workarounds instead of following established best practices.</li>
-<li>Lambda Stack: A software stack from Lambda Labs that provides pre-built binaries of deep learning frameworks and other software packages for Ubuntu-based systems.</li>
-</ul>
-</details>
-
-
-</section>
-
- ]]></description>
-  <category>bad</category>
-  <category>setup</category>
-  <category>Debian</category>
-  <guid>https://sam.ucm.dev/blog/posts/bad_ideas/bad_ideas.html</guid>
-  <pubDate>Thu, 02 Mar 2023 13:00:00 GMT</pubDate>
-</item>
 <item>
   <title>My setup for AI work on my Debian PC</title>
   <link>https://sam.ucm.dev/blog/posts/setup/setup.html</link>
@@ -1281,6 +1096,191 @@ Glossary
   <category>Python</category>
   <category>CUDA</category>
   <guid>https://sam.ucm.dev/blog/posts/setup/setup.html</guid>
+  <pubDate>Thu, 02 Mar 2023 13:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Graveyard of bad setup ideas</title>
+  <link>https://sam.ucm.dev/blog/posts/bad_ideas/bad_ideas.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Here is a list of other things I tried for my Debian AI setup, which didn’t work out so well. They didn’t cause disasters for me, but they didn’t solve my setup problems either. Here be dragons!</p>
+</section>
+<section id="allow-myself-to-install-packages-to-usrlocal" class="level2">
+<h2 class="anchored" data-anchor-id="allow-myself-to-install-packages-to-usrlocal">Allow myself to install packages to /usr/local</h2>
+<p>Since I wrote this section, Debian has modified their pip so that it refuses to install to <code>/usr/local</code>, unless we use the <code>--break-system-packages</code> flag.</p>
+<p>It’s not safe to run <code>pip install -U</code> as root. It will merrily remove files from Debian-packaged Python modules under <code>/usr/lib</code>, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under <code>/usr/local</code> via the <code>staff</code> group. I do the same for <code>/opt</code> because I want to upgrade Rust from my own user ID also:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;">sudo</span> adduser <span class="va" style="color: #111111;">$USER</span> staff</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;">sudo</span> chgrp <span class="at" style="color: #657422;">-R</span> staff /usr/local /opt</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;">sudo</span> chmod <span class="at" style="color: #657422;">-R</span> g+w /usr/local /opt</span></code></pre></div>
+</div>
+<p>This is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.</p>
+<p>In order to upgrade a pip package where the same package was also installed in <code>/usr/lib</code> by dpkg, I need to use <code>pip -I -U packagename</code>. The <code>-I</code> flag tells it to ignore installed packages, i.e.&nbsp;don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.</p>
+<p>This setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.</p>
+<p>If you try to downgrade a package, and if multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, it can get confused, so watch out for that. You might need to manually remove one of the versions.</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>pip: A package manager for Python packages that allows users to easily install, upgrade, and remove Python packages.</li>
+<li>/usr/local: A directory on Unix-like systems where locally installed software is usually placed, separate from the operating system’s own packages.</li>
+<li>Debian: A popular Linux distribution known for its stability and ease of use.</li>
+<li>–break-system-packages: A flag used with pip to force installation of packages that conflict with system packages, even though this can cause problems.</li>
+<li>root: The default administrative user in Unix-like operating systems, with full permissions to all system files and directories.</li>
+<li>permissions: The settings that control who can access and modify files and directories on a computer.</li>
+<li>staff group: A group on Unix-like systems that provides additional permissions to users who belong to it.</li>
+<li>chgrp: A Unix command used to change the group ownership of a file or directory.</li>
+<li>chmod: A Unix command used to change the permissions of a file or directory.</li>
+<li>security concern: A potential risk to the security of a system, data, or user privacy.</li>
+<li>dpkg: A package manager for Debian-based Linux distributions.</li>
+<li>upgrade: The process of installing a newer version of a software package over an existing version to get new features or bug fixes.</li>
+<li>downgrade: The process of installing an older version of a software package over a newer version.</li>
+</ul>
+</details>
+</section>
+<section id="enable-switching-the-system-python-version" class="level2">
+<h2 class="anchored" data-anchor-id="enable-switching-the-system-python-version">Enable switching the system python version</h2>
+<p>The default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;">python3.11</span> <span class="at" style="color: #657422;">-m</span> pip install <span class="at" style="color: #657422;">--break-system-packages</span> torchvision</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)
+ERROR: No matching distribution found for torchvision
+</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>: 1</code></pre>
+</div>
+</div>
+<p>I decided to try switch the system Python version back to 3.10. This is not recommended, but at least it’s easy to undo!</p>
+<p>Anyway, let’s enable switching the system Python version back to 3.10, using <code>update-alternatives</code>.</p>
+<p>First, note that we can undo this change later, if necessary, as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--remove-all</span> python3</span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--remove-all</span> pydoc3</span>
+<span id="cb5-3"><span class="fu" style="color: #4758AB;">sudo</span> ln <span class="at" style="color: #657422;">-sf</span> python3.11 /usr/bin/python3</span>
+<span id="cb5-4"><span class="fu" style="color: #4758AB;">sudo</span> ln <span class="at" style="color: #657422;">-sf</span> pydoc3.11 /usr/bin/pydoc3</span></code></pre></div>
+</div>
+<p>We can set up alternatives for <code>python3</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/python3 python3 /usr/bin/python3.11 11</span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/python3 python3 /usr/bin/python3.10 10</span>
+<span id="cb6-3"><span class="co" style="color: #5E5E5E;"># sudo update-alternatives --set python3 /usr/bin/python3.10</span></span></code></pre></div>
+</div>
+<p>and do the same for <code>pydoc3</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11</span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;">sudo</span> update-alternatives <span class="at" style="color: #657422;">--install</span> /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10</span>
+<span id="cb7-3"><span class="co" style="color: #5E5E5E;"># sudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;">update-alternatives</span> <span class="at" style="color: #657422;">--list</span> python3</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;">update-alternatives</span> <span class="at" style="color: #657422;">--list</span> pydoc3</span></code></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>torchvision: a PyTorch library containing popular datasets, model architectures, and common image transformations for computer vision.</li>
+<li>update-alternatives: a Debian/Ubuntu tool for managing alternative versions of executables, such as Python or Pydoc.</li>
+<li>system Python: the version of Python installed on a Debian/Ubuntu system and used by default for system-level processes.</li>
+<li>break-system-packages: a pip option that allows installation of packages that may break other system packages.</li>
+<li>ln -s: a command for creating symbolic links between files.</li>
+<li>pydoc: a Python documentation tool.</li>
+</ul>
+</details>
+</section>
+<section id="install-nightly-torch-with-python-3.11" class="level2">
+<h2 class="anchored" data-anchor-id="install-nightly-torch-with-python-3.11">Install nightly torch with Python 3.11</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> fastbook jupyter jupyterlab tensorflow ipywidgets</span></code></pre></div>
+</div>
+<p>At some point I saw a warning about compatibility between fastai and torch.</p>
+<pre><code>fastai 2.7.11 has requirement torch&lt;1.14,&gt;=1.7, but you have torch 2.0.0.dev20230220+cu117</code></pre>
+<p>I decided to try using it with nightly torch anyway:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> <span class="at" style="color: #657422;">--pre</span> torch torchvision torchaudio <span class="at" style="color: #657422;">--index-url</span> https://download.pytorch.org/whl/nightly/cu117</span></code></pre></div>
+</div>
+<p>Extra packages: nbdev, and kernels for bash and C:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-qq</span> <span class="at" style="color: #657422;">-U</span> nbdev bash_kernel jupyter-c-kernel</span></code></pre></div>
+</div>
+</section>
+<section id="use-the-old-pip-resolver-if-necessary" class="level2">
+<h2 class="anchored" data-anchor-id="use-the-old-pip-resolver-if-necessary">Use the old pip resolver, if necessary</h2>
+<p>As of pip 20.3, a new resolver has been introduced, which doesn’t always work. As of pip 21.0 the old working resolver is unsupported and slated for removal dependent on pip team resources.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="ex" style="color: null;">pip</span> <span class="at" style="color: #657422;">--version</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>pip 23.0 from /usr/lib/python3/dist-packages/pip (python 3.11)</code></pre>
+</div>
+</div>
+<p>With this version of pip, it’s possible to use the “legacy resolver” with the following option:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-U</span> <span class="at" style="color: #657422;">-r</span> requirements.txt <span class="at" style="color: #657422;">--use-deprecated</span><span class="op" style="color: #5E5E5E;">=</span>legacy-resolver</span></code></pre></div>
+</div>
+<p>Or, I can downgrade pip to version 20.2.4, before they switched to the new resolver.</p>
+<p>Refer to https://stackoverflow.com/a/67408694 for more info.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><span class="ex" style="color: null;">pip</span> install pip==20.2.4</span></code></pre></div>
+</div>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>resolver: Part of pip responsible for resolving package dependencies and deciding which versions to install.</li>
+<li>legacy resolver: The older version of pip’s resolver algorithm, which is still supported in some versions of pip but has been deprecated and is no longer the default.</li>
+</ul>
+</details>
+</section>
+<section id="pypi-does-not-include-onnxruntime-for-python3.11" class="level2">
+<h2 class="anchored" data-anchor-id="pypi-does-not-include-onnxruntime-for-python3.11">PyPI does not include onnxruntime for python3.11</h2>
+<p>At one point I was hoping to use python3.11 rather than python3.10. I attempted to build onnxruntime from source, but didn’t persevere with it.</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>PyPI: PyPI (Python Package Index) is a repository of software for the Python programming language. It contains packages of software developed by various authors that are published and shared with the wider Python community.</li>
+<li>onnxruntime: onnxruntime is an open-source engine for executing machine learning models that are defined in the Open Neural Network Exchange (ONNX) format. It provides high performance and supports multiple platforms, including CPU, GPU, and FPGA.</li>
+<li>Source code is the human-readable code that programmers write to create computer programs. It needs to be compiled or interpreted to run on a computer.</li>
+<li>Build: Building refers to the process of compiling or otherwise preparing source code for execution on a specific platform or architecture.</li>
+<li>Open Neural Network Exchange (ONNX): ONNX is an open-source format for representing machine learning models. It is designed to be interoperable across different frameworks and platforms, allowing models to be easily transferred and executed on different hardware.</li>
+<li>FPGA: FPGA stands for Field-Programmable Gate Array. It is an integrated circuit that can be programmed to perform a wide range of computing tasks, including machine learning inference.</li>
+</ul>
+</details>
+</section>
+<section id="untold-difficulties" class="level2">
+<h2 class="anchored" data-anchor-id="untold-difficulties">Untold difficulties! 😭</h2>
+<p>I haven’t described all of the various problems I had to deal with, due to trying various hacky approaches rather than venvs. There were plenty of problems! I guess I learned something from the experience, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would have been a lot easier than this!</p>
+<details>
+<summary>
+Glossary
+</summary>
+<ul>
+<li>hacky approaches: Informal or unconventional methods used to solve a problem or complete a task, often using shortcuts or workarounds instead of following established best practices.</li>
+<li>Lambda Stack: A software stack from Lambda Labs that provides pre-built binaries of deep learning frameworks and other software packages for Ubuntu-based systems.</li>
+</ul>
+</details>
+
+
+</section>
+
+ ]]></description>
+  <category>bad</category>
+  <category>setup</category>
+  <category>Debian</category>
+  <guid>https://sam.ucm.dev/blog/posts/bad_ideas/bad_ideas.html</guid>
   <pubDate>Thu, 02 Mar 2023 13:00:00 GMT</pubDate>
 </item>
 <item>

@@ -2,11 +2,12 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/bad_ideas/bad_ideas.html",
+      "/posts/backport/backport.html",
       "/posts/setup/setup.html",
+      "/posts/deadends/deadends.html",
       "/posts/shortcuts/shortcuts.html",
       "/posts/startup/startup.html",
-      "/posts/blogging/blogging.html"
+      "/posts/blog/blog.html"
     ]
   }
 ]
