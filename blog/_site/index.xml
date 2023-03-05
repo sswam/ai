@@ -9,7 +9,7 @@
 <link>https://sam.ucm.dev/blog/index.html</link>
 <atom:link href="https://sam.ucm.dev/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>recording my AI studies</description>
-<generator>quarto-1.2.335</generator>
+<generator>quarto-1.2.280</generator>
 <lastBuildDate>Thu, 02 Mar 2023 13:00:00 GMT</lastBuildDate>
 <item>
   <title>My setup for AI work on my Debian PC</title>
@@ -1104,7 +1104,7 @@ Glossary
 </item>
 <item>
   <title>Graveyard of bad setup ideas</title>
-  <link>https://sam.ucm.dev/blog/posts/bad_ideas/bad_ideas.html</link>
+  <link>https://sam.ucm.dev/blog/posts/deadends/deadends.html</link>
   <description><![CDATA[ 
 
 
@@ -1112,7 +1112,7 @@ Glossary
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Here is a list of other things I tried for my Debian AI setup, which didn’t work out so well. They didn’t cause disasters for me, but they didn’t solve my setup problems either. Here be dragons!</p>
+<p>Here is a list of other things I tried for my Debian AI setup, which didn’t work out so well. They didn’t cause disasters for me, but they were dead-ends; they didn’t solve my setup problems. Here be dragons!</p>
 </section>
 <section id="allow-myself-to-install-packages-to-usrlocal" class="level2">
 <h2 class="anchored" data-anchor-id="allow-myself-to-install-packages-to-usrlocal">Allow myself to install packages to /usr/local</h2>
@@ -1284,7 +1284,7 @@ Glossary
   <category>bad</category>
   <category>setup</category>
   <category>Debian</category>
-  <guid>https://sam.ucm.dev/blog/posts/bad_ideas/bad_ideas.html</guid>
+  <guid>https://sam.ucm.dev/blog/posts/deadends/deadends.html</guid>
   <pubDate>Thu, 02 Mar 2023 13:00:00 GMT</pubDate>
 </item>
 <item>
@@ -1656,7 +1656,7 @@ See also
 </item>
 <item>
   <title>Blogging AI with Jupyter and Quarto</title>
-  <link>https://sam.ucm.dev/blog/posts/blogging/blogging.html</link>
+  <link>https://sam.ucm.dev/blog/posts/blog/blog.html</link>
   <description><![CDATA[ 
 
 
@@ -1844,10 +1844,10 @@ See also
 
  ]]></description>
   <category>setup</category>
-  <category>blogging</category>
+  <category>blog</category>
   <category>Jupyter</category>
   <category>Quarto</category>
-  <guid>https://sam.ucm.dev/blog/posts/blogging/blogging.html</guid>
+  <guid>https://sam.ucm.dev/blog/posts/blog/blog.html</guid>
   <pubDate>Tue, 07 Feb 2023 13:00:00 GMT</pubDate>
 </item>
 </channel>

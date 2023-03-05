@@ -1,54 +1,5 @@
 [
   {
-    "objectID": "posts/bad_ideas/bad_ideas.html",
-    "href": "posts/bad_ideas/bad_ideas.html",
-    "title": "Graveyard of bad setup ideas",
-    "section": "",
-    "text": "Here is a list of other things I tried for my Debian AI setup, which didn’t work out so well. They didn’t cause disasters for me, but they didn’t solve my setup problems either. Here be dragons!"
-  },
-  {
-    "objectID": "posts/bad_ideas/bad_ideas.html#allow-myself-to-install-packages-to-usrlocal",
-    "href": "posts/bad_ideas/bad_ideas.html#allow-myself-to-install-packages-to-usrlocal",
-    "title": "Graveyard of bad setup ideas",
-    "section": "Allow myself to install packages to /usr/local",
-    "text": "Allow myself to install packages to /usr/local\nSince I wrote this section, Debian has modified their pip so that it refuses to install to /usr/local, unless we use the --break-system-packages flag.\nIt’s not safe to run pip install -U as root. It will merrily remove files from Debian-packaged Python modules under /usr/lib, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under /usr/local via the staff group. I do the same for /opt because I want to upgrade Rust from my own user ID also:\n\nsudo adduser $USER staff\nsudo chgrp -R staff /usr/local /opt\nsudo chmod -R g+w /usr/local /opt\n\nThis is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.\nIn order to upgrade a pip package where the same package was also installed in /usr/lib by dpkg, I need to use pip -I -U packagename. The -I flag tells it to ignore installed packages, i.e. don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.\nThis setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.\nIf you try to downgrade a package, and if multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, it can get confused, so watch out for that. You might need to manually remove one of the versions.\n\n\nGlossary\n\n\npip: A package manager for Python packages that allows users to easily install, upgrade, and remove Python packages.\n/usr/local: A directory on Unix-like systems where locally installed software is usually placed, separate from the operating system’s own packages.\nDebian: A popular Linux distribution known for its stability and ease of use.\n–break-system-packages: A flag used with pip to force installation of packages that conflict with system packages, even though this can cause problems.\nroot: The default administrative user in Unix-like operating systems, with full permissions to all system files and directories.\npermissions: The settings that control who can access and modify files and directories on a computer.\nstaff group: A group on Unix-like systems that provides additional permissions to users who belong to it.\nchgrp: A Unix command used to change the group ownership of a file or directory.\nchmod: A Unix command used to change the permissions of a file or directory.\nsecurity concern: A potential risk to the security of a system, data, or user privacy.\ndpkg: A package manager for Debian-based Linux distributions.\nupgrade: The process of installing a newer version of a software package over an existing version to get new features or bug fixes.\ndowngrade: The process of installing an older version of a software package over a newer version."
-  },
-  {
-    "objectID": "posts/bad_ideas/bad_ideas.html#enable-switching-the-system-python-version",
-    "href": "posts/bad_ideas/bad_ideas.html#enable-switching-the-system-python-version",
-    "title": "Graveyard of bad setup ideas",
-    "section": "Enable switching the system python version",
-    "text": "Enable switching the system python version\nThe default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet.\n\npython3.11 -m pip install --break-system-packages torchvision\n\nERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)\nERROR: No matching distribution found for torchvision\n\n\n\n: 1\n\n\nI decided to try switch the system Python version back to 3.10. This is not recommended, but at least it’s easy to undo!\nAnyway, let’s enable switching the system Python version back to 3.10, using update-alternatives.\nFirst, note that we can undo this change later, if necessary, as follows:\n\nsudo update-alternatives --remove-all python3\nsudo update-alternatives --remove-all pydoc3\nsudo ln -sf python3.11 /usr/bin/python3\nsudo ln -sf pydoc3.11 /usr/bin/pydoc3\n\nWe can set up alternatives for python3:\n\nsudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 11\nsudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 10\n# sudo update-alternatives --set python3 /usr/bin/python3.10\n\nand do the same for pydoc3:\n\nsudo update-alternatives --install /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11\nsudo update-alternatives --install /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10\n# sudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10\n\n\nupdate-alternatives --list python3\n\n\nupdate-alternatives --list pydoc3\n\n\n\nGlossary\n\n\ntorchvision: a PyTorch library containing popular datasets, model architectures, and common image transformations for computer vision.\nupdate-alternatives: a Debian/Ubuntu tool for managing alternative versions of executables, such as Python or Pydoc.\nsystem Python: the version of Python installed on a Debian/Ubuntu system and used by default for system-level processes.\nbreak-system-packages: a pip option that allows installation of packages that may break other system packages.\nln -s: a command for creating symbolic links between files.\npydoc: a Python documentation tool."
-  },
-  {
-    "objectID": "posts/bad_ideas/bad_ideas.html#install-nightly-torch-with-python-3.11",
-    "href": "posts/bad_ideas/bad_ideas.html#install-nightly-torch-with-python-3.11",
-    "title": "Graveyard of bad setup ideas",
-    "section": "Install nightly torch with Python 3.11",
-    "text": "Install nightly torch with Python 3.11\n\npip install -qq -U fastbook jupyter jupyterlab tensorflow ipywidgets\n\nAt some point I saw a warning about compatibility between fastai and torch.\nfastai 2.7.11 has requirement torch<1.14,>=1.7, but you have torch 2.0.0.dev20230220+cu117\nI decided to try using it with nightly torch anyway:\n\npip install -qq -U --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu117\n\nExtra packages: nbdev, and kernels for bash and C:\n\npip install -qq -U nbdev bash_kernel jupyter-c-kernel"
-  },
-  {
-    "objectID": "posts/bad_ideas/bad_ideas.html#use-the-old-pip-resolver-if-necessary",
-    "href": "posts/bad_ideas/bad_ideas.html#use-the-old-pip-resolver-if-necessary",
-    "title": "Graveyard of bad setup ideas",
-    "section": "Use the old pip resolver, if necessary",
-    "text": "Use the old pip resolver, if necessary\nAs of pip 20.3, a new resolver has been introduced, which doesn’t always work. As of pip 21.0 the old working resolver is unsupported and slated for removal dependent on pip team resources.\n\npip --version\n\npip 23.0 from /usr/lib/python3/dist-packages/pip (python 3.11)\n\n\nWith this version of pip, it’s possible to use the “legacy resolver” with the following option:\n\npip install -U -r requirements.txt --use-deprecated=legacy-resolver\n\nOr, I can downgrade pip to version 20.2.4, before they switched to the new resolver.\nRefer to https://stackoverflow.com/a/67408694 for more info.\n\npip install pip==20.2.4\n\n\n\nGlossary\n\n\nresolver: Part of pip responsible for resolving package dependencies and deciding which versions to install.\nlegacy resolver: The older version of pip’s resolver algorithm, which is still supported in some versions of pip but has been deprecated and is no longer the default."
-  },
-  {
-    "objectID": "posts/bad_ideas/bad_ideas.html#pypi-does-not-include-onnxruntime-for-python3.11",
-    "href": "posts/bad_ideas/bad_ideas.html#pypi-does-not-include-onnxruntime-for-python3.11",
-    "title": "Graveyard of bad setup ideas",
-    "section": "PyPI does not include onnxruntime for python3.11",
-    "text": "PyPI does not include onnxruntime for python3.11\nAt one point I was hoping to use python3.11 rather than python3.10. I attempted to build onnxruntime from source, but didn’t persevere with it.\n\n\nGlossary\n\n\nPyPI: PyPI (Python Package Index) is a repository of software for the Python programming language. It contains packages of software developed by various authors that are published and shared with the wider Python community.\nonnxruntime: onnxruntime is an open-source engine for executing machine learning models that are defined in the Open Neural Network Exchange (ONNX) format. It provides high performance and supports multiple platforms, including CPU, GPU, and FPGA.\nSource code is the human-readable code that programmers write to create computer programs. It needs to be compiled or interpreted to run on a computer.\nBuild: Building refers to the process of compiling or otherwise preparing source code for execution on a specific platform or architecture.\nOpen Neural Network Exchange (ONNX): ONNX is an open-source format for representing machine learning models. It is designed to be interoperable across different frameworks and platforms, allowing models to be easily transferred and executed on different hardware.\nFPGA: FPGA stands for Field-Programmable Gate Array. It is an integrated circuit that can be programmed to perform a wide range of computing tasks, including machine learning inference."
-  },
-  {
-    "objectID": "posts/bad_ideas/bad_ideas.html#untold-difficulties",
-    "href": "posts/bad_ideas/bad_ideas.html#untold-difficulties",
-    "title": "Graveyard of bad setup ideas",
-    "section": "Untold difficulties! 😭",
-    "text": "Untold difficulties! 😭\nI haven’t described all of the various problems I had to deal with, due to trying various hacky approaches rather than venvs. There were plenty of problems! I guess I learned something from the experience, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would have been a lot easier than this!\n\n\nGlossary\n\n\nhacky approaches: Informal or unconventional methods used to solve a problem or complete a task, often using shortcuts or workarounds instead of following established best practices.\nLambda Stack: A software stack from Lambda Labs that provides pre-built binaries of deep learning frameworks and other software packages for Ubuntu-based systems."
-  },
-  {
     "objectID": "posts/setup/setup.html",
     "href": "posts/setup/setup.html",
     "title": "My setup for AI work on my Debian PC",
@@ -119,81 +70,130 @@
     "text": "Conclusion\nWith these new keyboard shortcuts, you can quickly run all the cells above your current selection, clear all cell outputs, render all markdown cells, and paste cells above your current selection. By customizing your shortcuts to fit your needs, you can save time and increase your productivity in Jupyter Lab."
   },
   {
-    "objectID": "posts/blogging/blogging.html",
-    "href": "posts/blogging/blogging.html",
+    "objectID": "posts/blog/blog.html",
+    "href": "posts/blog/blog.html",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "",
     "text": "Welcome to my blog! My name is Sam Watkins, and I am a programmer and math enthusiast with a keen interest in artificial intelligence. As part of my journey to learn more about AI, I am starting this blog to document my studies, particularly with the fast.ai book and courses.\nIn this first post, I will provide an overview of why I am starting this blog and share some details on how I plan to use Jupyter, Quarto, and nbdev2 tools to create software libraries, documentation, apps, and blog posts. I believe that blogging will not only help me solidify my understanding of AI but also provide a platform to share my insights and get feedback from others in the community. Blogging can be a powerful tool for learning, networking, and personal development.\nI want to note from the beginning, that I am using ChatGPT to help me write better blog posts; but I’m doing most of the work!"
   },
   {
-    "objectID": "posts/blogging/blogging.html#why-write-a-blog",
-    "href": "posts/blogging/blogging.html#why-write-a-blog",
+    "objectID": "posts/blog/blog.html#why-write-a-blog",
+    "href": "posts/blog/blog.html#why-write-a-blog",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Why write a blog?",
     "text": "Why write a blog?\nIn a previous post on dev.to, I discussed the benefits of keeping a development log. Writing about my progress helps me learn more effectively, and the feedback I receive can be invaluable. I’ve also learned from the success of other developers, like the creator of the game Gunpoint, who grew a community around his blog and received feedback at every step of his project.\nI hope that by starting this blog, I can experience some of the benefits of blogging for myself and maybe help others in the process. Please leave a comment using the hypothes.is plugin on the right side, if you have any thoughts on the topic or suggestions for me as I begin this journey.\n\n\nSee also\n\n\nThis previous post of mine on dev.to: Why Write a Dev Log?\nRachael Thomas’s post: Why you (yes, you) should blog\nAnother post from Rachael: Advice for Better Blog Posts\nAn exemplary dev log: Gunpoint dev log\nAn exemplary dev retrospective: Gunpoint dev breakdown"
   },
   {
-    "objectID": "posts/blogging/blogging.html#why-use-jupyter-and-quarto",
-    "href": "posts/blogging/blogging.html#why-use-jupyter-and-quarto",
+    "objectID": "posts/blog/blog.html#why-use-jupyter-and-quarto",
+    "href": "posts/blog/blog.html#why-use-jupyter-and-quarto",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Why use Jupyter and Quarto?",
     "text": "Why use Jupyter and Quarto?\nThe fast.ai team recommends to work in Jupyter and blog using Quarto. Their nbdev2 tool also makes use of Quarto. We can work on a notebooks in Jupyter, then run them through nbdev2 and Quarto to produce software libraries, documentation, apps, blog posts, papers, and even books.\n\n\nSee also\n\n\nfast.ai: A company that provides practical deep learning courses and libraries, as well as open source software tools for building and deploying deep learning models.\nnbdev+Quarto: A new secret weapon for productivity: The blog post recommending to use Jupyter with nbdev and Quarto.\nJupyter: A web-based interactive development environment for creating notebooks, code, and data visualizations. Supports multiple programming languages.\nQuarto: A document automation tool that can be used for creating books, reports, and blogs using Markdown, Jupyter Notebooks, and other file formats.\nnbdev: A tool that helps you develop Python packages using Jupyter Notebooks."
   },
   {
-    "objectID": "posts/blogging/blogging.html#installing-the-software",
-    "href": "posts/blogging/blogging.html#installing-the-software",
+    "objectID": "posts/blog/blog.html#installing-the-software",
+    "href": "posts/blog/blog.html#installing-the-software",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Installing the software",
     "text": "Installing the software\nI am running the AI tools on my home PC, with Debian GNU/Linux and an NVIDIA GPU. I’ll write more about my setup in another post.\nI downloaded Quarto from their Get Started page, and installed it.\nTo manage the installation of Python packages, I’m using pip, which is a package installer for Python. It’s a command-line utility that helps you install and manage software packages written in Python. You can learn more about pip and its usage from the official pip documentation.\nThis command installs or upgrades Jupyter, fastbook, and nbdev Python packages, which I’ll need to use for AI experiments and to help me write my blog.\n\npip install -qq -U jupyter fastbook nbdev"
   },
   {
-    "objectID": "posts/blogging/blogging.html#setting-up-the-blog",
-    "href": "posts/blogging/blogging.html#setting-up-the-blog",
+    "objectID": "posts/blog/blog.html#setting-up-the-blog",
+    "href": "posts/blog/blog.html#setting-up-the-blog",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Setting up the blog",
     "text": "Setting up the blog\nTo set up the blog, I first created a Git repository called ai in my home directory. I used the following commands to create the blog project.\n\ncd\nmkdir -p ai\ncd ai\ngit init\n\nReinitialized existing Git repository in /home/sam/ai/.git/\n\n\n\nquarto create-project blog --type website:blog\n\nCreating project at /home/sam/ai/blog:\n  - Created _quarto.yml\n  - Created .gitignore\n  - Created index.qmd\n  - Created posts/welcome/index.qmd\n  - Created posts/post-with-code/index.qmd\n  - Created about.qmd\n  - Created styles.css\n  - Created posts/_metadata.yml\n\n\nI also ran the command nbdev_install_hooks to prevent unnecessary Git merge conflicts and enable conflict resolution in Jupyter.\n\nnbdev_install_hooks\n\nHooks are installed.\n\n\n\n\nSee also\n\n\nQuarto - Creating a Blog\nThe Jupyter+git problem is now solved\nGit-Friendly Jupyter\nGit documentation\nGit Handbook\nCodecademy’s “Learn Git” course\nBash Guide for Beginners"
   },
   {
-    "objectID": "posts/blogging/blogging.html#adding-this-post-to-the-blog",
-    "href": "posts/blogging/blogging.html#adding-this-post-to-the-blog",
+    "objectID": "posts/blog/blog.html#adding-this-post-to-the-blog",
+    "href": "posts/blog/blog.html#adding-this-post-to-the-blog",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Adding this post to the blog",
     "text": "Adding this post to the blog\nI had already started writing this post in a Jupyter Lab notebook blogging.ipynb. Now I needed to put it in the right place, so I made a directory for it:\nI started writing this post in a Jupyter Lab notebook called blogging.ipynb. When I got to this point, I needed to put it in the right directory to include it in the blog. I first created a directory called blog/posts/blogging:\n\nmkdir -p blog/posts/blogging\n\nThen I simply moved the blogging.ipynb file to that directory using Jupyter Lab’s file browser. This allowed me to easily include the post in the blog without even having to close the notebook."
   },
   {
-    "objectID": "posts/blogging/blogging.html#previewing-the-blog",
-    "href": "posts/blogging/blogging.html#previewing-the-blog",
+    "objectID": "posts/blog/blog.html#previewing-the-blog",
+    "href": "posts/blog/blog.html#previewing-the-blog",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Previewing the blog",
     "text": "Previewing the blog\nOnce you’ve set up your blog, you can preview it by running the following command in a terminal:\nquarto preview blog\nMake sure to run this command outside of Jupyter, as it can cause Jupyter to hang if run in a cell.\nYou can also use additional options to customize the preview. For example, if you don’t want to launch a browser, you can use the –no-browser option. If you want to specify a custom port, you can use the –port option followed by the desired port number. Here’s an example of how to use both options:\nquarto preview blog --no-browser --port 4242\nThis will start the preview on port 4242 and prevent it from automatically launching a browser. I do it this way myself, because I open the preview window from a separate startup script."
   },
   {
-    "objectID": "posts/blogging/blogging.html#finishing-up",
-    "href": "posts/blogging/blogging.html#finishing-up",
+    "objectID": "posts/blog/blog.html#finishing-up",
+    "href": "posts/blog/blog.html#finishing-up",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Finishing up",
     "text": "Finishing up\nTo clean up the blog ready for publishing my first post, I removed the example posts, changed the settings, filled in the about page, added links to my social media profiles, and added a profile picture.\nI also followed the Quarto documentation to enable comments using Hypothesis and an RSS feed for the blog.\nThe Hypothesis annotation tool to allow readers to leave comments and annotations on the blog posts. This feature required me to create an Hypothesis account and link it to the blog. It’s functional, but looks and feels different from regular commenting. Please try it out and leave a comment for me.\nFor the RSS feed, I followed the Quarto guide to add an RSS feed to the blog. This enables readers to subscribe to the blog and receive updates whenever new posts are published. Personally I am using the Miniflux RSS reader; Newsblur is another good option. After a bit of research, I found that I can follow the comments on my blog using this RSS stream.\n\n\nSee also\n\n\nQuarto - HTML Basics - Commenting\nQuarto - Creating a Blog - RSS Feed\nHypothesis: A web-based annotation tool that allows users to highlight and comment on web pages.\nRSS: A web feed format used to publish frequently updated content such as blog entries, news headlines, and podcasts.\nMiniflux: A minimalist and open source RSS reader.\nNewsBlur: A personal news reader that brings people together to talk about the world."
   },
   {
-    "objectID": "posts/blogging/blogging.html#committing-to-git",
-    "href": "posts/blogging/blogging.html#committing-to-git",
+    "objectID": "posts/blog/blog.html#committing-to-git",
+    "href": "posts/blog/blog.html#committing-to-git",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Committing to git",
     "text": "Committing to git\nThe Quarto doc says “you should always fully quarto render your site before deploying it”, so let’s do it, and commit to git:\n\ncd ~/ai\nquarto render blog\ngit add blog\ngit commit -m 'update blog'\ngit push\ngit push opal\ngit push pi\n\nI pushed to github, and my two servers opal and pi.\n\n\nSee also\n\n\nQuarto - Websites\nGitHub"
   },
   {
-    "objectID": "posts/blogging/blogging.html#publishing-the-blog",
-    "href": "posts/blogging/blogging.html#publishing-the-blog",
+    "objectID": "posts/blog/blog.html#publishing-the-blog",
+    "href": "posts/blog/blog.html#publishing-the-blog",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Publishing the blog",
     "text": "Publishing the blog\nI used a symlink on my server to put the rendered blog into my website at sam.ucm.dev/blog:\nln -s ~/ai/blog/_site ~/www/sam.ucm.dev/blog\n\n\nSee also\n\n\nQuarto - Publishing"
   },
   {
-    "objectID": "posts/blogging/blogging.html#conclusion",
-    "href": "posts/blogging/blogging.html#conclusion",
+    "objectID": "posts/blog/blog.html#conclusion",
+    "href": "posts/blog/blog.html#conclusion",
     "title": "Blogging AI with Jupyter and Quarto",
     "section": "Conclusion",
     "text": "Conclusion\nIn this post, we’ve seen how to set up a blog using Quarto and Jupyter. These tools allow us to write and publish blog posts as Jupyter notebooks, which can be converted to various formats such as HTML, PDF, and LaTeX, among others. We’ve also looked at using Hypothesis for comments and annotations, and how to commit our changes to git and deploy our blog on a personal server. By following these steps, we can create a blog that showcases our AI studies and provides a platform for getting feedback, sharing knowledge, and building a community.\nOne thing I would like to explore further, is a way that I can automatically link to other AI bloggers in the community. Link sharing and discovery is one of the benefits of posting on an off-the-shelf playform, such as Towards Data Science; it would be good to have something similar for indie bloggers. Maybe just an RSS aggregator plugin that would show links to other recent posts from selected friends and communities…\nIf you have any questions or suggestions, please leave a comment, if you can figure out how to use Hypothesis. Thanks for reading!"
+  },
+  {
+    "objectID": "posts/deadends/deadends.html",
+    "href": "posts/deadends/deadends.html",
+    "title": "Graveyard of bad setup ideas",
+    "section": "",
+    "text": "Here is a list of other things I tried for my Debian AI setup, which didn’t work out so well. They didn’t cause disasters for me, but they were dead-ends; they didn’t solve my setup problems. Here be dragons!"
+  },
+  {
+    "objectID": "posts/deadends/deadends.html#allow-myself-to-install-packages-to-usrlocal",
+    "href": "posts/deadends/deadends.html#allow-myself-to-install-packages-to-usrlocal",
+    "title": "Graveyard of bad setup ideas",
+    "section": "Allow myself to install packages to /usr/local",
+    "text": "Allow myself to install packages to /usr/local\nSince I wrote this section, Debian has modified their pip so that it refuses to install to /usr/local, unless we use the --break-system-packages flag.\nIt’s not safe to run pip install -U as root. It will merrily remove files from Debian-packaged Python modules under /usr/lib, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under /usr/local via the staff group. I do the same for /opt because I want to upgrade Rust from my own user ID also:\n\nsudo adduser $USER staff\nsudo chgrp -R staff /usr/local /opt\nsudo chmod -R g+w /usr/local /opt\n\nThis is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.\nIn order to upgrade a pip package where the same package was also installed in /usr/lib by dpkg, I need to use pip -I -U packagename. The -I flag tells it to ignore installed packages, i.e. don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.\nThis setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.\nIf you try to downgrade a package, and if multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, it can get confused, so watch out for that. You might need to manually remove one of the versions.\n\n\nGlossary\n\n\npip: A package manager for Python packages that allows users to easily install, upgrade, and remove Python packages.\n/usr/local: A directory on Unix-like systems where locally installed software is usually placed, separate from the operating system’s own packages.\nDebian: A popular Linux distribution known for its stability and ease of use.\n–break-system-packages: A flag used with pip to force installation of packages that conflict with system packages, even though this can cause problems.\nroot: The default administrative user in Unix-like operating systems, with full permissions to all system files and directories.\npermissions: The settings that control who can access and modify files and directories on a computer.\nstaff group: A group on Unix-like systems that provides additional permissions to users who belong to it.\nchgrp: A Unix command used to change the group ownership of a file or directory.\nchmod: A Unix command used to change the permissions of a file or directory.\nsecurity concern: A potential risk to the security of a system, data, or user privacy.\ndpkg: A package manager for Debian-based Linux distributions.\nupgrade: The process of installing a newer version of a software package over an existing version to get new features or bug fixes.\ndowngrade: The process of installing an older version of a software package over a newer version."
+  },
+  {
+    "objectID": "posts/deadends/deadends.html#enable-switching-the-system-python-version",
+    "href": "posts/deadends/deadends.html#enable-switching-the-system-python-version",
+    "title": "Graveyard of bad setup ideas",
+    "section": "Enable switching the system python version",
+    "text": "Enable switching the system python version\nThe default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet.\n\npython3.11 -m pip install --break-system-packages torchvision\n\nERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)\nERROR: No matching distribution found for torchvision\n\n\n\n: 1\n\n\nI decided to try switch the system Python version back to 3.10. This is not recommended, but at least it’s easy to undo!\nAnyway, let’s enable switching the system Python version back to 3.10, using update-alternatives.\nFirst, note that we can undo this change later, if necessary, as follows:\n\nsudo update-alternatives --remove-all python3\nsudo update-alternatives --remove-all pydoc3\nsudo ln -sf python3.11 /usr/bin/python3\nsudo ln -sf pydoc3.11 /usr/bin/pydoc3\n\nWe can set up alternatives for python3:\n\nsudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 11\nsudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 10\n# sudo update-alternatives --set python3 /usr/bin/python3.10\n\nand do the same for pydoc3:\n\nsudo update-alternatives --install /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11\nsudo update-alternatives --install /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10\n# sudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10\n\n\nupdate-alternatives --list python3\n\n\nupdate-alternatives --list pydoc3\n\n\n\nGlossary\n\n\ntorchvision: a PyTorch library containing popular datasets, model architectures, and common image transformations for computer vision.\nupdate-alternatives: a Debian/Ubuntu tool for managing alternative versions of executables, such as Python or Pydoc.\nsystem Python: the version of Python installed on a Debian/Ubuntu system and used by default for system-level processes.\nbreak-system-packages: a pip option that allows installation of packages that may break other system packages.\nln -s: a command for creating symbolic links between files.\npydoc: a Python documentation tool."
+  },
+  {
+    "objectID": "posts/deadends/deadends.html#install-nightly-torch-with-python-3.11",
+    "href": "posts/deadends/deadends.html#install-nightly-torch-with-python-3.11",
+    "title": "Graveyard of bad setup ideas",
+    "section": "Install nightly torch with Python 3.11",
+    "text": "Install nightly torch with Python 3.11\n\npip install -qq -U fastbook jupyter jupyterlab tensorflow ipywidgets\n\nAt some point I saw a warning about compatibility between fastai and torch.\nfastai 2.7.11 has requirement torch<1.14,>=1.7, but you have torch 2.0.0.dev20230220+cu117\nI decided to try using it with nightly torch anyway:\n\npip install -qq -U --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu117\n\nExtra packages: nbdev, and kernels for bash and C:\n\npip install -qq -U nbdev bash_kernel jupyter-c-kernel"
+  },
+  {
+    "objectID": "posts/deadends/deadends.html#use-the-old-pip-resolver-if-necessary",
+    "href": "posts/deadends/deadends.html#use-the-old-pip-resolver-if-necessary",
+    "title": "Graveyard of bad setup ideas",
+    "section": "Use the old pip resolver, if necessary",
+    "text": "Use the old pip resolver, if necessary\nAs of pip 20.3, a new resolver has been introduced, which doesn’t always work. As of pip 21.0 the old working resolver is unsupported and slated for removal dependent on pip team resources.\n\npip --version\n\npip 23.0 from /usr/lib/python3/dist-packages/pip (python 3.11)\n\n\nWith this version of pip, it’s possible to use the “legacy resolver” with the following option:\n\npip install -U -r requirements.txt --use-deprecated=legacy-resolver\n\nOr, I can downgrade pip to version 20.2.4, before they switched to the new resolver.\nRefer to https://stackoverflow.com/a/67408694 for more info.\n\npip install pip==20.2.4\n\n\n\nGlossary\n\n\nresolver: Part of pip responsible for resolving package dependencies and deciding which versions to install.\nlegacy resolver: The older version of pip’s resolver algorithm, which is still supported in some versions of pip but has been deprecated and is no longer the default."
+  },
+  {
+    "objectID": "posts/deadends/deadends.html#pypi-does-not-include-onnxruntime-for-python3.11",
+    "href": "posts/deadends/deadends.html#pypi-does-not-include-onnxruntime-for-python3.11",
+    "title": "Graveyard of bad setup ideas",
+    "section": "PyPI does not include onnxruntime for python3.11",
+    "text": "PyPI does not include onnxruntime for python3.11\nAt one point I was hoping to use python3.11 rather than python3.10. I attempted to build onnxruntime from source, but didn’t persevere with it.\n\n\nGlossary\n\n\nPyPI: PyPI (Python Package Index) is a repository of software for the Python programming language. It contains packages of software developed by various authors that are published and shared with the wider Python community.\nonnxruntime: onnxruntime is an open-source engine for executing machine learning models that are defined in the Open Neural Network Exchange (ONNX) format. It provides high performance and supports multiple platforms, including CPU, GPU, and FPGA.\nSource code is the human-readable code that programmers write to create computer programs. It needs to be compiled or interpreted to run on a computer.\nBuild: Building refers to the process of compiling or otherwise preparing source code for execution on a specific platform or architecture.\nOpen Neural Network Exchange (ONNX): ONNX is an open-source format for representing machine learning models. It is designed to be interoperable across different frameworks and platforms, allowing models to be easily transferred and executed on different hardware.\nFPGA: FPGA stands for Field-Programmable Gate Array. It is an integrated circuit that can be programmed to perform a wide range of computing tasks, including machine learning inference."
+  },
+  {
+    "objectID": "posts/deadends/deadends.html#untold-difficulties",
+    "href": "posts/deadends/deadends.html#untold-difficulties",
+    "title": "Graveyard of bad setup ideas",
+    "section": "Untold difficulties! 😭",
+    "text": "Untold difficulties! 😭\nI haven’t described all of the various problems I had to deal with, due to trying various hacky approaches rather than venvs. There were plenty of problems! I guess I learned something from the experience, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would have been a lot easier than this!\n\n\nGlossary\n\n\nhacky approaches: Informal or unconventional methods used to solve a problem or complete a task, often using shortcuts or workarounds instead of following established best practices.\nLambda Stack: A software stack from Lambda Labs that provides pre-built binaries of deep learning frameworks and other software packages for Ubuntu-based systems."
   },
   {
     "objectID": "posts/startup/startup.html",
@@ -263,55 +263,6 @@
     "href": "index.html",
     "title": "Sam’s AI Blog",
     "section": "",
-    "text": "Graveyard of bad setup ideas\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n\n\nMy setup for AI work on my Debian PC\n\n\n\n\n\n\n\nsetup\n\n\nDebian\n\n\nfastai\n\n\nPython\n\n\nCUDA\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n\n\nGraveyard of bad setup ideas\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n\n\nKeyboard shortcuts for Jupyter Lab\n\n\n\n\n\n\n\nsetup\n\n\nJupyter\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n\n\nStartup script for my Linux desktop\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\ntools\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nsetup\n\n\nblogging\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "posts/deadends/deadends.html",
-    "href": "posts/deadends/deadends.html",
-    "title": "Graveyard of bad setup ideas",
-    "section": "",
-    "text": "Here is a list of other things I tried for my Debian AI setup, which didn’t work out so well. They didn’t cause disasters for me, but they were dead-ends; they didn’t solve my setup problems. Here be dragons!"
-  },
-  {
-    "objectID": "posts/deadends/deadends.html#allow-myself-to-install-packages-to-usrlocal",
-    "href": "posts/deadends/deadends.html#allow-myself-to-install-packages-to-usrlocal",
-    "title": "Graveyard of bad setup ideas",
-    "section": "Allow myself to install packages to /usr/local",
-    "text": "Allow myself to install packages to /usr/local\nSince I wrote this section, Debian has modified their pip so that it refuses to install to /usr/local, unless we use the --break-system-packages flag.\nIt’s not safe to run pip install -U as root. It will merrily remove files from Debian-packaged Python modules under /usr/lib, and mess up the system. To avoid this, I changed permissions so that my regular user account can write to everything under /usr/local via the staff group. I do the same for /opt because I want to upgrade Rust from my own user ID also:\n\nsudo adduser $USER staff\nsudo chgrp -R staff /usr/local /opt\nsudo chmod -R g+w /usr/local /opt\n\nThis is somewhat of a security concern, but if a bad guy gets a local shell it’s pretty much game over anyway. To make it safer, I could have used a different non-root account.\nIn order to upgrade a pip package where the same package was also installed in /usr/lib by dpkg, I need to use pip -I -U packagename. The -I flag tells it to ignore installed packages, i.e. don’t try to remove them. I only do that as needed for individual packages, when a normal upgrade fails.\nThis setup might upset Debian-packaged programs that depend on older versions of the Python libraries that I’ve upgraded. I haven’t noticed any problems like that yet.\nIf you try to downgrade a package, and if multiple versions of a package are accidentally installed under /usr/local/lib/python3.10 at that same time, it can get confused, so watch out for that. You might need to manually remove one of the versions.\n\n\nGlossary\n\n\npip: A package manager for Python packages that allows users to easily install, upgrade, and remove Python packages.\n/usr/local: A directory on Unix-like systems where locally installed software is usually placed, separate from the operating system’s own packages.\nDebian: A popular Linux distribution known for its stability and ease of use.\n–break-system-packages: A flag used with pip to force installation of packages that conflict with system packages, even though this can cause problems.\nroot: The default administrative user in Unix-like operating systems, with full permissions to all system files and directories.\npermissions: The settings that control who can access and modify files and directories on a computer.\nstaff group: A group on Unix-like systems that provides additional permissions to users who belong to it.\nchgrp: A Unix command used to change the group ownership of a file or directory.\nchmod: A Unix command used to change the permissions of a file or directory.\nsecurity concern: A potential risk to the security of a system, data, or user privacy.\ndpkg: A package manager for Debian-based Linux distributions.\nupgrade: The process of installing a newer version of a software package over an existing version to get new features or bug fixes.\ndowngrade: The process of installing an older version of a software package over a newer version."
-  },
-  {
-    "objectID": "posts/deadends/deadends.html#enable-switching-the-system-python-version",
-    "href": "posts/deadends/deadends.html#enable-switching-the-system-python-version",
-    "title": "Graveyard of bad setup ideas",
-    "section": "Enable switching the system python version",
-    "text": "Enable switching the system python version\nThe default Python version for Debian “testing” at time of writing is Python 3.11, however we don’t have a stable release of pytorch for Python 3.11 yet.\n\npython3.11 -m pip install --break-system-packages torchvision\n\nERROR: Could not find a version that satisfies the requirement torchvision (from versions: 0.1.6, 0.1.7, 0.1.8, 0.1.9, 0.2.0, 0.2.1, 0.2.2, 0.2.2.post2, 0.2.2.post3)\nERROR: No matching distribution found for torchvision\n\n\n\n: 1\n\n\nI decided to try switch the system Python version back to 3.10. This is not recommended, but at least it’s easy to undo!\nAnyway, let’s enable switching the system Python version back to 3.10, using update-alternatives.\nFirst, note that we can undo this change later, if necessary, as follows:\n\nsudo update-alternatives --remove-all python3\nsudo update-alternatives --remove-all pydoc3\nsudo ln -sf python3.11 /usr/bin/python3\nsudo ln -sf pydoc3.11 /usr/bin/pydoc3\n\nWe can set up alternatives for python3:\n\nsudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 11\nsudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 10\n# sudo update-alternatives --set python3 /usr/bin/python3.10\n\nand do the same for pydoc3:\n\nsudo update-alternatives --install /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.11 11\nsudo update-alternatives --install /usr/bin/pydoc3 pydoc3 /usr/bin/pydoc3.10 10\n# sudo update-alternatives --set pydoc3 /usr/bin/pydoc3.10\n\n\nupdate-alternatives --list python3\n\n\nupdate-alternatives --list pydoc3\n\n\n\nGlossary\n\n\ntorchvision: a PyTorch library containing popular datasets, model architectures, and common image transformations for computer vision.\nupdate-alternatives: a Debian/Ubuntu tool for managing alternative versions of executables, such as Python or Pydoc.\nsystem Python: the version of Python installed on a Debian/Ubuntu system and used by default for system-level processes.\nbreak-system-packages: a pip option that allows installation of packages that may break other system packages.\nln -s: a command for creating symbolic links between files.\npydoc: a Python documentation tool."
-  },
-  {
-    "objectID": "posts/deadends/deadends.html#install-nightly-torch-with-python-3.11",
-    "href": "posts/deadends/deadends.html#install-nightly-torch-with-python-3.11",
-    "title": "Graveyard of bad setup ideas",
-    "section": "Install nightly torch with Python 3.11",
-    "text": "Install nightly torch with Python 3.11\n\npip install -qq -U fastbook jupyter jupyterlab tensorflow ipywidgets\n\nAt some point I saw a warning about compatibility between fastai and torch.\nfastai 2.7.11 has requirement torch<1.14,>=1.7, but you have torch 2.0.0.dev20230220+cu117\nI decided to try using it with nightly torch anyway:\n\npip install -qq -U --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu117\n\nExtra packages: nbdev, and kernels for bash and C:\n\npip install -qq -U nbdev bash_kernel jupyter-c-kernel"
-  },
-  {
-    "objectID": "posts/deadends/deadends.html#use-the-old-pip-resolver-if-necessary",
-    "href": "posts/deadends/deadends.html#use-the-old-pip-resolver-if-necessary",
-    "title": "Graveyard of bad setup ideas",
-    "section": "Use the old pip resolver, if necessary",
-    "text": "Use the old pip resolver, if necessary\nAs of pip 20.3, a new resolver has been introduced, which doesn’t always work. As of pip 21.0 the old working resolver is unsupported and slated for removal dependent on pip team resources.\n\npip --version\n\npip 23.0 from /usr/lib/python3/dist-packages/pip (python 3.11)\n\n\nWith this version of pip, it’s possible to use the “legacy resolver” with the following option:\n\npip install -U -r requirements.txt --use-deprecated=legacy-resolver\n\nOr, I can downgrade pip to version 20.2.4, before they switched to the new resolver.\nRefer to https://stackoverflow.com/a/67408694 for more info.\n\npip install pip==20.2.4\n\n\n\nGlossary\n\n\nresolver: Part of pip responsible for resolving package dependencies and deciding which versions to install.\nlegacy resolver: The older version of pip’s resolver algorithm, which is still supported in some versions of pip but has been deprecated and is no longer the default."
-  },
-  {
-    "objectID": "posts/deadends/deadends.html#pypi-does-not-include-onnxruntime-for-python3.11",
-    "href": "posts/deadends/deadends.html#pypi-does-not-include-onnxruntime-for-python3.11",
-    "title": "Graveyard of bad setup ideas",
-    "section": "PyPI does not include onnxruntime for python3.11",
-    "text": "PyPI does not include onnxruntime for python3.11\nAt one point I was hoping to use python3.11 rather than python3.10. I attempted to build onnxruntime from source, but didn’t persevere with it.\n\n\nGlossary\n\n\nPyPI: PyPI (Python Package Index) is a repository of software for the Python programming language. It contains packages of software developed by various authors that are published and shared with the wider Python community.\nonnxruntime: onnxruntime is an open-source engine for executing machine learning models that are defined in the Open Neural Network Exchange (ONNX) format. It provides high performance and supports multiple platforms, including CPU, GPU, and FPGA.\nSource code is the human-readable code that programmers write to create computer programs. It needs to be compiled or interpreted to run on a computer.\nBuild: Building refers to the process of compiling or otherwise preparing source code for execution on a specific platform or architecture.\nOpen Neural Network Exchange (ONNX): ONNX is an open-source format for representing machine learning models. It is designed to be interoperable across different frameworks and platforms, allowing models to be easily transferred and executed on different hardware.\nFPGA: FPGA stands for Field-Programmable Gate Array. It is an integrated circuit that can be programmed to perform a wide range of computing tasks, including machine learning inference."
-  },
-  {
-    "objectID": "posts/deadends/deadends.html#untold-difficulties",
-    "href": "posts/deadends/deadends.html#untold-difficulties",
-    "title": "Graveyard of bad setup ideas",
-    "section": "Untold difficulties! 😭",
-    "text": "Untold difficulties! 😭\nI haven’t described all of the various problems I had to deal with, due to trying various hacky approaches rather than venvs. There were plenty of problems! I guess I learned something from the experience, anyway. I wish Lambda Stack worked on Debian, not only Ubuntu, it would have been a lot easier than this!\n\n\nGlossary\n\n\nhacky approaches: Informal or unconventional methods used to solve a problem or complete a task, often using shortcuts or workarounds instead of following established best practices.\nLambda Stack: A software stack from Lambda Labs that provides pre-built binaries of deep learning frameworks and other software packages for Ubuntu-based systems."
+    "text": "My setup for AI work on my Debian PC\n\n\n\n\n\n\n\nsetup\n\n\nDebian\n\n\nfastai\n\n\nPython\n\n\nCUDA\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n\n\nGraveyard of bad setup ideas\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n\n\nKeyboard shortcuts for Jupyter Lab\n\n\n\n\n\n\n\nsetup\n\n\nJupyter\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n\n\nStartup script for my Linux desktop\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\ntools\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nsetup\n\n\nblog\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\n\n\n\n\nNo matching items"
   }
 ]
