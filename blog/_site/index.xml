@@ -9,7 +9,7 @@
 <link>https://sam.ucm.dev/blog/index.html</link>
 <atom:link href="https://sam.ucm.dev/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>recording my AI studies</description>
-<generator>quarto-1.2.335</generator>
+<generator>quarto-1.2.280</generator>
 <lastBuildDate>Thu, 02 Mar 2023 13:00:00 GMT</lastBuildDate>
 <item>
   <title>My setup for AI work on my Debian PC</title>
