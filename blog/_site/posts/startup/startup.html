@@ -333,9 +333,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">wmctrl</span> <span class="at">-r</span> <span class="st">"</span><span class="va">$app</span><span class="st">"</span> <span class="at">-b</span> add,sticky</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> pomodoro <span class="at">-b</span> add,above</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> barrier<span class="kw">;</span> <span class="cf">do</span> <span class="ex">wmctrl</span> <span class="at">-c</span> <span class="va">$app</span><span class="kw">;</span> <span class="cf">done</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> swatch pomodoro<span class="kw">;</span> <span class="cf">do</span> <span class="ex">xdotool</span> search <span class="at">--name</span> <span class="va">$app</span> windowminimize %@<span class="kw">;</span> <span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> swatch <span class="at">-b</span> add,above</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> barrier<span class="kw">;</span> <span class="cf">do</span> <span class="ex">wmctrl</span> <span class="at">-c</span> <span class="va">$app</span><span class="kw">;</span> <span class="cf">done</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> app <span class="kw">in</span> swatch pomodoro<span class="kw">;</span> <span class="cf">do</span> <span class="ex">xdotool</span> search <span class="at">--name</span> <span class="va">$app</span> windowminimize %@<span class="kw">;</span> <span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gnome-pomodoro</span> <span class="at">--start</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -459,7 +460,6 @@ See also
 <li><a href="https://github.com/tonyduan/ChatGPT">ChatGPT</a> for an AI assistant</li>
 <li><a href="https://miniflux.app/">Miniflux</a> for a blog reader</li>
 <li><a href="https://apps.ankiweb.net/">Anki</a> for learning with flashcards</li>
-<li><a href="https://github.com/dthree/cash/blob/master/src/commands/swatch.md">Swatch</a> for displaying system information</li>
 <li><a href="https://www.perl.org/">Perl</a> programming language for the xtile script</li>
 <li><a href="https://www.gnu.org/software/screen/">Screen</a> for creating and managing terminal sessions</li>
 <li><a href="https://slack.com/">Slack</a> for team communication</li>

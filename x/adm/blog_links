@@ -57,7 +57,7 @@ def blog_update_symlinks(blog_dir, **kwargs):
 			raise
 		else:
 			eprint(f'error: {e}')
-
+	
 def main():
 	"""Main function, handles command line arguments."""
 	parser = argparse.ArgumentParser(description='Update blog symlinks')

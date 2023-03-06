@@ -1486,9 +1486,10 @@ Glossary
 <span id="cb8-8">    <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> <span class="st" style="color: #20794D;">"</span><span class="va" style="color: #111111;">$app</span><span class="st" style="color: #20794D;">"</span> <span class="at" style="color: #657422;">-b</span> add,sticky</span>
 <span id="cb8-9"><span class="cf" style="color: #003B4F;">done</span></span>
 <span id="cb8-10"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> pomodoro <span class="at" style="color: #657422;">-b</span> add,above</span>
-<span id="cb8-11"></span>
-<span id="cb8-12"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> barrier<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-c</span> <span class="va" style="color: #111111;">$app</span><span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span>
-<span id="cb8-13"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> swatch pomodoro<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="va" style="color: #111111;">$app</span> windowminimize %@<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span></code></pre></div>
+<span id="cb8-11"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> swatch <span class="at" style="color: #657422;">-b</span> add,above</span>
+<span id="cb8-12"></span>
+<span id="cb8-13"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> barrier<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-c</span> <span class="va" style="color: #111111;">$app</span><span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span>
+<span id="cb8-14"><span class="cf" style="color: #003B4F;">for</span> app <span class="kw" style="color: #003B4F;">in</span> swatch pomodoro<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="va" style="color: #111111;">$app</span> windowminimize %@<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;">gnome-pomodoro</span> <span class="at" style="color: #657422;">--start</span></span></code></pre></div>
@@ -1612,7 +1613,6 @@ See also
 <li><a href="https://github.com/tonyduan/ChatGPT">ChatGPT</a> for an AI assistant</li>
 <li><a href="https://miniflux.app/">Miniflux</a> for a blog reader</li>
 <li><a href="https://apps.ankiweb.net/">Anki</a> for learning with flashcards</li>
-<li><a href="https://github.com/dthree/cash/blob/master/src/commands/swatch.md">Swatch</a> for displaying system information</li>
 <li><a href="https://www.perl.org/">Perl</a> programming language for the xtile script</li>
 <li><a href="https://www.gnu.org/software/screen/">Screen</a> for creating and managing terminal sessions</li>
 <li><a href="https://slack.com/">Slack</a> for team communication</li>

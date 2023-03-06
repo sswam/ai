@@ -17,6 +17,9 @@ from pygments.formatters import TerminalFormatter
 from pygments.formatters import Terminal256Formatter
 from kv import KeyValueLexer
 import re
+# from functools import reduce
+
+# Directory and File Utilities ###############################################
 
 @contextlib.contextmanager
 def cd(path):
@@ -27,6 +30,8 @@ def cd(path):
 		yield
 	finally:
 		os.chdir(old_dir)
+
+# Stack and Frame Inspection #################################################
 
 def nth_frame(level=1):
 	"""Get the nth frame from the current frame."""
@@ -114,8 +119,6 @@ def is_256_color_terminal():
 def is_primitive_type(obj):
 	"""Return True if obj is a primitive type."""
 	return isinstance(obj, (int, float, str, bytes, bool, type(None)))
-
-from functools import reduce
 
 def simple_primitive_type(obj):
 	return is_primitive_type(obj) and "," not in repr(obj)
