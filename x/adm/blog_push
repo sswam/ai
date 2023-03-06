@@ -1,6 +1,6 @@
 #!/bin/sh
 cd ~/ai
-blog_symlinks
+blog_links
 quarto render blog
 git add blog
 ai_push "blog"

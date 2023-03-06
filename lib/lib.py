@@ -122,6 +122,10 @@ def test_shuf():
 	else:
 		assert False, 'shuf() did not shuffle'
 
+def map_(l, fn):
+	for i in range(0, len(l)):
+		l[i] = fn(l[i])
+
 # Terminal Utilities #########################################################
 
 def is_256_color_terminal():
