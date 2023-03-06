@@ -8,7 +8,6 @@ import pprint
 import json
 import yaml
 import contextlib
-import jq
 from pygments import highlight
 from pygments.lexers import JsonLexer
 from pygments.lexers.python import PythonLexer
@@ -18,6 +17,22 @@ from pygments.formatters import Terminal256Formatter
 from kv import KeyValueLexer
 import re
 # from functools import reduce
+
+# Notebook Utilities #########################################################
+
+def is_notebook() -> bool:
+	""" Check if running in an IPython notebook """
+	# From https://stackoverflow.com/a/39662359/218294
+	try:
+		shell = get_ipython().__class__.__name__
+		if shell == 'ZMQInteractiveShell':
+			return True   # Jupyter notebook or qtconsole
+		elif shell == 'TerminalInteractiveShell':
+			return False  # Terminal running IPython
+		else:
+			return False  # Other type (?)
+	except NameError:
+		return False          # Probably standard Python interpreter
 
 # Directory and File Utilities ###############################################
 
@@ -76,6 +91,8 @@ def source_symbols(source_code):
 
 	return symbols
 
+# List Utilities #############################################################
+
 def uniqo(seq):
 	"""Return a list of unique elements in the order they appear in seq."""
 	python_version = sys.version_info
@@ -105,6 +122,8 @@ def test_shuf():
 	else:
 		assert False, 'shuf() did not shuffle'
 
+# Terminal Utilities #########################################################
+
 def is_256_color_terminal():
 	"""Return True if the terminal supports 256 colors."""
 	if os.environ.get('TERM') == 'xterm-256color':
@@ -115,6 +134,8 @@ def is_256_color_terminal():
 		return True
 	else:
 		return False
+
+# Debugging ##################################################################
 
 def is_primitive_type(obj):
 	"""Return True if obj is a primitive type."""
@@ -200,14 +221,3 @@ def show_locals(exclude=None, locals_now=None, format='kv', color=None, level=1)
 	if format is not None:
 		eprint(dump(printme, format=format, color=color))
 	return printme
-
-def quarto_post_date(post_file):
-	"""Get the date of a quarto post."""
-	with open(post_file) as f:
-		text = f.read()
-	metadata = jq.compile('.cells[] | select(.cell_type == "raw") | .source | join("")').input(text=text).first()
-	match = re.search(r'^date: "(.*?)"$', metadata, re.MULTILINE)
-	if not match:
-		raise Exception('no date found in post metadata for ' + post_file)
-	date = match.group(1)
-	return date

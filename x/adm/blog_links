@@ -10,9 +10,12 @@ import re
 from glob import glob
 from pathlib import Path
 import argparse
-from lib import cd, show_locals, caller_locals, quarto_post_date, kv_dump, eprint
+from os import environ as env
 
-def blog_update_symlinks_in_cwd(number_width=3, dry_run=False, verbose=False, debug=False):
+from lib import cd, show_locals, caller_locals, kv_dump, eprint
+from blog import quarto_post_date
+
+def update_links_in_cwd(digits=3, dry_run=False, verbose=False, debug=False):
 	"""Update blog symlinks in the current working directory."""
 	_params = caller_locals()
 
@@ -40,35 +43,35 @@ def blog_update_symlinks_in_cwd(number_width=3, dry_run=False, verbose=False, de
 	# create a numbered symlink for each post which doesn't have one yet
 	for post in new_posts_by_date:
 		n_posts += 1
-		post_number = str(n_posts).zfill(number_width)
+		post_number = str(n_posts).zfill(digits)
 		link_name = f'{post_number}_{os.path.basename(post)}'
 		if not dry_run:
 			os.symlink(post, link_name)
 		if verbose:
 			print(f'created symlink {link_name} -> {post}')
 
-def blog_update_symlinks(blog_dir, **kwargs):
+def update_links(blog_dir, *args, **kwargs):
 	"""Update blog symlinks, wrapper to cd into blog_dir and show errors."""
 	try:
 		with cd(blog_dir):
-			return blog_update_symlinks_in_cwd(**kwargs)
+			return update_links_in_cwd(*args, **kwargs)
 	except Exception as e:
 		if kwargs.get('debug'):
 			raise
 		else:
 			eprint(f'error: {e}')
-	
+
 def main():
 	"""Main function, handles command line arguments."""
-	parser = argparse.ArgumentParser(description='Update blog symlinks')
-	default_blog_dir = str(Path.home() / 'ai' / 'blog')
-	parser.add_argument('blog_dir', type=str, help='blog directory', default=default_blog_dir, nargs='?')
-	parser.add_argument('--number-width', '-w', type=int, default=3, help='number width')
+	parser = argparse.ArgumentParser(description='Update blog symlinks') #, formatter_class=argparse.ArgumentDefaultsHelpFormatter, argument_default=argparse.SUPPRESS)
+	default_blog_dir = env.get("BLOG_DIR", ".")
+	parser.add_argument('--dir', type=str, help='blog directory', default=default_blog_dir, nargs='?')
+	parser.add_argument('--digits', '-w', type=int, default=3, help='pad numbering to digits')
 	parser.add_argument('--dry-run', '-n', action='store_true', help='dry run')
 	parser.add_argument('--verbose', '-v', action='store_true', help='verbose')
 	parser.add_argument('--debug', '-d', action='store_true', help='debug')
 	args = parser.parse_args()
-	blog_update_symlinks(args.blog_dir, number_width=args.number_width, dry_run=args.dry_run, verbose=args.verbose, debug=args.debug)
+	update_links(args.dir, digits=args.digits, dry_run=args.dry_run, verbose=args.verbose, debug=args.debug)
 
 if __name__ == '__main__':
 	main()

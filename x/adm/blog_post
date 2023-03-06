@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-This script creates numbered symlinks for blog posts.
+This script creates a new blank blog post from a template.
 """
 
 import os
@@ -10,79 +10,85 @@ import re
 from glob import glob
 from pathlib import Path
 import argparse
-from lib import cd, show_locals, caller_locals, quarto_post_date, kv_dump, eprint
+from os import environ as env
+import json
+import datetime
 
-eprint("Not finished yet")
-sys.exit(1)
 
-def blog_update_symlinks_in_cwd(number_width=3, dry_run=False, verbose=False, debug=False):
-	"""Update blog symlinks in the current working directory."""
-	_params = caller_locals()
+from lib import cd, show_locals, caller_locals, kv_dump, eprint
 
-	# get list of blog symlinks
-	blog_links = sorted(filter(islink, glob('*.ipynb')))
+python_kernelspec = {
+	"display_name": "python3",
+	"language": "python",
+	"name": "python3"
+}
 
-	# get list of blog posts under posts/foo/foo.ipynb
-	posts = glob('posts/*/*.ipynb')
+bash_kernelspec = {
+	"display_name": "bash",
+	"language": "bash",
+	"name": "bash"
+}
 
-	# get link targets for each blog symlink
-	link_targets = [os.readlink(link) for link in blog_links]
+def map_(l, fn):
+	for i in range(0, len(l)):
+		l[i] = fn(l[i])
 
-	# get list of posts which don't have symlinks yet
-	new_posts = [post for post in posts if post not in link_targets]
-
-	# sort posts by date
-	new_posts_by_date = sorted(new_posts, key=quarto_post_date)
-
-	# get the number of the last post
-	n_posts = int(re.match(r'^\d+', basename(blog_links[-1])).group(0)) if blog_links else 0
-
-	if debug:
-		show_locals(exclude=_params)
-
-	# create a numbered symlink for each post which doesn't have one yet
-	for post in new_posts_by_date:
-		n_posts += 1
-		post_number = str(n_posts).zfill(number_width)
-		link_name = f'{post_number}_{os.path.basename(post)}'
-		if not dry_run:
-			os.symlink(post, link_name)
-		if verbose:
-			print(f'created symlink {link_name} -> {post}')
-
-def blog_update_symlinks(blog_dir, **kwargs):
-	"""Update blog symlinks, wrapper to cd into blog_dir and show errors."""
-	try:
-		with cd(blog_dir):
-			return blog_update_symlinks_in_cwd(**kwargs)
-	except Exception as e:
-		if kwargs.get('debug'):
-			raise
-		else:
-			eprint(f'error: {e}')
-
-def new_blog_post(blog_dir, name, title):
+def new_post_in_cwd(lang, name, title, dry_run=False, verbose=False, debug=False, template_file="template.ipynb"):
 	"""Create a new blog post."""
+
+	with open(template_file) as f:
+		post = json.loads(f.read())
+
+	if lang == "python":
+		post["metadata"]["kernelspec"] = python_kernelspec
+	elif lang == "bash":
+		post["metadata"]["kernelspec"] = bash_kernelspec
+
+	cell0 = post["cells"][0]
+
+	date = datetime.date.today().isoformat()
+
+	v = locals().copy()
+
+	def replace_vars(line):
+		return re.sub(r'\$(\w+)', lambda m: v.get(m.group(1)), line)
+
+	map_(cell0["source"], replace_vars)
+
+	post_dir = Path("posts")/name
+	post_dir.mkdir(parents=True)
+	post_file = post_dir/f"{name}.ipynb"
+
+	with open(post_file, "w") as f:
+		print(json.dumps(post, indent=1), file=f)
+	if verbose:
+		eprint(f"Created blog file {post_file}")
+
+def new_post(blog_dir, *args, **kwargs):
+	"""Create a new blog post, wrapper to cd into blog_dir and show errors."""
 	try:
 		with cd(blog_dir):
-			return blog_update_symlinks_in_cwd(**kwargs)
+			return new_post_in_cwd(*args, **kwargs)
 	except Exception as e:
 		if kwargs.get('debug'):
 			raise
 		else:
 			eprint(f'error: {e}')
-	
 
 def main():
 	"""Main function, handles command line arguments."""
-	parser = argparse.ArgumentParser(description='Update blog symlinks')
-	default_blog_dir = str(Path.home() / 'ai' / 'blog')
+	parser = argparse.ArgumentParser(description='Update blog symlinks') # , formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+	default_blog_dir = env.get("BLOG_DIR", ".")
+	parser.add_argument('name', help='filename of the post')
+	parser.add_argument('title', help='title of the post')
+	parser.add_argument('--lang', '-l', help='notebook language', default="python")
 	parser.add_argument('--dir', type=str, help='blog directory', default=default_blog_dir, nargs='?')
 	parser.add_argument('--dry-run', '-n', action='store_true', help='dry run')
 	parser.add_argument('--verbose', '-v', action='store_true', help='verbose')
 	parser.add_argument('--debug', '-d', action='store_true', help='debug')
+
 	args = parser.parse_args()
-	new_blog_post(args.dir, args.name, args.title, dry_run=args.dry_run, verbose=args.verbose, debug=args.debug)
+	new_post(args.dir, args.lang, args.name, args.title, dry_run=args.dry_run, verbose=args.verbose, debug=args.debug)
 
 if __name__ == '__main__':
 	main()
