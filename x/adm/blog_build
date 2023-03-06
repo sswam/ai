@@ -1,4 +1,6 @@
+#!/bin/sh
 cd ~/ai
+blog_symlinks
 quarto render blog
 git add blog
 git commit -m "blog_build"
