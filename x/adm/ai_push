@@ -1,0 +1,7 @@
+#!/bin/sh
+m="${1:-.}"
+cd ~/ai
+git commit -m "$m"
+git push
+git push opal
+git push pi

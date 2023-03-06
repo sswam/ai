@@ -3,7 +3,4 @@ cd ~/ai
 blog_symlinks
 quarto render blog
 git add blog
-git commit -m "blog_build"
-git push
-git push opal
-git push pi
+ai_push "blog"
