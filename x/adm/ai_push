@@ -1,8 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 # Commit changes, and push to github, opal, and pi
 m="${1:-.}"
 cd ~/ai
 git commit -m "$m"
-git push
-git push opal
-git push pi
+log_i=0
+tmp=$HOME/tmp
+P() {
+	local logfile=$tmp/P_$$_$(printf %06d $log_i).log
+	"$@" >"$logfile" 2>&1 &
+	log_i=$((log_i+1))
+}
+P git push
+P git push opal
+P git push pi
+wait
+cat "$tmp/"P_$$_*.log
+rm -f "$tmp/"P_$$_*.log
