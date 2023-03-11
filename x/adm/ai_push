@@ -1,6 +1,6 @@
 #!/bin/bash
 # Commit changes, and push to github, opal, and pi
-m="${1:-.}"
+m="${*:-.}"
 cd ~/ai
 git commit -m "$m"
 . P git push

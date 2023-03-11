@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-02-24">
+<meta name="dcterms.date" content="2023-03-11">
 
-<title>Sam’s AI Blog - Keyboard shortcuts for Jupyter Lab</title>
+<title>Sam’s AI Blog - A multi-label classifier, part 5: finding duplicate images</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -128,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -168,12 +168,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <div class="quarto-title-block"><div><h1 class="title">Keyboard shortcuts for Jupyter Lab</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/sswam/ai/blob/main/blog/posts/shortcuts/shortcuts.ipynb"><i class="bi"></i> Code</button></div></div>
-                                <div class="quarto-categories">
-                <div class="quarto-category">setup</div>
-                <div class="quarto-category">Jupyter</div>
-              </div>
-                  </div>
+      <div class="quarto-title-block"><div><h1 class="title">A multi-label classifier, part 5: finding duplicate images</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/sswam/ai/blob/main/blog/posts/multilabel5/multilabel5.ipynb"><i class="bi"></i> Code</button></div></div>
+                      </div>
   </div>
     
   
@@ -183,14 +179,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">February 24, 2023</p>
+        <p class="date">March 11, 2023</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">March 3, 2023</p>
+        <p class="date-modified">March 12, 2023</p>
       </div>
     </div>
       
@@ -200,7 +196,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#check-for-exact-duplicates" id="toc-check-for-exact-duplicates" class="nav-link" data-scroll-target="#check-for-exact-duplicates">check for exact duplicates</a></li>
+  <li><a href="#check-for-similar-images" id="toc-check-for-similar-images" class="nav-link" data-scroll-target="#check-for-similar-images">check for similar images</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -209,75 +215,45 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Keyboard shortcuts are a great way to speed up your workflow in Jupyter Lab, but sometimes the default shortcuts don’t quite fit your needs. In this short post, I’ll show you how to add four new keyboard shortcuts to Jupyter Lab that I find useful.</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>shortcut</th>
-<th>function</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Ctrl Shift Enter</td>
-<td>Run All Above Selected Cell</td>
-</tr>
-<tr class="even">
-<td>Alt L</td>
-<td>Clear All Outputs</td>
-</tr>
-<tr class="odd">
-<td>Alt M</td>
-<td>Render All Markdown Cells</td>
-</tr>
-<tr class="even">
-<td>Shift V</td>
-<td>Paste Cells Above</td>
-</tr>
-</tbody>
-</table>
 </section>
-<section id="editing-the-settings" class="level2">
-<h2 class="anchored" data-anchor-id="editing-the-settings">Editing the settings</h2>
-<p>Go to Settings → Advanced Settings Editor → JSON Settings Editor</p>
-<p>Then add these shortcuts at the end of the file.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"args"</span><span class="fu">:</span> <span class="fu">{},</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"notebook:run-all-above"</span><span class="fu">,</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"keys"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Ctrl Shift Enter"</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            <span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"selector"</span><span class="fu">:</span> <span class="st">".jp-Notebook:focus"</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="er">,</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"args"</span><span class="fu">:</span> <span class="fu">{},</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"notebook:clear-all-cell-outputs"</span><span class="fu">,</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"keys"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Alt L"</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>            <span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"selector"</span><span class="fu">:</span> <span class="st">".jp-Notebook:focus"</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="er">,</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"args"</span><span class="fu">:</span> <span class="fu">{},</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"notebook:render-all-markdown"</span><span class="fu">,</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"keys"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Alt M"</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>            <span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"selector"</span><span class="fu">:</span> <span class="st">".jp-Notebook:focus"</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="er">,</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"args"</span><span class="fu">:</span> <span class="fu">{},</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"notebook:paste-cell-above"</span><span class="fu">,</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"keys"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Shift V"</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>            <span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"selector"</span><span class="fu">:</span> <span class="st">".jp-Notebook:focus"</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Remember to add a trailing comma on the previous entry, and no comma after the final entry.</p>
+<section id="check-for-exact-duplicates" class="level2">
+<h2 class="anchored" data-anchor-id="check-for-exact-duplicates">check for exact duplicates</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cp <span class="op">-</span>al bird_cat_dog<span class="fl">.3</span>.together bird_cat_dog<span class="fl">.4</span>.dedup</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cd bird_cat_dog<span class="fl">.4</span>.dedup<span class="op">/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/home/sam/ai/blog/posts/multilabel/bird_cat_dog.4.dedup</code></pre>
+</div>
+</div>
+<p>Automatically delete duplicates with the same labels:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span><span class="cf">for</span> d <span class="kw">in</span> <span class="op">*;</span> do fdupes <span class="op">-</span>f <span class="op">-</span>r $d<span class="op">;</span> done <span class="op">|</span> grep . <span class="op">|</span> xa rm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                        </code></pre>
+</div>
+</div>
+<p>Manually delete duplicates with different labels:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>fdupes <span class="op">-</span>r . <span class="op">|</span> grep . <span class="op">|</span> xa qiv <span class="op">-</span>D</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                        </code></pre>
+</div>
+</div>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>With these new keyboard shortcuts, you can quickly run all the cells above your current selection, clear all cell outputs, render all markdown cells, and paste cells above your current selection. By customizing your shortcuts to fit your needs, you can save time and increase your productivity in Jupyter Lab.</p>
+<section id="check-for-similar-images" class="level2">
+<h2 class="anchored" data-anchor-id="check-for-similar-images">check for similar images</h2>
+<p>Ideally, I would show each set of duplicates together across a row, visually check them, eliminate any that aren’t in fact duplicates, and keep the best quality image from each set. I might not be able to determine which is best quality automatically after having resized them, so I might need to do step before resizing.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>findimagedupes <span class="op">-</span>R <span class="op">-</span>f dups.db . <span class="op">&gt;</span>dups.txt <span class="dv">2</span><span class="op">&gt;</span>dups.err.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">!&lt;</span> dups.txt xargs qiv <span class="op">-</span>D</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/bin/bash: line 1: dups.txt: No such file or directory</code></pre>
+</div>
+</div>
 
 
 </section>
