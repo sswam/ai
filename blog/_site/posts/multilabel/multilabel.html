@@ -751,18 +751,21 @@ Unable to flush stdout: Broken pipe</code></pre>
 <h2 class="anchored" data-anchor-id="check-for-similar-images">check for similar images</h2>
 <p>Ideally, I would show each set of duplicates together across a row, visually check them, eliminate any that aren’t in fact duplicates, and keep the best quality image from each set. I might not be able to determine which is best quality automatically after having resized them, so I might need to do step before resizing.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>findimagedupes <span class="op">-</span>R <span class="op">-</span>f dups.db . <span class="dv">2</span><span class="op">&gt;</span>dups.err.txt <span class="op">&gt;</span> dups.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>findimagedupes <span class="op">-</span>R <span class="op">-</span>f dups.db . <span class="op">&gt;</span>dups.txt <span class="dv">2</span><span class="op">&gt;</span>dups.err.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb103"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="op">!&lt;</span> dups.txt xargs qiv <span class="op">-</span>D</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/bin/bash: line 1: dups.txt: No such file or directory</code></pre>
+</div>
 </div>
 </section>
 <section id="create-a-csv-file-describing-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="create-a-csv-file-describing-the-data">create a CSV file describing the data</h2>
 <p>I’ll put 20% of each directory of images into the validation set.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> get_image_files(data)</span>
-<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(images), images[:<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> get_image_files(data)</span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(images), images[:<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>(3973,
  (#1) [Path('bird_cat_dog/ddg/bird_/8f0a00b6-6140-40dd-81e9-c34bb0d37e15.jpeg')])</code></pre>
@@ -772,11 +775,11 @@ Unable to flush stdout: Broken pipe</code></pre>
 <section id="train-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="train-the-model">train the model</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.vision.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.vision.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br> ## scratch</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mvdata bird_cat_dog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mvdata bird_cat_dog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>mkdir: created directory '/home/sam/ai/data/blog'
 mkdir: created directory '/home/sam/ai/data/blog/posts'
@@ -786,13 +789,13 @@ ln   'bird_cat_dog' -&gt; '/home/sam/ai/data/blog/posts/multilabel/bird_cat_dog'
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>data.readlink()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>data.readlink()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>Path('/home/sam/ai/data/blog/posts/multilabel/bird_cat_dog')</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mv <span class="op">~/</span>ai<span class="op">/</span>data<span class="op">/</span>blog<span class="op">/</span>posts<span class="op">/</span>multilabel<span class="op">/</span>{bird_cat_dog,bird_cat_dog.orig}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mv <span class="op">~/</span>ai<span class="op">/</span>data<span class="op">/</span>blog<span class="op">/</span>posts<span class="op">/</span>multilabel<span class="op">/</span>{bird_cat_dog,bird_cat_dog.orig}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

@@ -1461,10 +1461,7 @@ Glossary
 <span id="cb6-2"><span class="st" style="color: #20794D;">"https://trello.com/b/dnuAgKw1/ai"</span> <span class="dt" style="color: #AD0000;">\</span></span>
 <span id="cb6-3"><span class="st" style="color: #20794D;">"https://trello.com/b/y16reUe3/misc"</span> <span class="dt" style="color: #AD0000;">\</span></span>
 <span id="cb6-4"><span class="st" style="color: #20794D;">"https://chat.openai.com/chat"</span> <span class="dt" style="color: #AD0000;">\</span></span>
-<span id="cb6-5"><span class="st" style="color: #20794D;">"https://chat.openai.com/chat"</span> <span class="dt" style="color: #AD0000;">\</span></span>
-<span id="cb6-6"><span class="st" style="color: #20794D;">"https://miniflux.ucm.dev/unread"</span> <span class="dt" style="color: #AD0000;">\</span></span>
-<span id="cb6-7"><span class="st" style="color: #20794D;">"https://www.youtube.com/playlist?list=PLqkzs79RU9yUrYAN083Jbiza9DMqQE1dq"</span> <span class="dt" style="color: #AD0000;">\</span></span>
-<span id="cb6-8"><span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
+<span id="cb6-5"><span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="ex" style="color: null;">gnome-pomodoro</span> <span class="kw" style="color: #003B4F;">&amp;</span></span>
@@ -1507,7 +1504,23 @@ libva error: vaGetDriverNameByIndex() failed with unknown libva error, driver_na
 <section id="apps-on-workspace-1-entertainment" class="level3">
 <h3 class="anchored" data-anchor-id="apps-on-workspace-1-entertainment">Apps on Workspace 1: Entertainment</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;">xterm</span> <span class="at" style="color: #657422;">-e</span> <span class="st" style="color: #20794D;">'. entertain'</span> <span class="kw" style="color: #003B4F;">&amp;</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;">chrome</span> <span class="at" style="color: #657422;">--new-window</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-2"><span class="st" style="color: #20794D;">'https://sigmoid.social/'</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-3"><span class="st" style="color: #20794D;">"https://miniflux.ucm.dev/unread"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-4"><span class="st" style="color: #20794D;">"https://news.ycombinator.com/best"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-5"><span class="st" style="color: #20794D;">"https://chat.openai.com/chat"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-6"><span class="st" style="color: #20794D;">'https://www.facebook.com/'</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-7"><span class="st" style="color: #20794D;">'https://www.twitter.com/'</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-8"><span class="st" style="color: #20794D;">'https://www.linkedin.com/'</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-9"><span class="st" style="color: #20794D;">'https://www.reddit.com/'</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-10"><span class="st" style="color: #20794D;">'https://www.netflix.com/browse'</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-11"><span class="st" style="color: #20794D;">'https://www.disneyplus.com/'</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-12"><span class="st" style="color: #20794D;">'https://primevideo.com/'</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-13"><span class="st" style="color: #20794D;">'https://www.youtube.com/'</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-14"><span class="st" style="color: #20794D;">"https://www.youtube.com/playlist?list=PLqkzs79RU9yUrYAN083Jbiza9DMqQE1dq"</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb12-15"><span class="kw" style="color: #003B4F;">&amp;</span></span>
+<span id="cb12-16"><span class="fu" style="color: #4758AB;">sleep</span> 2</span>
+<span id="cb12-17"><span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-r</span> Netflix <span class="at" style="color: #657422;">-e</span> 0,1920,0,3440,1440</span></code></pre></div>
 </div>
 </section>
 <section id="apps-on-workspace-2-miscellaneous" class="level3">
@@ -1591,18 +1604,14 @@ libva error: vaGetDriverNameByIndex() failed with unknown libva error, driver_na
 <h2 class="anchored" data-anchor-id="logging-out-to-test-the-script">Logging out to test the script</h2>
 <p>This notebook can helpfully kill itself, an unusual characteristic for a notebook!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><span class="ex" style="color: null;">xdotool</span> search <span class="at" style="color: #657422;">--name</span> <span class="st" style="color: #20794D;">'Chrome'</span> windowclose %@</span>
-<span id="cb29-2"><span class="fu" style="color: #4758AB;">sleep</span> 1</span>
-<span id="cb29-3"><span class="fu" style="color: #4758AB;">killall</span> screen Xorg</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><span class="fu" style="color: #4758AB;">close_all()</span> <span class="kw" style="color: #003B4F;">{</span></span>
+<span id="cb29-2">        <span class="cf" style="color: #003B4F;">while</span> <span class="ex" style="color: null;">wmctrl</span> <span class="at" style="color: #657422;">-c</span> <span class="st" style="color: #20794D;">"</span><span class="va" style="color: #111111;">$1</span><span class="st" style="color: #20794D;">"</span><span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">do</span> <span class="fu" style="color: #4758AB;">sleep</span> 0.2<span class="kw" style="color: #003B4F;">;</span> <span class="cf" style="color: #003B4F;">done</span></span>
+<span id="cb29-3"><span class="kw" style="color: #003B4F;">}</span></span>
+<span id="cb29-4"><span class="ex" style="color: null;">close_all</span> Anki</span>
+<span id="cb29-5"><span class="ex" style="color: null;">close_all</span> <span class="st" style="color: #20794D;">'Google Chrome'</span></span>
+<span id="cb29-6"><span class="fu" style="color: #4758AB;">sleep</span> 5</span>
+<span id="cb29-7"><span class="fu" style="color: #4758AB;">killall</span> screen Xorg</span></code></pre></div>
 </div>
-<details>
-<summary>
-See also
-</summary>
-<ul>
-<li><a href="https://www.lifeline.org.au/">Lifeline Australia</a></li>
-</ul>
-</details>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
