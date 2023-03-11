@@ -236,7 +236,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>This is my <code>startup.sh</code> script, to open various apps and webpages when I log in to my Linux PC, and arrange them on my workspaces.</p>
 <p>Testing and debugging this script is a bit annoying. My previous approach was to make fixes to the script, close everything, exit my desktop session, then log in again and see what happens. Another possibility is to copy-paste lines out of the script into the terminal.</p>
 <p>Now I’m going to try developing the script as a Jupyter notebook with the Bash kernel. I will also generate the shell script from the notebook.</p>
-<p>My startup script calls out to several other scripts, which aren’t included in this blog post yet.</p>
+<p>I’ve included a couple of “appendices”, with lists of the tools and scripts I am using.</p>
 </section>
 <section id="workspaces-and-apps" class="level2">
 <h2 class="anchored" data-anchor-id="workspaces-and-apps">Workspaces and Apps</h2>
@@ -353,21 +353,25 @@ libva error: vaGetDriverNameByIndex() failed with unknown libva error, driver_na
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">chrome</span> <span class="at">--new-window</span> <span class="dt">\</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="st">'https://sigmoid.social/'</span> <span class="dt">\</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="st">"https://miniflux.ucm.dev/unread"</span> <span class="dt">\</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="st">"https://news.ycombinator.com/best"</span> <span class="dt">\</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="st">"https://chat.openai.com/chat"</span> <span class="dt">\</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.facebook.com/'</span> <span class="dt">\</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.twitter.com/'</span> <span class="dt">\</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.linkedin.com/'</span> <span class="dt">\</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.reddit.com/'</span> <span class="dt">\</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.netflix.com/browse'</span> <span class="dt">\</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.disneyplus.com/'</span> <span class="dt">\</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="st">'https://primevideo.com/'</span> <span class="dt">\</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.youtube.com/'</span> <span class="dt">\</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.facebook.com/'</span> <span class="dt">\</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.twitter.com/'</span> <span class="dt">\</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.linkedin.com/'</span> <span class="dt">\</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.reddit.com/'</span> <span class="dt">\</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="st">"https://miniflux.ucm.dev/unread"</span> <span class="dt">\</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="st">"https://news.ycombinator.com/best"</span> <span class="dt">\</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="st">"https://chat.openai.com/chat"</span> <span class="dt">\</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="kw">&amp;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> <span class="st">"Sigmoid Social"</span> <span class="at">-e</span> 0,1920,0,1720,1440</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="ex">chrome</span> <span class="at">--new-window</span> <span class="dt">\</span></span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="st">"https://www.youtube.com/playlist?list=PLqkzs79RU9yUrYAN083Jbiza9DMqQE1dq"</span> <span class="dt">\</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="kw">&amp;</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> Netflix <span class="at">-e</span> 0,1920,0,3440,1440</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.netflix.com/browse'</span> <span class="dt">\</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.disneyplus.com/'</span> <span class="dt">\</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="st">'https://primevideo.com/'</span> <span class="dt">\</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="st">'https://www.youtube.com/'</span> <span class="dt">\</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="kw">&amp;</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-r</span> <span class="st">"my music"</span> <span class="at">-e</span> 0,3640,0,1720,1440</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="apps-on-workspace-2-miscellaneous" class="level3">
@@ -413,8 +417,33 @@ libva error: vaGetDriverNameByIndex() failed with unknown libva error, driver_na
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">wmctrl</span> <span class="at">-s</span> 3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">zotero</span> <span class="kw">&amp;</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">'. ai'</span> <span class="kw">&amp;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/ai</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="ex">zotero</span> <span class="kw">&amp;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> ~/my/ai.env</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="ex">xterm</span> <span class="at">-e</span> <span class="st">"stty -ixon; xtile /3+2 1 1 ; s ai ; exec </span><span class="va">$SHELL</span><span class="st">"</span> <span class="kw">&amp;</span> <span class="fu">sleep</span> 2</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="ex">sw</span> ai jup</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="ex">sw</span> ai quarto</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="ex">sw</span> ai sh</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">#       xterm -e "stty -ixon; xtile /3+2 1 1 ; sxw ai sh ; exec $SHELL" &amp; sleep 2</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="ex">sstuff</span> ai sh <span class="st">"^L"</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="ex">chrome_profile</span> Sam <span class="at">--new-window</span> <span class="dt">\</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="st">"https://forums.fast.ai/c/part-2-2022/57"</span> <span class="dt">\</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="st">"https://walkwithfastai.com/revisited/"</span> <span class="dt">\</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="kw">&amp;</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 1 <span class="kw">;</span> <span class="ex">xtile</span> <span class="at">-w</span> <span class="kw">`</span><span class="ex">xactivewindow</span><span class="kw">`</span> 1 1 0</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a><span class="ex">sst</span> ai jup jup <span class="kw">;</span> <span class="fu">sleep</span> 2 <span class="kw">;</span> <span class="ex">xtile</span> <span class="at">-w</span> <span class="kw">`</span><span class="ex">xactivewindow</span><span class="kw">`</span> /3 1 1</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="ex">sst</span> ai quarto quarto preview blog <span class="at">--no-browser</span> <span class="at">--port</span> 4242</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a><span class="ex">chrome</span> <span class="at">--new-window</span> <span class="st">"http://localhost:4242"</span> <span class="kw">&amp;</span> <span class="fu">sleep</span> 1 <span class="kw">;</span> <span class="ex">xtile</span> <span class="at">-w</span> <span class="kw">`</span><span class="ex">xactivewindow</span><span class="kw">`</span> /3+1 1 1</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="ex">screen</span> <span class="at">-S</span> ai <span class="at">-X</span> shelltitle sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 2</span>

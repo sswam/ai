@@ -1,4 +1,5 @@
 #!/bin/sh
+# Commit changes, and push to github, opal, and pi
 m="${1:-.}"
 cd ~/ai
 git commit -m "$m"

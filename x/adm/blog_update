@@ -1,4 +1,5 @@
 #!/bin/sh
+# Update my blog, and push to GitHub and my servers
 cd ~/ai
 blog_links
 quarto render blog
