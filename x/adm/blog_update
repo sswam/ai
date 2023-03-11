@@ -4,4 +4,4 @@ cd ~/ai
 blog_links
 quarto render blog
 git add blog
-echo ai_push "${*:-blog}"
+ai_push "${*:-blog}"
