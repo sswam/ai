@@ -8,7 +8,7 @@ tmp=$HOME/tmp
 P() {
 	local i_padded=$(printf %06d $log_i)
 	local logfile=$tmp/P_$$_$i_padded.log
-	"$@" 2>&1 | tee "$logfile" | prepend $'$i_padded:\t'
+	"$@" 2>&1 | tee "$logfile" | prepend "$i_padded"$'\t'
 	log_i=$((log_i+1))
 }
 P git push
