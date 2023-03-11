@@ -6,9 +6,10 @@ git commit -m "$m"
 log_i=0
 tmp=$HOME/tmp
 P() {
-	local i_padded=$(printf %06d $log_i)
-	local logfile=$tmp/P_$$_$i_padded.log
-	"$@" 2>&1 | tee "$logfile" | prepend "$i_padded"$'\t'
+	local i_zero_pad=$(printf %06d $log_i)
+	local i_space_pad=$(printf %6d $log_i)
+	local logfile=$tmp/P_$$_$i_zero_pad.log
+	"$@" 2>&1 | tee "$logfile" | prepend "$i_space_pad"$'\t'
 	log_i=$((log_i+1))
 }
 P git push
