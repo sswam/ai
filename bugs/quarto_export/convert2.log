@@ -1,0 +1,12 @@
+[91mERROR: TypeError: Cannot delete property '0' of [object String]
+
+TypeError: Cannot delete property '0' of [object String]
+    at file:///home/sam/soft-ai/quarto-cli/src/core/jupyter/jupyter.ts:380:29
+    at Array.forEach (<anonymous>)
+    at flushLineBuffer (file:///home/sam/soft-ai/quarto-cli/src/core/jupyter/jupyter.ts:371:20)
+    at quartoMdToJupyter (file:///home/sam/soft-ai/quarto-cli/src/core/jupyter/jupyter.ts:439:9)
+    at async markdownToJupyterNotebook (file:///home/sam/soft-ai/quarto-cli/src/command/convert/jupyter.ts:35:20)
+    at async Command.fn (file:///home/sam/soft-ai/quarto-cli/src/command/convert/cmd.ts:69:9)
+    at async Command.execute (file:///home/sam/soft-ai/quarto-cli/src/vendor/deno.land/x/cliffy@v0.25.4/command/command.ts:1790:7)
+    at async quarto (file:///home/sam/soft-ai/quarto-cli/src/quarto.ts:119:3)
+    at async file:///home/sam/soft-ai/quarto-cli/src/quarto.ts:151:5[39m

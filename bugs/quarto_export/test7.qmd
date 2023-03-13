@@ -1,0 +1,12 @@
+---
+title: 'quarto renders #|export wrongly'
+jupyter: python3
+---
+
+```{python}
+#| export
+#| default_exp cow
+#| hello: true
+print("Hello, world")
+```
+
