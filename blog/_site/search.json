@@ -4,21 +4,14 @@
     "href": "posts/multilabel1/multilabel1.html",
     "title": "A multi-label classifier, part 1: collecting images",
     "section": "",
-    "text": "The idea of developing a computer system capable of recognizing birds was considered extremely difficult in 2015, so much so that it was the inspiration for an XKCD joke.\nI want to make a bird detector that works fairly reliably with any sort of input image.\nA multi-label classifier for birds, cats, and dogs should be a good starting point.\n\nIt’s going to take me a lot more than 5 minutes to make a good bird detector, but hopefully I won’t need to hire a research team for five years!\nThese are my main references:\n\nPractical Deep Learning for Coders, 2022 edition, lesson 0: Is it a bird?\nThe FastAI book, chapter 6\nWalk with FastAI Revisited:\n\nlesson 3 notebook - multilabel\nlesson 3a notebook - unknown label\nlesson 5 notebook - deployment with fastai\nlesson 5a notebook - deployment without fastai\n\n\nAfter doing maybe half of the work for this project, I found that it will be too much for a single blog post, so I’ve split it up into eight posts:\n\ncollecting images\nreusable functions\nGoogle image search\ncleaning up the dataset\nfinding duplicate images\ntraining the model\ndeploying with fastai\ndeploying without fastai"
+    "text": "The idea of developing a computer system capable of recognizing birds was considered extremely difficult in 2015, so much so that it was the inspiration for an XKCD joke.\nI want to make a bird detector that works fairly reliably with any sort of input image.\nA multi-label classifier for birds, cats, and dogs should be a good starting point.\n\nIt’s going to take me a lot more than 5 minutes to make a good bird detector, but hopefully I won’t need to hire a research team for five years!\nThese are my main references:\n\nPractical Deep Learning for Coders, 2022 edition, lesson 0: Is it a bird?\nThe FastAI book, chapter 6\nWalk with FastAI Revisited:\n\nlesson 3 notebook - multilabel\nlesson 3a notebook - unknown label\nlesson 5 notebook - deployment with fastai\nlesson 5a notebook - deployment without fastai\n\n\nAfter doing maybe half of the work for this project, I found that it will be too much for a single blog post, so I’m splitting it up into eight posts:\n\ncollecting images\nreusable functions\nGoogle image search\ncleaning up the dataset\nfinding duplicate images\ntraining the model\ndeploying with fastai\ndeploying without fastai"
   },
   {
     "objectID": "posts/multilabel1/multilabel1.html#introduction",
     "href": "posts/multilabel1/multilabel1.html#introduction",
     "title": "A multi-label classifier, part 1: collecting images",
     "section": "",
-    "text": "The idea of developing a computer system capable of recognizing birds was considered extremely difficult in 2015, so much so that it was the inspiration for an XKCD joke.\nI want to make a bird detector that works fairly reliably with any sort of input image.\nA multi-label classifier for birds, cats, and dogs should be a good starting point.\n\nIt’s going to take me a lot more than 5 minutes to make a good bird detector, but hopefully I won’t need to hire a research team for five years!\nThese are my main references:\n\nPractical Deep Learning for Coders, 2022 edition, lesson 0: Is it a bird?\nThe FastAI book, chapter 6\nWalk with FastAI Revisited:\n\nlesson 3 notebook - multilabel\nlesson 3a notebook - unknown label\nlesson 5 notebook - deployment with fastai\nlesson 5a notebook - deployment without fastai\n\n\nAfter doing maybe half of the work for this project, I found that it will be too much for a single blog post, so I’ve split it up into eight posts:\n\ncollecting images\nreusable functions\nGoogle image search\ncleaning up the dataset\nfinding duplicate images\ntraining the model\ndeploying with fastai\ndeploying without fastai"
-  },
-  {
-    "objectID": "posts/multilabel1/multilabel1.html#highlight-text-having-mouse-over-tips",
-    "href": "posts/multilabel1/multilabel1.html#highlight-text-having-mouse-over-tips",
-    "title": "A multi-label classifier, part 1: collecting images",
-    "section": "Highlight text having mouse-over tips",
-    "text": "Highlight text having mouse-over tips\nThis is a bit random, but I wanted to include mouse-over tips, and it was awkward to try to hide this code from the blog post. I figure it might be useful to someone. I’ve included a hidden version too, but you’ll have to check the source notebook to see it!\n\n%%HTML\n&lt;style&gt;\nspan[title] { color: green; cursor: help; }\n&lt;/style&gt;"
+    "text": "The idea of developing a computer system capable of recognizing birds was considered extremely difficult in 2015, so much so that it was the inspiration for an XKCD joke.\nI want to make a bird detector that works fairly reliably with any sort of input image.\nA multi-label classifier for birds, cats, and dogs should be a good starting point.\n\nIt’s going to take me a lot more than 5 minutes to make a good bird detector, but hopefully I won’t need to hire a research team for five years!\nThese are my main references:\n\nPractical Deep Learning for Coders, 2022 edition, lesson 0: Is it a bird?\nThe FastAI book, chapter 6\nWalk with FastAI Revisited:\n\nlesson 3 notebook - multilabel\nlesson 3a notebook - unknown label\nlesson 5 notebook - deployment with fastai\nlesson 5a notebook - deployment without fastai\n\n\nAfter doing maybe half of the work for this project, I found that it will be too much for a single blog post, so I’m splitting it up into eight posts:\n\ncollecting images\nreusable functions\nGoogle image search\ncleaning up the dataset\nfinding duplicate images\ntraining the model\ndeploying with fastai\ndeploying without fastai"
   },
   {
     "objectID": "posts/multilabel1/multilabel1.html#search-engines",
@@ -68,6 +61,13 @@
     "title": "A multi-label classifier, part 1: collecting images",
     "section": "Find images using Google search",
     "text": "Find images using Google search\nI wrote a small tool and library to find images using Google image search; see part 3: Google image search.\n\nfrom google_images import install_webdriver, start_chrome, google_image_search\n\n\nengine = \"gimg\"\n\n\nconfirm_delete(data/engine)\n\n\n\n\n\nwith start_chrome() as wd:\n    for comb in powerset(labels):\n        others = seq_diff(labels, comb)\n        dirname = \"_\".join(comb) + \"_\"\n        path = data/engine/dirname\n        query = query_prefix + join_a_foo_and_a_bar(comb) if comb else null_query\n        query += \" \" + \" \".join(\"-\"+x for x in [*others, \"stock\"])\n        try:\n            path.mkdir(parents=True, exist_ok=False)\n        except FileExistsError as e:\n            print(f\"already downloaded: {query}\")\n            continue\n        print(f\"downloading: {query}\")\n        # want creative commons images to avoid stock photos, but not many CC images have all three\n        opts = \"tbs=il:cl\" if len(comb) &lt; 3 else ''\n        urls = google_image_search(query, safe=True, n=samples_per_query, opts=opts, wd=wd)\n        download_images(dest=path, urls=urls)\n\nINFO:WDM:====== WebDriver manager ======\nINFO:WDM:Get LATEST chromedriver version for google-chrome 111.0.5563\nINFO:WDM:Driver [/home/sam/.wdm/drivers/chromedriver/linux64/111.0.5563/chromedriver] found in cache\n\n\ndownloading: photo of outdoors -bird -cat -dog -stock\ndownloading: photo of a bird -cat -dog -stock\ndownloading: photo of a cat -bird -dog -stock\ndownloading: photo of a dog -bird -cat -stock\ndownloading: photo of a bird and a cat -dog -stock\ndownloading: photo of a bird and a dog -cat -stock\ndownloading: photo of a cat and a dog -bird -stock\ndownloading: photo of a bird and a cat and a dog -stock"
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#this-project-continues-in-part-2-reusable-functions",
+    "href": "posts/multilabel1/multilabel1.html#this-project-continues-in-part-2-reusable-functions",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "This project continues in part 2: reusable functions",
+    "text": "This project continues in part 2: reusable functions"
   },
   {
     "objectID": "posts/multilabel1/multilabel1.html#scratch",
@@ -161,18 +161,11 @@
     "text": "Conclusion\nWith these new keyboard shortcuts, you can quickly run all the cells above your current selection, clear all cell outputs, render all markdown cells, and paste cells above your current selection. By customizing your shortcuts to fit your needs, you can save time and increase your productivity in Jupyter Lab."
   },
   {
-    "objectID": "posts/multilabel2/multilabel2.html",
-    "href": "posts/multilabel2/multilabel2.html",
-    "title": "A multi-label classifier, part 2: reusable functions",
-    "section": "",
-    "text": "In this blog post, I am collecting some reusable functions that I am using for my multi-label classifier project. So far, they are mainly related to the image search queries. I’m exporting this stuff to a mini library called ucm.py using nbdev."
-  },
-  {
     "objectID": "posts/multilabel2/multilabel2.html#introduction",
     "href": "posts/multilabel2/multilabel2.html#introduction",
     "title": "A multi-label classifier, part 2: reusable functions",
-    "section": "",
-    "text": "In this blog post, I am collecting some reusable functions that I am using for my multi-label classifier project. So far, they are mainly related to the image search queries. I’m exporting this stuff to a mini library called ucm.py using nbdev."
+    "section": "Introduction",
+    "text": "Introduction\nIn this blog post, I am collecting some reusable functions that I am using for my multi-label classifier project. So far, they are mainly related to the image search queries. I’m exporting this stuff to a mini library called ucm.py using nbdev."
   },
   {
     "objectID": "posts/multilabel2/multilabel2.html#avoid-warnings-from-tensorflow",
@@ -452,6 +445,6 @@
     "href": "index.html",
     "title": "Sam’s AI Blog",
     "section": "",
-    "text": "A multi-label classifier, part 2: reusable functions\n\n\n\n\n\n\n\nnbdev\n\n\n\n\n\n\n\n\n\n\n\nMar 11, 2023\n\n\n\n\n\n\n  \n\n\n\n\nA multi-label classifier, part 1: collecting images\n\n\n\n\n\n\n\nfastai\n\n\n\n\n\n\n\n\n\n\n\nMar 9, 2023\n\n\n\n\n\n\n  \n\n\n\n\nMy setup for AI work on my Debian PC\n\n\n\n\n\n\n\nsetup\n\n\nDebian\n\n\nfastai\n\n\nPython\n\n\nCUDA\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n  \n\n\n\n\nGraveyard of bad setup ideas\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n  \n\n\n\n\nKeyboard shortcuts for Jupyter Lab\n\n\n\n\n\n\n\nsetup\n\n\nJupyter\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n  \n\n\n\n\nStartup script for my Linux desktop\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\ntools\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n  \n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nsetup\n\n\nblog\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\n\n\n\n\nNo matching items"
+    "text": "A multi-label classifier, part 2: reusable functions\n\n\n\n\n\n\n\nnbdev\n\n\n\n\n\n\n\n\n\n\n\nMar 11, 2023\n\n\n\n\n\n\n  \n\n\n\n\nA multi-label classifier, part 1: collecting images\n\n\n\n\n\n\n\nfastai\n\n\nimage\n\n\nclassifier\n\n\n\n\n\n\n\n\n\n\n\nMar 9, 2023\n\n\n\n\n\n\n  \n\n\n\n\nMy setup for AI work on my Debian PC\n\n\n\n\n\n\n\nsetup\n\n\nDebian\n\n\nfastai\n\n\nPython\n\n\nCUDA\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n  \n\n\n\n\nGraveyard of bad setup ideas\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n  \n\n\n\n\nKeyboard shortcuts for Jupyter Lab\n\n\n\n\n\n\n\nsetup\n\n\nJupyter\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n  \n\n\n\n\nStartup script for my Linux desktop\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\ntools\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n  \n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nsetup\n\n\nblog\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\n\n\n\n\nNo matching items"
   }
 ]

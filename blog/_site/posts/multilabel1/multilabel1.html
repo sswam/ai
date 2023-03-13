@@ -148,6 +148,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="quarto-title-block"><div><h1 class="title">A multi-label classifier, part 1: collecting images</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/sswam/ai/blob/main/blog/posts/multilabel/multilabel.ipynb"><i class="bi"></i> Code</button></div></div>
                                 <div class="quarto-categories">
                 <div class="quarto-category">fastai</div>
+                <div class="quarto-category">image</div>
+                <div class="quarto-category">classifier</div>
               </div>
                   </div>
   </div>
@@ -182,7 +184,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul class="collapse">
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#highlight-text-having-mouse-over-tips" id="toc-highlight-text-having-mouse-over-tips" class="nav-link" data-scroll-target="#highlight-text-having-mouse-over-tips">Highlight text having mouse-over tips</a></li>
   <li><a href="#search-engines" id="toc-search-engines" class="nav-link" data-scroll-target="#search-engines">Search engines</a></li>
   <li><a href="#install-requirements" id="toc-install-requirements" class="nav-link" data-scroll-target="#install-requirements">Install requirements</a></li>
   <li><a href="#import-required-libs" id="toc-import-required-libs" class="nav-link" data-scroll-target="#import-required-libs">Import required libs</a></li>
@@ -190,6 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#find-images-using-duckduckgo_search" id="toc-find-images-using-duckduckgo_search" class="nav-link" data-scroll-target="#find-images-using-duckduckgo_search">Find images using duckduckgo_search</a></li>
   <li><a href="#find-images-using-laion" id="toc-find-images-using-laion" class="nav-link" data-scroll-target="#find-images-using-laion">Find images using LAION</a></li>
   <li><a href="#find-images-using-google-search" id="toc-find-images-using-google-search" class="nav-link" data-scroll-target="#find-images-using-google-search">Find images using Google search</a></li>
+  <li><a href="#this-project-continues-in-part-2-reusable-functions" id="toc-this-project-continues-in-part-2-reusable-functions" class="nav-link" data-scroll-target="#this-project-continues-in-part-2-reusable-functions">This project continues in part 2: reusable functions</a></li>
   <li><a href="#scratch" id="toc-scratch" class="nav-link" data-scroll-target="#scratch">scratch</a></li>
   </ul>
 </nav>
@@ -219,37 +221,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://github.com/muellerzr/Walk-with-fastai-revisited/blob/main/05a_deployment_no_fastai.ipynb">lesson 5a notebook - deployment without fastai</a></li>
 </ul></li>
 </ul>
-<p>After doing maybe half of the work for this project, I found that it will be too much for a single blog post, so I’ve split it up into eight posts:</p>
+<p>After doing maybe half of the work for this project, I found that it will be too much for a single blog post, so I’m splitting it up into eight posts:</p>
 <ol type="1">
 <li><a href="../../posts/multilabel1/multilabel1.html">collecting images</a></li>
 <li><a href="../../posts/multilabel2/multilabel2.html">reusable functions</a></li>
-<li><a href="../../posts/multilabel3/multilabel3.html">Google image search</a></li>
-<li><a href="../../posts/multilabel4/multilabel4.html">cleaning up the dataset</a></li>
-<li><a href="../../posts/multilabel5/multilabel5.html">finding duplicate images</a></li>
-<li><a href="../../posts/multilabel6/multilabel6.html">training the model</a></li>
-<li><a href="../../posts/multilabel7/multilabel7.html">deploying with fastai</a></li>
-<li><a href="../../posts/multilabel8/multilabel8.html">deploying without fastai</a></li>
+<li>Google image search</li>
+<li>cleaning up the dataset</li>
+<li>finding duplicate images</li>
+<li>training the model</li>
+<li>deploying with fastai</li>
+<li>deploying without fastai</li>
 </ol>
-</section>
-<section id="highlight-text-having-mouse-over-tips" class="level2">
-<h2 class="anchored" data-anchor-id="highlight-text-having-mouse-over-tips">Highlight text having mouse-over tips</h2>
-<p>This is a bit random, but I wanted to include mouse-over tips, and it was awkward to try to hide this code from the blog post. I figure it might be useful to someone. I’ve included a hidden version too, but you’ll have to check the source notebook to see it!</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>HTML</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>style<span class="op">&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>span[title] { color: green<span class="op">;</span> cursor: <span class="bu">help</span><span class="op">;</span> }</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;/</span>style<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<style>
-span[title] { color: green; cursor: help; }
-</style>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-display">
-<style>span[title] { color: green; }</style>
-</div>
-</div>
+<!---
+3. [Google image search](/posts/multilabel3/multilabel3.html)
+4. [cleaning up the dataset](/posts/multilabel4/multilabel4.html)
+5. [finding duplicate images](/posts/multilabel5/multilabel5.html)
+6. [training the model](/posts/multilabel6/multilabel6.html)
+7. [deploying with fastai](/posts/multilabel7/multilabel7.html)
+8. [deploying without fastai](/posts/multilabel8/multilabel8.html)
+-->
 </section>
 <section id="search-engines" class="level2">
 <h2 class="anchored" data-anchor-id="search-engines">Search engines</h2>
@@ -263,14 +253,14 @@ span[title] { color: green; cursor: help; }
 <section id="install-requirements" class="level2">
 <h2 class="anchored" data-anchor-id="install-requirements">Install requirements</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>qq <span class="op">-</span>U fastai ipywidgets ipynbname pillow pillow<span class="op">-</span>avif<span class="op">-</span>plugin inflect</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>qq <span class="op">-</span>U selenium webdriver_manager retry</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>qq <span class="op">-</span>U duckduckgo_search</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>qq <span class="op">-</span>U clip<span class="op">-</span>retrieval</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>qq protobuf<span class="op">==</span><span class="fl">3.20.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>qq <span class="op">-</span>U fastai ipywidgets ipynbname pillow pillow<span class="op">-</span>avif<span class="op">-</span>plugin inflect</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>qq <span class="op">-</span>U selenium webdriver_manager retry</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>qq <span class="op">-</span>U duckduckgo_search</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>qq <span class="op">-</span>U clip<span class="op">-</span>retrieval</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>qq protobuf<span class="op">==</span><span class="fl">3.20.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>jupyter nbextension enable <span class="op">--</span>py <span class="op">--</span>sys<span class="op">-</span>prefix widgetsnbextension</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>jupyter nbextension enable <span class="op">--</span>py <span class="op">--</span>sys<span class="op">-</span>prefix widgetsnbextension</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Enabling notebook extension jupyter-js-widgets/extension...
       - Validating: OK</code></pre>
@@ -280,42 +270,42 @@ span[title] { color: green; cursor: help; }
 <section id="import-required-libs" class="level2">
 <h2 class="anchored" data-anchor-id="import-required-libs">Import required libs</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pillow_avif</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.vision.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pillow_avif</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.vision.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I collected some reusable functions in a mini library ucm.py; see part 2: <a href="../../posts/multilabel2/multilabel2.html">reusable functions</a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ucm <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ucm <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="general-setup" class="level2">
 <h2 class="anchored" data-anchor-id="general-setup">General setup</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> Path(<span class="st">"bird_cat_dog"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> Path(<span class="st">"bird_cat_dog"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>null_query <span class="op">=</span> <span class="st">"photo of outdoors"</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="st">"bird"</span>, <span class="st">"cat"</span>, <span class="st">"dog"</span>]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>query_prefix <span class="op">=</span> <span class="st">"photo of "</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>null_query <span class="op">=</span> <span class="st">"photo of outdoors"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="st">"bird"</span>, <span class="st">"cat"</span>, <span class="st">"dog"</span>]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>query_prefix <span class="op">=</span> <span class="st">"photo of "</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>samples_per_query <span class="op">=</span> <span class="dv">200</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>samples_per_query <span class="op">=</span> <span class="dv">200</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="find-images-using-duckduckgo_search" class="level2">
 <h2 class="anchored" data-anchor-id="find-images-using-duckduckgo_search">Find images using duckduckgo_search</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> duckduckgo_search <span class="im">import</span> ddg_images</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> duckduckgo_search <span class="im">import</span> ddg_images</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>engine <span class="op">=</span> <span class="st">"ddg"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>engine <span class="op">=</span> <span class="st">"ddg"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>confirm_delete(data<span class="op">/</span>engine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>confirm_delete(data<span class="op">/</span>engine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id":"6ca758dab1854766a73f8f3bf835a46a","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
@@ -323,23 +313,23 @@ span[title] { color: green; cursor: help; }
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> comb <span class="kw">in</span> powerset(labels):</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    others <span class="op">=</span> seq_diff(labels, comb)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    dirname <span class="op">=</span> <span class="st">"_"</span>.join(comb) <span class="op">+</span> <span class="st">"_"</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> data<span class="op">/</span>engine<span class="op">/</span>dirname</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    query <span class="op">=</span> query_prefix <span class="op">+</span> join_a_foo_and_a_bar(comb) <span class="cf">if</span> comb <span class="cf">else</span> null_query</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    query <span class="op">+=</span> <span class="st">" "</span> <span class="op">+</span> <span class="st">" "</span>.join(<span class="st">"-"</span><span class="op">+</span>x <span class="cf">for</span> x <span class="kw">in</span> others)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        path.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">FileExistsError</span> <span class="im">as</span> e:</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"already downloaded: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"downloading: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># want creative commons images to avoid stock photos, but not many CC images have all three</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    license <span class="op">=</span> <span class="st">"any"</span> <span class="cf">if</span> <span class="bu">len</span>(comb) <span class="op">&lt;</span> <span class="dv">3</span> <span class="cf">else</span> <span class="va">None</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> ddg_images(query, max_results<span class="op">=</span>samples_per_query, license_image<span class="op">=</span>license)</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    urls <span class="op">=</span> [r[<span class="st">"image"</span>] <span class="cf">for</span> r <span class="kw">in</span> results]</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    download_images(dest<span class="op">=</span>path, urls<span class="op">=</span>urls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> comb <span class="kw">in</span> powerset(labels):</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    others <span class="op">=</span> seq_diff(labels, comb)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    dirname <span class="op">=</span> <span class="st">"_"</span>.join(comb) <span class="op">+</span> <span class="st">"_"</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> data<span class="op">/</span>engine<span class="op">/</span>dirname</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    query <span class="op">=</span> query_prefix <span class="op">+</span> join_a_foo_and_a_bar(comb) <span class="cf">if</span> comb <span class="cf">else</span> null_query</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    query <span class="op">+=</span> <span class="st">" "</span> <span class="op">+</span> <span class="st">" "</span>.join(<span class="st">"-"</span><span class="op">+</span>x <span class="cf">for</span> x <span class="kw">in</span> others)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        path.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">FileExistsError</span> <span class="im">as</span> e:</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"already downloaded: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"downloading: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># want creative commons images to avoid stock photos, but not many CC images have all three</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    license <span class="op">=</span> <span class="st">"any"</span> <span class="cf">if</span> <span class="bu">len</span>(comb) <span class="op">&lt;</span> <span class="dv">3</span> <span class="cf">else</span> <span class="va">None</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> ddg_images(query, max_results<span class="op">=</span>samples_per_query, license_image<span class="op">=</span>license)</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    urls <span class="op">=</span> [r[<span class="st">"image"</span>] <span class="cf">for</span> r <span class="kw">in</span> results]</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    download_images(dest<span class="op">=</span>path, urls<span class="op">=</span>urls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>already downloaded: photo of outdoors -bird -cat -dog
 already downloaded: photo of a bird -cat -dog
@@ -356,13 +346,13 @@ already downloaded: photo of a bird and a cat and a dog </code></pre>
 <h2 class="anchored" data-anchor-id="find-images-using-laion">Find images using LAION</h2>
 <p>Deduplication means that fewer than <code>samples_per_query</code> images will be returned, around 75% or so.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> clip_retrieval.clip_client <span class="im">import</span> ClipClient</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> clip_retrieval.clip_client <span class="im">import</span> ClipClient</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>engine <span class="op">=</span> <span class="st">"laion"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>engine <span class="op">=</span> <span class="st">"laion"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>confirm_delete(data<span class="op">/</span>engine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>confirm_delete(data<span class="op">/</span>engine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id":"66155b17fb0245f783afaa883c0f08b6","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
@@ -370,26 +360,26 @@ already downloaded: photo of a bird and a cat and a dog </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>laion <span class="op">=</span> ClipClient(</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">"https://knn.laion.ai/knn-service"</span>,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    indice_name<span class="op">=</span><span class="st">"laion5B-H-14"</span>,</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    aesthetic_score<span class="op">=</span><span class="dv">0</span>, aesthetic_weight<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    num_images<span class="op">=</span>samples_per_query)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>laion <span class="op">=</span> ClipClient(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">"https://knn.laion.ai/knn-service"</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    indice_name<span class="op">=</span><span class="st">"laion5B-H-14"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    aesthetic_score<span class="op">=</span><span class="dv">0</span>, aesthetic_weight<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    num_images<span class="op">=</span>samples_per_query)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> comb <span class="kw">in</span> powerset(labels):</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    dirname <span class="op">=</span> <span class="st">"_"</span>.join(comb) <span class="op">+</span> <span class="st">"_"</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> data<span class="op">/</span>engine<span class="op">/</span>dirname</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    query <span class="op">=</span> query_prefix <span class="op">+</span> <span class="st">", "</span>.join(comb) <span class="cf">if</span> comb <span class="cf">else</span> null_query</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>        path.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">FileExistsError</span> <span class="im">as</span> e:</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"already downloaded: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"downloading: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> laion.query(text<span class="op">=</span>query)</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    urls <span class="op">=</span> [r[<span class="st">"url"</span>] <span class="cf">for</span> r <span class="kw">in</span> results]</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    download_images(dest<span class="op">=</span>path, urls<span class="op">=</span>urls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> comb <span class="kw">in</span> powerset(labels):</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    dirname <span class="op">=</span> <span class="st">"_"</span>.join(comb) <span class="op">+</span> <span class="st">"_"</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> data<span class="op">/</span>engine<span class="op">/</span>dirname</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    query <span class="op">=</span> query_prefix <span class="op">+</span> <span class="st">", "</span>.join(comb) <span class="cf">if</span> comb <span class="cf">else</span> null_query</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        path.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">FileExistsError</span> <span class="im">as</span> e:</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"already downloaded: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"downloading: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> laion.query(text<span class="op">=</span>query)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    urls <span class="op">=</span> [r[<span class="st">"url"</span>] <span class="cf">for</span> r <span class="kw">in</span> results]</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    download_images(dest<span class="op">=</span>path, urls<span class="op">=</span>urls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>downloading: photo of outdoors
 downloading: photo of bird
@@ -414,13 +404,13 @@ downloading: photo of bird, cat, dog</code></pre>
 <h2 class="anchored" data-anchor-id="find-images-using-google-search">Find images using Google search</h2>
 <p>I wrote a small tool and library to find images using Google image search; see part 3: <a href="../../posts/multilabel3/multilabel3.html">Google image search</a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google_images <span class="im">import</span> install_webdriver, start_chrome, google_image_search</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google_images <span class="im">import</span> install_webdriver, start_chrome, google_image_search</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>engine <span class="op">=</span> <span class="st">"gimg"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>engine <span class="op">=</span> <span class="st">"gimg"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>confirm_delete(data<span class="op">/</span>engine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>confirm_delete(data<span class="op">/</span>engine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id":"e8d3981197d644dd82a32bc573560408","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
@@ -428,23 +418,23 @@ downloading: photo of bird, cat, dog</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> start_chrome() <span class="im">as</span> wd:</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> comb <span class="kw">in</span> powerset(labels):</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>        others <span class="op">=</span> seq_diff(labels, comb)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>        dirname <span class="op">=</span> <span class="st">"_"</span>.join(comb) <span class="op">+</span> <span class="st">"_"</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>        path <span class="op">=</span> data<span class="op">/</span>engine<span class="op">/</span>dirname</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>        query <span class="op">=</span> query_prefix <span class="op">+</span> join_a_foo_and_a_bar(comb) <span class="cf">if</span> comb <span class="cf">else</span> null_query</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>        query <span class="op">+=</span> <span class="st">" "</span> <span class="op">+</span> <span class="st">" "</span>.join(<span class="st">"-"</span><span class="op">+</span>x <span class="cf">for</span> x <span class="kw">in</span> [<span class="op">*</span>others, <span class="st">"stock"</span>])</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>            path.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">FileExistsError</span> <span class="im">as</span> e:</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"already downloaded: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"downloading: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># want creative commons images to avoid stock photos, but not many CC images have all three</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>        opts <span class="op">=</span> <span class="st">"tbs=il:cl"</span> <span class="cf">if</span> <span class="bu">len</span>(comb) <span class="op">&lt;</span> <span class="dv">3</span> <span class="cf">else</span> <span class="st">''</span></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>        urls <span class="op">=</span> google_image_search(query, safe<span class="op">=</span><span class="va">True</span>, n<span class="op">=</span>samples_per_query, opts<span class="op">=</span>opts, wd<span class="op">=</span>wd)</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>        download_images(dest<span class="op">=</span>path, urls<span class="op">=</span>urls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> start_chrome() <span class="im">as</span> wd:</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> comb <span class="kw">in</span> powerset(labels):</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        others <span class="op">=</span> seq_diff(labels, comb)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>        dirname <span class="op">=</span> <span class="st">"_"</span>.join(comb) <span class="op">+</span> <span class="st">"_"</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        path <span class="op">=</span> data<span class="op">/</span>engine<span class="op">/</span>dirname</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        query <span class="op">=</span> query_prefix <span class="op">+</span> join_a_foo_and_a_bar(comb) <span class="cf">if</span> comb <span class="cf">else</span> null_query</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>        query <span class="op">+=</span> <span class="st">" "</span> <span class="op">+</span> <span class="st">" "</span>.join(<span class="st">"-"</span><span class="op">+</span>x <span class="cf">for</span> x <span class="kw">in</span> [<span class="op">*</span>others, <span class="st">"stock"</span>])</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>            path.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">FileExistsError</span> <span class="im">as</span> e:</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"already downloaded: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"downloading: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># want creative commons images to avoid stock photos, but not many CC images have all three</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>        opts <span class="op">=</span> <span class="st">"tbs=il:cl"</span> <span class="cf">if</span> <span class="bu">len</span>(comb) <span class="op">&lt;</span> <span class="dv">3</span> <span class="cf">else</span> <span class="st">''</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        urls <span class="op">=</span> google_image_search(query, safe<span class="op">=</span><span class="va">True</span>, n<span class="op">=</span>samples_per_query, opts<span class="op">=</span>opts, wd<span class="op">=</span>wd)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        download_images(dest<span class="op">=</span>path, urls<span class="op">=</span>urls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>INFO:WDM:====== WebDriver manager ======
 INFO:WDM:Get LATEST chromedriver version for google-chrome 111.0.5563
@@ -461,12 +451,15 @@ downloading: photo of a cat and a dog -bird -stock
 downloading: photo of a bird and a cat and a dog -stock</code></pre>
 </div>
 </div>
+</section>
+<section id="this-project-continues-in-part-2-reusable-functions" class="level2">
+<h2 class="anchored" data-anchor-id="this-project-continues-in-part-2-reusable-functions">This project continues in part 2: <a href="../../posts/multilabel2/multilabel2.html">reusable functions</a></h2>
 <p><br><br><br><br><br><br><br><br></p>
 </section>
 <section id="scratch" class="level2">
 <h2 class="anchored" data-anchor-id="scratch">scratch</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mvdata bird_cat_dog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mvdata bird_cat_dog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>mkdir: created directory '/home/sam/ai/data/blog'
 mkdir: created directory '/home/sam/ai/data/blog/posts'
@@ -476,13 +469,13 @@ ln   'bird_cat_dog' -&gt; '/home/sam/ai/data/blog/posts/multilabel/bird_cat_dog'
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>data.readlink()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>data.readlink()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>Path('/home/sam/ai/data/blog/posts/multilabel/bird_cat_dog')</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mv <span class="op">~/</span>ai<span class="op">/</span>data<span class="op">/</span>blog<span class="op">/</span>posts<span class="op">/</span>multilabel<span class="op">/</span>{bird_cat_dog,bird_cat_dog.orig}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mv <span class="op">~/</span>ai<span class="op">/</span>data<span class="op">/</span>blog<span class="op">/</span>posts<span class="op">/</span>multilabel<span class="op">/</span>{bird_cat_dog,bird_cat_dog.orig}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

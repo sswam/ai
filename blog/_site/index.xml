@@ -19,9 +19,12 @@
 
 
 
+<section id="this-project-continues-on-from-part-1-collecting-images" class="level2">
+<h2 class="anchored" data-anchor-id="this-project-continues-on-from-part-1-collecting-images">This project continues on from part 1: <a href="../../posts/multilabel1/multilabel1.html">collecting images</a></h2>
+</section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>In this blog post, I am collecting some reusable functions that I am using for my multi-label classifier project. So far, they are mainly related to the image search queries. I’m exporting this stuff to a mini library called <code>ucm.py</code> using nbdev.</p>
+<p>In this blog post, I am collecting some reusable functions that I am using for my multi-label classifier project. So far, they are mainly related to the image search queries. I’m exporting this stuff to a mini library called <code>ucm.py</code> using <span title="nbdev is a Python library that allows users to create Python packages and libraries directly from Jupyter notebooks. It provides tools for testing, documentation, and packaging code, making it easier for users to develop and share their work.">nbdev</span>.</p>
 </section>
 <section id="avoid-warnings-from-tensorflow" class="level2">
 <h2 class="anchored" data-anchor-id="avoid-warnings-from-tensorflow">Avoid warnings from tensorflow</h2>
@@ -451,53 +454,25 @@ font-style: inherit;">"lib"</span></span>
 <li><a href="https://github.com/muellerzr/Walk-with-fastai-revisited/blob/main/05a_deployment_no_fastai.ipynb">lesson 5a notebook - deployment without fastai</a></li>
 </ul></li>
 </ul>
-<p>After doing maybe half of the work for this project, I found that it will be too much for a single blog post, so I’ve split it up into eight posts:</p>
+<p>After doing maybe half of the work for this project, I found that it will be too much for a single blog post, so I’m splitting it up into eight posts:</p>
 <ol type="1">
 <li><a href="../../posts/multilabel1/multilabel1.html">collecting images</a></li>
 <li><a href="../../posts/multilabel2/multilabel2.html">reusable functions</a></li>
-<li><a href="../../posts/multilabel3/multilabel3.html">Google image search</a></li>
-<li><a href="../../posts/multilabel4/multilabel4.html">cleaning up the dataset</a></li>
-<li><a href="../../posts/multilabel5/multilabel5.html">finding duplicate images</a></li>
-<li><a href="../../posts/multilabel6/multilabel6.html">training the model</a></li>
-<li><a href="../../posts/multilabel7/multilabel7.html">deploying with fastai</a></li>
-<li><a href="../../posts/multilabel8/multilabel8.html">deploying without fastai</a></li>
+<li>Google image search</li>
+<li>cleaning up the dataset</li>
+<li>finding duplicate images</li>
+<li>training the model</li>
+<li>deploying with fastai</li>
+<li>deploying without fastai</li>
 </ol>
-</section>
-<section id="highlight-text-having-mouse-over-tips" class="level2">
-<h2 class="anchored" data-anchor-id="highlight-text-having-mouse-over-tips">Highlight text having mouse-over tips</h2>
-<p>This is a bit random, but I wanted to include mouse-over tips, and it was awkward to try to hide this code from the blog post. I figure it might be useful to someone. I’ve included a hidden version too, but you’ll have to check the source notebook to see it!</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%%</span>HTML</span>
-<span id="cb1-2"><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>style<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span>
-<span id="cb1-3">span[title] { color: green<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span> cursor: <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">help</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">;</span> }</span>
-<span id="cb1-4"><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;/</span>style<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div>
-<div class="cell-output cell-output-display">
-<style>
-span[title] { color: green; cursor: help; }
-</style>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-display">
-<style>span[title] { color: green; }</style>
-</div>
-</div>
+<!---
+3. [Google image search](/posts/multilabel3/multilabel3.html)
+4. [cleaning up the dataset](/posts/multilabel4/multilabel4.html)
+5. [finding duplicate images](/posts/multilabel5/multilabel5.html)
+6. [training the model](/posts/multilabel6/multilabel6.html)
+7. [deploying with fastai](/posts/multilabel7/multilabel7.html)
+8. [deploying without fastai](/posts/multilabel8/multilabel8.html)
+-->
 </section>
 <section id="search-engines" class="level2">
 <h2 class="anchored" data-anchor-id="search-engines">Search engines</h2>
@@ -511,7 +486,7 @@ span[title] { color: green; cursor: help; }
 <section id="install-requirements" class="level2">
 <h2 class="anchored" data-anchor-id="install-requirements">Install requirements</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -522,21 +497,21 @@ background-color: null;
 font-style: inherit;">-</span>avif<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>plugin inflect</span>
-<span id="cb2-2"><span class="op" style="color: #5E5E5E;
+<span id="cb1-2"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>qq <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>U selenium webdriver_manager retry</span>
-<span id="cb2-3"><span class="op" style="color: #5E5E5E;
+<span id="cb1-3"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>qq <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>U duckduckgo_search</span>
-<span id="cb2-4"><span class="op" style="color: #5E5E5E;
+<span id="cb1-4"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -545,7 +520,7 @@ background-color: null;
 font-style: inherit;">-</span>U clip<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>retrieval</span>
-<span id="cb2-5"><span class="op" style="color: #5E5E5E;
+<span id="cb1-5"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>pip install <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -556,7 +531,7 @@ background-color: null;
 font-style: inherit;">3.20.0</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>jupyter nbextension enable <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -574,20 +549,20 @@ font-style: inherit;">-</span>prefix widgetsnbextension</span></code></pre></div
 <section id="import-required-libs" class="level2">
 <h2 class="anchored" data-anchor-id="import-required-libs">Import required libs</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%</span>load_ext autoreload</span>
-<span id="cb5-2"><span class="op" style="color: #5E5E5E;
+<span id="cb4-2"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%</span>autoreload <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="im" style="color: #00769E;
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> pillow_avif</span>
-<span id="cb6-2"><span class="im" style="color: #00769E;
+<span id="cb5-2"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> fastai.vision.<span class="bu" style="color: null;
 background-color: null;
@@ -599,7 +574,7 @@ font-style: inherit;">*</span></span></code></pre></div>
 </div>
 <p>I collected some reusable functions in a mini library ucm.py; see part 2: <a href="../../posts/multilabel2/multilabel2.html">reusable functions</a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> ucm <span class="im" style="color: #00769E;
 background-color: null;
@@ -611,19 +586,19 @@ font-style: inherit;">*</span></span></code></pre></div>
 <section id="general-setup" class="level2">
 <h2 class="anchored" data-anchor-id="general-setup">General setup</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">data <span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1">data <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> Path(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"bird_cat_dog"</span>)</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">null_query <span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">null_query <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"photo of outdoors"</span></span>
-<span id="cb9-2">labels <span class="op" style="color: #5E5E5E;
+<span id="cb8-2">labels <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
 background-color: null;
@@ -632,14 +607,14 @@ background-color: null;
 font-style: inherit;">"cat"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"dog"</span>]</span>
-<span id="cb9-3">query_prefix <span class="op" style="color: #5E5E5E;
+<span id="cb8-3">query_prefix <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"photo of "</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">samples_per_query <span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">samples_per_query <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -649,21 +624,21 @@ font-style: inherit;">200</span></span></code></pre></div>
 <section id="find-images-using-duckduckgo_search" class="level2">
 <h2 class="anchored" data-anchor-id="find-images-using-duckduckgo_search">Find images using duckduckgo_search</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> duckduckgo_search <span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> ddg_images</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">engine <span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1">engine <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"ddg"</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1">confirm_delete(data<span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">confirm_delete(data<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span>engine)</span></code></pre></div>
 <div class="cell-output cell-output-display">
@@ -673,15 +648,15 @@ font-style: inherit;">/</span>engine)</span></code></pre></div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="cf" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> comb <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> powerset(labels):</span>
-<span id="cb14-2">    others <span class="op" style="color: #5E5E5E;
+<span id="cb13-2">    others <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> seq_diff(labels, comb)</span>
-<span id="cb14-3">    dirname <span class="op" style="color: #5E5E5E;
+<span id="cb13-3">    dirname <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -690,14 +665,14 @@ background-color: null;
 font-style: inherit;">+</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"_"</span></span>
-<span id="cb14-4">    path <span class="op" style="color: #5E5E5E;
+<span id="cb13-4">    path <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> data<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span>engine<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span>dirname</span>
-<span id="cb14-5">    query <span class="op" style="color: #5E5E5E;
+<span id="cb13-5">    query <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> query_prefix <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -706,7 +681,7 @@ background-color: null;
 font-style: inherit;">if</span> comb <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span> null_query</span>
-<span id="cb14-6">    query <span class="op" style="color: #5E5E5E;
+<span id="cb13-6">    query <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -723,10 +698,10 @@ background-color: null;
 font-style: inherit;">for</span> x <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> others)</span>
-<span id="cb14-7">    <span class="cf" style="color: #003B4F;
+<span id="cb13-7">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">try</span>:</span>
-<span id="cb14-8">        path.mkdir(parents<span class="op" style="color: #5E5E5E;
+<span id="cb13-8">        path.mkdir(parents<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="va" style="color: #111111;
 background-color: null;
@@ -735,14 +710,14 @@ background-color: null;
 font-style: inherit;">=</span><span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">False</span>)</span>
-<span id="cb14-9">    <span class="cf" style="color: #003B4F;
+<span id="cb13-9">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">except</span> <span class="pp" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">FileExistsError</span> <span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">as</span> e:</span>
-<span id="cb14-10">        <span class="bu" style="color: null;
+<span id="cb13-10">        <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
 background-color: null;
@@ -753,10 +728,10 @@ background-color: null;
 font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>)</span>
-<span id="cb14-11">        <span class="cf" style="color: #003B4F;
+<span id="cb13-11">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">continue</span></span>
-<span id="cb14-12">    <span class="bu" style="color: null;
+<span id="cb13-12">    <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
 background-color: null;
@@ -767,10 +742,10 @@ background-color: null;
 font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>)</span>
-<span id="cb14-13">    <span class="co" style="color: #5E5E5E;
+<span id="cb13-13">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># want creative commons images to avoid stock photos, but not many CC images have all three</span></span>
-<span id="cb14-14">    license <span class="op" style="color: #5E5E5E;
+<span id="cb13-14">    license <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -787,14 +762,14 @@ background-color: null;
 font-style: inherit;">else</span> <span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">None</span></span>
-<span id="cb14-15">    results <span class="op" style="color: #5E5E5E;
+<span id="cb13-15">    results <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> ddg_images(query, max_results<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>samples_per_query, license_image<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>license)</span>
-<span id="cb14-16">    urls <span class="op" style="color: #5E5E5E;
+<span id="cb13-16">    urls <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [r[<span class="st" style="color: #20794D;
 background-color: null;
@@ -803,7 +778,7 @@ background-color: null;
 font-style: inherit;">for</span> r <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> results]</span>
-<span id="cb14-17">    download_images(dest<span class="op" style="color: #5E5E5E;
+<span id="cb13-17">    download_images(dest<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>path, urls<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -824,21 +799,21 @@ already downloaded: photo of a bird and a cat and a dog </code></pre>
 <h2 class="anchored" data-anchor-id="find-images-using-laion">Find images using LAION</h2>
 <p>Deduplication means that fewer than <code>samples_per_query</code> images will be returned, around 75% or so.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="im" style="color: #00769E;
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> clip_retrieval.clip_client <span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> ClipClient</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1">engine <span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1">engine <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"laion"</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1">confirm_delete(data<span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1">confirm_delete(data<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span>engine)</span></code></pre></div>
 <div class="cell-output cell-output-display">
@@ -848,20 +823,20 @@ font-style: inherit;">/</span>engine)</span></code></pre></div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1">laion <span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1">laion <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> ClipClient(</span>
-<span id="cb19-2">    url<span class="op" style="color: #5E5E5E;
+<span id="cb18-2">    url<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"https://knn.laion.ai/knn-service"</span>,</span>
-<span id="cb19-3">    indice_name<span class="op" style="color: #5E5E5E;
+<span id="cb18-3">    indice_name<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"laion5B-H-14"</span>,</span>
-<span id="cb19-4">    aesthetic_score<span class="op" style="color: #5E5E5E;
+<span id="cb18-4">    aesthetic_score<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
 background-color: null;
@@ -870,17 +845,17 @@ background-color: null;
 font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span>,</span>
-<span id="cb19-5">    num_images<span class="op" style="color: #5E5E5E;
+<span id="cb18-5">    num_images<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>samples_per_query)</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="cf" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> comb <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> powerset(labels):</span>
-<span id="cb20-2">    dirname <span class="op" style="color: #5E5E5E;
+<span id="cb19-2">    dirname <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -889,14 +864,14 @@ background-color: null;
 font-style: inherit;">+</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"_"</span></span>
-<span id="cb20-3">    path <span class="op" style="color: #5E5E5E;
+<span id="cb19-3">    path <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> data<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span>engine<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span>dirname</span>
-<span id="cb20-4">    query <span class="op" style="color: #5E5E5E;
+<span id="cb19-4">    query <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> query_prefix <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -907,10 +882,10 @@ background-color: null;
 font-style: inherit;">if</span> comb <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span> null_query</span>
-<span id="cb20-5">    <span class="cf" style="color: #003B4F;
+<span id="cb19-5">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">try</span>:</span>
-<span id="cb20-6">        path.mkdir(parents<span class="op" style="color: #5E5E5E;
+<span id="cb19-6">        path.mkdir(parents<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="va" style="color: #111111;
 background-color: null;
@@ -919,14 +894,14 @@ background-color: null;
 font-style: inherit;">=</span><span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">False</span>)</span>
-<span id="cb20-7">    <span class="cf" style="color: #003B4F;
+<span id="cb19-7">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">except</span> <span class="pp" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">FileExistsError</span> <span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">as</span> e:</span>
-<span id="cb20-8">        <span class="bu" style="color: null;
+<span id="cb19-8">        <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
 background-color: null;
@@ -937,10 +912,10 @@ background-color: null;
 font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>)</span>
-<span id="cb20-9">        <span class="cf" style="color: #003B4F;
+<span id="cb19-9">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">continue</span></span>
-<span id="cb20-10">    <span class="bu" style="color: null;
+<span id="cb19-10">    <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
 background-color: null;
@@ -951,12 +926,12 @@ background-color: null;
 font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>)</span>
-<span id="cb20-11">    results <span class="op" style="color: #5E5E5E;
+<span id="cb19-11">    results <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> laion.query(text<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>query)</span>
-<span id="cb20-12">    urls <span class="op" style="color: #5E5E5E;
+<span id="cb19-12">    urls <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [r[<span class="st" style="color: #20794D;
 background-color: null;
@@ -965,7 +940,7 @@ background-color: null;
 font-style: inherit;">for</span> r <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> results]</span>
-<span id="cb20-13">    download_images(dest<span class="op" style="color: #5E5E5E;
+<span id="cb19-13">    download_images(dest<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>path, urls<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -994,21 +969,21 @@ downloading: photo of bird, cat, dog</code></pre>
 <h2 class="anchored" data-anchor-id="find-images-using-google-search">Find images using Google search</h2>
 <p>I wrote a small tool and library to find images using Google image search; see part 3: <a href="../../posts/multilabel3/multilabel3.html">Google image search</a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="im" style="color: #00769E;
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> google_images <span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> install_webdriver, start_chrome, google_image_search</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1">engine <span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1">engine <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"gimg"</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1">confirm_delete(data<span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1">confirm_delete(data<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span>engine)</span></code></pre></div>
 <div class="cell-output cell-output-display">
@@ -1018,20 +993,20 @@ font-style: inherit;">/</span>engine)</span></code></pre></div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><span class="cf" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">with</span> start_chrome() <span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">as</span> wd:</span>
-<span id="cb25-2">    <span class="cf" style="color: #003B4F;
+<span id="cb24-2">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> comb <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> powerset(labels):</span>
-<span id="cb25-3">        others <span class="op" style="color: #5E5E5E;
+<span id="cb24-3">        others <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> seq_diff(labels, comb)</span>
-<span id="cb25-4">        dirname <span class="op" style="color: #5E5E5E;
+<span id="cb24-4">        dirname <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -1040,14 +1015,14 @@ background-color: null;
 font-style: inherit;">+</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"_"</span></span>
-<span id="cb25-5">        path <span class="op" style="color: #5E5E5E;
+<span id="cb24-5">        path <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> data<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span>engine<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span>dirname</span>
-<span id="cb25-6">        query <span class="op" style="color: #5E5E5E;
+<span id="cb24-6">        query <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> query_prefix <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -1056,7 +1031,7 @@ background-color: null;
 font-style: inherit;">if</span> comb <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span> null_query</span>
-<span id="cb25-7">        query <span class="op" style="color: #5E5E5E;
+<span id="cb24-7">        query <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -1077,10 +1052,10 @@ background-color: null;
 font-style: inherit;">*</span>others, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"stock"</span>])</span>
-<span id="cb25-8">        <span class="cf" style="color: #003B4F;
+<span id="cb24-8">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">try</span>:</span>
-<span id="cb25-9">            path.mkdir(parents<span class="op" style="color: #5E5E5E;
+<span id="cb24-9">            path.mkdir(parents<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="va" style="color: #111111;
 background-color: null;
@@ -1089,14 +1064,14 @@ background-color: null;
 font-style: inherit;">=</span><span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">False</span>)</span>
-<span id="cb25-10">        <span class="cf" style="color: #003B4F;
+<span id="cb24-10">        <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">except</span> <span class="pp" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">FileExistsError</span> <span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">as</span> e:</span>
-<span id="cb25-11">            <span class="bu" style="color: null;
+<span id="cb24-11">            <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
 background-color: null;
@@ -1107,10 +1082,10 @@ background-color: null;
 font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>)</span>
-<span id="cb25-12">            <span class="cf" style="color: #003B4F;
+<span id="cb24-12">            <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">continue</span></span>
-<span id="cb25-13">        <span class="bu" style="color: null;
+<span id="cb24-13">        <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
 background-color: null;
@@ -1121,10 +1096,10 @@ background-color: null;
 font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>)</span>
-<span id="cb25-14">        <span class="co" style="color: #5E5E5E;
+<span id="cb24-14">        <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># want creative commons images to avoid stock photos, but not many CC images have all three</span></span>
-<span id="cb25-15">        opts <span class="op" style="color: #5E5E5E;
+<span id="cb24-15">        opts <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -1141,7 +1116,7 @@ background-color: null;
 font-style: inherit;">else</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">''</span></span>
-<span id="cb25-16">        urls <span class="op" style="color: #5E5E5E;
+<span id="cb24-16">        urls <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> google_image_search(query, safe<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -1154,7 +1129,7 @@ background-color: null;
 font-style: inherit;">=</span>opts, wd<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>wd)</span>
-<span id="cb25-17">        download_images(dest<span class="op" style="color: #5E5E5E;
+<span id="cb24-17">        download_images(dest<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>path, urls<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -1175,12 +1150,15 @@ downloading: photo of a cat and a dog -bird -stock
 downloading: photo of a bird and a cat and a dog -stock</code></pre>
 </div>
 </div>
+</section>
+<section id="this-project-continues-in-part-2-reusable-functions" class="level2">
+<h2 class="anchored" data-anchor-id="this-project-continues-in-part-2-reusable-functions">This project continues in part 2: <a href="../../posts/multilabel2/multilabel2.html">reusable functions</a></h2>
 <p><br><br><br><br><br><br><br><br></p>
 </section>
 <section id="scratch" class="level2">
 <h2 class="anchored" data-anchor-id="scratch">scratch</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>mvdata bird_cat_dog</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1192,13 +1170,13 @@ ln   'bird_cat_dog' -&gt; '/home/sam/ai/data/blog/posts/multilabel/bird_cat_dog'
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1">data.readlink()</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1">data.readlink()</span></code></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>Path('/home/sam/ai/data/blog/posts/multilabel/bird_cat_dog')</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><span class="op" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span>mv <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -1220,6 +1198,8 @@ font-style: inherit;">/</span>{bird_cat_dog,bird_cat_dog.orig}</span></code></pr
 
  ]]></description>
   <category>fastai</category>
+  <category>image</category>
+  <category>classifier</category>
   <guid>https://sam.ucm.dev/blog/posts/multilabel1/multilabel1.html</guid>
   <pubDate>Wed, 08 Mar 2023 13:00:00 GMT</pubDate>
 </item>

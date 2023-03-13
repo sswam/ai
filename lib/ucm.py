@@ -3,16 +3,16 @@
 # %% auto 0
 __all__ = ['p', 'powerset', 'seq_diff', 'join_a_foo_and_a_bar', 'confirm_delete', 'sh', 'setup_logging', 'export']
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 5
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 6
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 7
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 8
 from fastcore.foundation import L
 from pathlib import Path
 from fastcore.xtras import Path
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 9
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 10
 from itertools import chain, combinations
 
 def powerset(iterable):
@@ -20,20 +20,20 @@ def powerset(iterable):
     s = list(iterable)
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 10
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 11
 def seq_diff(s1, s2):
     return L(filter(lambda x: x not in s2, s1))
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 13
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 14
 import inflect
 
 p = inflect.engine()
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 14
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 15
 def join_a_foo_and_a_bar(comb):
     return " and ".join(p.a(x) for x in comb)
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 17
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 18
 import ipywidgets as widgets
 from send2trash import send2trash
 
@@ -43,13 +43,13 @@ def confirm_delete(del_path):
     button.on_click(lambda b: send2trash(del_path))
     display(button)
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 21
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 22
 import subprocess
 
 def sh(command):
     return subprocess.check_output(command).decode('utf-8').rstrip('\n')
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 24
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 25
 import logging
 
 def setup_logging(quiet=False, debug=False):
@@ -60,7 +60,7 @@ def setup_logging(quiet=False, debug=False):
     else:
         logging.basicConfig(level=logging.INFO, format="%(message)s")
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 26
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 27
 from nbdev.export import nb_export
 import ipynbname
 
