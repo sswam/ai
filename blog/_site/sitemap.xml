@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://sam.ucm.dev/blog/posts/multilabel1/multilabel1.html</loc>
+    <lastmod>2023-03-13T16:53:47.017Z</lastmod>
+  </url>
+  <url>
     <loc>https://sam.ucm.dev/blog/posts/setup/setup.html</loc>
-    <lastmod>2023-03-13T15:05:05.784Z</lastmod>
+    <lastmod>2023-03-13T16:53:48.153Z</lastmod>
   </url>
   <url>
     <loc>https://sam.ucm.dev/blog/posts/shortcuts/shortcuts.html</loc>
-    <lastmod>2023-03-13T15:05:05.920Z</lastmod>
+    <lastmod>2023-03-13T16:53:48.297Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sam.ucm.dev/blog/posts/multilabel2/multilabel2.html</loc>
+    <lastmod>2023-03-13T16:53:48.473Z</lastmod>
   </url>
   <url>
     <loc>https://sam.ucm.dev/blog/posts/blog/blog.html</loc>
-    <lastmod>2023-03-13T15:05:06.564Z</lastmod>
+    <lastmod>2023-03-13T16:53:48.941Z</lastmod>
   </url>
   <url>
     <loc>https://sam.ucm.dev/blog/posts/deadends/deadends.html</loc>
-    <lastmod>2023-03-13T15:05:07.100Z</lastmod>
+    <lastmod>2023-03-13T16:53:49.493Z</lastmod>
   </url>
   <url>
     <loc>https://sam.ucm.dev/blog/posts/startup/startup.html</loc>
-    <lastmod>2023-03-13T15:05:07.648Z</lastmod>
+    <lastmod>2023-03-13T16:53:50.041Z</lastmod>
   </url>
   <url>
     <loc>https://sam.ucm.dev/blog/about.html</loc>
-    <lastmod>2023-03-13T15:05:07.788Z</lastmod>
+    <lastmod>2023-03-13T16:53:50.169Z</lastmod>
   </url>
   <url>
     <loc>https://sam.ucm.dev/blog/index.html</loc>
-    <lastmod>2023-03-13T15:05:08.048Z</lastmod>
+    <lastmod>2023-03-13T16:53:50.489Z</lastmod>
   </url>
 </urlset>

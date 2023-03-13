@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/multilabel2/multilabel2.html",
+      "/posts/multilabel1/multilabel1.html",
       "/posts/setup/setup.html",
       "/posts/deadends/deadends.html",
       "/posts/shortcuts/shortcuts.html",

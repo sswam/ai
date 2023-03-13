@@ -1,5 +1,82 @@
 [
   {
+    "objectID": "posts/multilabel1/multilabel1.html",
+    "href": "posts/multilabel1/multilabel1.html",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "",
+    "text": "The idea of developing a computer system capable of recognizing birds was considered extremely difficult in 2015, so much so that it was the inspiration for an XKCD joke.\nI want to make a bird detector that works fairly reliably with any sort of input image.\nA multi-label classifier for birds, cats, and dogs should be a good starting point.\n\nIt’s going to take me a lot more than 5 minutes to make a good bird detector, but hopefully I won’t need to hire a research team for five years!\nThese are my main references:\n\nPractical Deep Learning for Coders, 2022 edition, lesson 0: Is it a bird?\nThe FastAI book, chapter 6\nWalk with FastAI Revisited:\n\nlesson 3 notebook - multilabel\nlesson 3a notebook - unknown label\nlesson 5 notebook - deployment with fastai\nlesson 5a notebook - deployment without fastai\n\n\nAfter doing maybe half of the work for this project, I found that it will be too much for a single blog post, so I’ve split it up into eight posts:\n\ncollecting images\nreusable functions\nGoogle image search\ncleaning up the dataset\nfinding duplicate images\ntraining the model\ndeploying with fastai\ndeploying without fastai"
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#introduction",
+    "href": "posts/multilabel1/multilabel1.html#introduction",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "",
+    "text": "The idea of developing a computer system capable of recognizing birds was considered extremely difficult in 2015, so much so that it was the inspiration for an XKCD joke.\nI want to make a bird detector that works fairly reliably with any sort of input image.\nA multi-label classifier for birds, cats, and dogs should be a good starting point.\n\nIt’s going to take me a lot more than 5 minutes to make a good bird detector, but hopefully I won’t need to hire a research team for five years!\nThese are my main references:\n\nPractical Deep Learning for Coders, 2022 edition, lesson 0: Is it a bird?\nThe FastAI book, chapter 6\nWalk with FastAI Revisited:\n\nlesson 3 notebook - multilabel\nlesson 3a notebook - unknown label\nlesson 5 notebook - deployment with fastai\nlesson 5a notebook - deployment without fastai\n\n\nAfter doing maybe half of the work for this project, I found that it will be too much for a single blog post, so I’ve split it up into eight posts:\n\ncollecting images\nreusable functions\nGoogle image search\ncleaning up the dataset\nfinding duplicate images\ntraining the model\ndeploying with fastai\ndeploying without fastai"
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#highlight-text-having-mouse-over-tips",
+    "href": "posts/multilabel1/multilabel1.html#highlight-text-having-mouse-over-tips",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "Highlight text having mouse-over tips",
+    "text": "Highlight text having mouse-over tips\nThis is a bit random, but I wanted to include mouse-over tips, and it was awkward to try to hide this code from the blog post. I figure it might be useful to someone. I’ve included a hidden version too, but you’ll have to check the source notebook to see it!\n\n%%HTML\n&lt;style&gt;\nspan[title] { color: green; cursor: help; }\n&lt;/style&gt;"
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#search-engines",
+    "href": "posts/multilabel1/multilabel1.html#search-engines",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "Search engines",
+    "text": "Search engines\nI tried a few different search engines to find suitable images:\n\nDuckDuckGo image search, which is based on Bing image search, has a nice Python API, and was used for the 2022 FastAI course.\nLAION Clip retrieval; LAION is the image set that was used for training Stable Diffusion.\nGoogle image search, using my own scraping tool written in Python."
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#install-requirements",
+    "href": "posts/multilabel1/multilabel1.html#install-requirements",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "Install requirements",
+    "text": "Install requirements\n\n!pip install -qq -U fastai ipywidgets ipynbname pillow pillow-avif-plugin inflect\n!pip install -qq -U selenium webdriver_manager retry\n!pip install -qq -U duckduckgo_search\n!pip install -qq -U clip-retrieval\n!pip install -qq protobuf==3.20.0\n\n\n!jupyter nbextension enable --py --sys-prefix widgetsnbextension\n\nEnabling notebook extension jupyter-js-widgets/extension...\n      - Validating: OK"
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#import-required-libs",
+    "href": "posts/multilabel1/multilabel1.html#import-required-libs",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "Import required libs",
+    "text": "Import required libs\n\n%load_ext autoreload\n%autoreload 2\n\n\nimport pillow_avif\nfrom fastai.vision.all import *\n\nI collected some reusable functions in a mini library ucm.py; see part 2: reusable functions.\n\nfrom ucm import *"
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#general-setup",
+    "href": "posts/multilabel1/multilabel1.html#general-setup",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "General setup",
+    "text": "General setup\n\ndata = Path(\"bird_cat_dog\")\n\n\nnull_query = \"photo of outdoors\"\nlabels = [\"bird\", \"cat\", \"dog\"]\nquery_prefix = \"photo of \"\n\n\nsamples_per_query = 200"
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#find-images-using-duckduckgo_search",
+    "href": "posts/multilabel1/multilabel1.html#find-images-using-duckduckgo_search",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "Find images using duckduckgo_search",
+    "text": "Find images using duckduckgo_search\n\nfrom duckduckgo_search import ddg_images\n\n\nengine = \"ddg\"\n\n\nconfirm_delete(data/engine)\n\n\n\n\n\nfor comb in powerset(labels):\n    others = seq_diff(labels, comb)\n    dirname = \"_\".join(comb) + \"_\"\n    path = data/engine/dirname\n    query = query_prefix + join_a_foo_and_a_bar(comb) if comb else null_query\n    query += \" \" + \" \".join(\"-\"+x for x in others)\n    try:\n        path.mkdir(parents=True, exist_ok=False)\n    except FileExistsError as e:\n        print(f\"already downloaded: {query}\")\n        continue\n    print(f\"downloading: {query}\")\n    # want creative commons images to avoid stock photos, but not many CC images have all three\n    license = \"any\" if len(comb) &lt; 3 else None\n    results = ddg_images(query, max_results=samples_per_query, license_image=license)\n    urls = [r[\"image\"] for r in results]\n    download_images(dest=path, urls=urls)\n\nalready downloaded: photo of outdoors -bird -cat -dog\nalready downloaded: photo of a bird -cat -dog\nalready downloaded: photo of a cat -bird -dog\nalready downloaded: photo of a dog -bird -cat\nalready downloaded: photo of a bird and a cat -dog\nalready downloaded: photo of a bird and a dog -cat\nalready downloaded: photo of a cat and a dog -bird\nalready downloaded: photo of a bird and a cat and a dog"
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#find-images-using-laion",
+    "href": "posts/multilabel1/multilabel1.html#find-images-using-laion",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "Find images using LAION",
+    "text": "Find images using LAION\nDeduplication means that fewer than samples_per_query images will be returned, around 75% or so.\n\nfrom clip_retrieval.clip_client import ClipClient\n\n\nengine = \"laion\"\n\n\nconfirm_delete(data/engine)\n\n\n\n\n\nlaion = ClipClient(\n    url=\"https://knn.laion.ai/knn-service\",\n    indice_name=\"laion5B-H-14\",\n    aesthetic_score=0, aesthetic_weight=0,\n    num_images=samples_per_query)\n\n\nfor comb in powerset(labels):\n    dirname = \"_\".join(comb) + \"_\"\n    path = data/engine/dirname\n    query = query_prefix + \", \".join(comb) if comb else null_query\n    try:\n        path.mkdir(parents=True, exist_ok=False)\n    except FileExistsError as e:\n        print(f\"already downloaded: {query}\")\n        continue\n    print(f\"downloading: {query}\")\n    results = laion.query(text=query)\n    urls = [r[\"url\"] for r in results]\n    download_images(dest=path, urls=urls)\n\ndownloading: photo of outdoors\ndownloading: photo of bird\ndownloading: photo of cat\ndownloading: photo of dog\ndownloading: photo of bird, cat\ndownloading: photo of bird, dog\ndownloading: photo of cat, dog\ndownloading: photo of bird, cat, dog\n\n\n\nreferences for LAION clip retrieval\n\nhttps://replicate.com/blog/grab-hundreds-of-images-with-clip-and-laion\nhttps://github.com/rom1504/clip-retrieval\nhttps://rom1504.github.io/clip-retrieval/"
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#find-images-using-google-search",
+    "href": "posts/multilabel1/multilabel1.html#find-images-using-google-search",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "Find images using Google search",
+    "text": "Find images using Google search\nI wrote a small tool and library to find images using Google image search; see part 3: Google image search.\n\nfrom google_images import install_webdriver, start_chrome, google_image_search\n\n\nengine = \"gimg\"\n\n\nconfirm_delete(data/engine)\n\n\n\n\n\nwith start_chrome() as wd:\n    for comb in powerset(labels):\n        others = seq_diff(labels, comb)\n        dirname = \"_\".join(comb) + \"_\"\n        path = data/engine/dirname\n        query = query_prefix + join_a_foo_and_a_bar(comb) if comb else null_query\n        query += \" \" + \" \".join(\"-\"+x for x in [*others, \"stock\"])\n        try:\n            path.mkdir(parents=True, exist_ok=False)\n        except FileExistsError as e:\n            print(f\"already downloaded: {query}\")\n            continue\n        print(f\"downloading: {query}\")\n        # want creative commons images to avoid stock photos, but not many CC images have all three\n        opts = \"tbs=il:cl\" if len(comb) &lt; 3 else ''\n        urls = google_image_search(query, safe=True, n=samples_per_query, opts=opts, wd=wd)\n        download_images(dest=path, urls=urls)\n\nINFO:WDM:====== WebDriver manager ======\nINFO:WDM:Get LATEST chromedriver version for google-chrome 111.0.5563\nINFO:WDM:Driver [/home/sam/.wdm/drivers/chromedriver/linux64/111.0.5563/chromedriver] found in cache\n\n\ndownloading: photo of outdoors -bird -cat -dog -stock\ndownloading: photo of a bird -cat -dog -stock\ndownloading: photo of a cat -bird -dog -stock\ndownloading: photo of a dog -bird -cat -stock\ndownloading: photo of a bird and a cat -dog -stock\ndownloading: photo of a bird and a dog -cat -stock\ndownloading: photo of a cat and a dog -bird -stock\ndownloading: photo of a bird and a cat and a dog -stock"
+  },
+  {
+    "objectID": "posts/multilabel1/multilabel1.html#scratch",
+    "href": "posts/multilabel1/multilabel1.html#scratch",
+    "title": "A multi-label classifier, part 1: collecting images",
+    "section": "scratch",
+    "text": "scratch\n\n!mvdata bird_cat_dog\n\nmkdir: created directory '/home/sam/ai/data/blog'\nmkdir: created directory '/home/sam/ai/data/blog/posts'\nmkdir: created directory '/home/sam/ai/data/blog/posts/multilabel'\nmv   renamed 'bird_cat_dog' -&gt; '/home/sam/ai/data/blog/posts/multilabel/bird_cat_dog'\nln   'bird_cat_dog' -&gt; '/home/sam/ai/data/blog/posts/multilabel/bird_cat_dog'\n\n\n\ndata.readlink()\n\nPath('/home/sam/ai/data/blog/posts/multilabel/bird_cat_dog')\n\n\n\n!mv ~/ai/data/blog/posts/multilabel/{bird_cat_dog,bird_cat_dog.orig}"
+  },
+  {
     "objectID": "posts/setup/setup.html",
     "href": "posts/setup/setup.html",
     "title": "My setup for AI work on my Debian PC",
@@ -82,6 +159,83 @@
     "title": "Keyboard shortcuts for Jupyter Lab",
     "section": "Conclusion",
     "text": "Conclusion\nWith these new keyboard shortcuts, you can quickly run all the cells above your current selection, clear all cell outputs, render all markdown cells, and paste cells above your current selection. By customizing your shortcuts to fit your needs, you can save time and increase your productivity in Jupyter Lab."
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html",
+    "href": "posts/multilabel2/multilabel2.html",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "",
+    "text": "In this blog post, I am collecting some reusable functions that I am using for my multi-label classifier project. So far, they are mainly related to the image search queries. I’m exporting this stuff to a mini library called ucm.py using nbdev."
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#introduction",
+    "href": "posts/multilabel2/multilabel2.html#introduction",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "",
+    "text": "In this blog post, I am collecting some reusable functions that I am using for my multi-label classifier project. So far, they are mainly related to the image search queries. I’m exporting this stuff to a mini library called ucm.py using nbdev."
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#avoid-warnings-from-tensorflow",
+    "href": "posts/multilabel2/multilabel2.html#avoid-warnings-from-tensorflow",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "Avoid warnings from tensorflow",
+    "text": "Avoid warnings from tensorflow\nI also added this to my ai.env environment file.\n\nimport os\nos.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#useful-imports",
+    "href": "posts/multilabel2/multilabel2.html#useful-imports",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "Useful imports",
+    "text": "Useful imports\n\nfrom fastcore.foundation import L\nfrom pathlib import Path\nfrom fastcore.xtras import Path"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#collections",
+    "href": "posts/multilabel2/multilabel2.html#collections",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "Collections",
+    "text": "Collections\n\nfrom itertools import chain, combinations\n\ndef powerset(iterable):\n    \"powerset([1,2,3]) --&gt; () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)\"\n    s = list(iterable)\n    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))\n\n\ndef seq_diff(s1, s2):\n    return L(filter(lambda x: x not in s2, s1))\n\n\ndef test_powerset_and_seq_diff():\n    labels = L(\"bird\", \"cat\", \"dog\")\n    for comb in powerset(labels):\n        print(comb, seq_diff(labels, comb))\n        \ntest_powerset_and_seq_diff()\n\n() ['bird', 'cat', 'dog']\n('bird',) ['cat', 'dog']\n('cat',) ['bird', 'dog']\n('dog',) ['bird', 'cat']\n('bird', 'cat') ['dog']\n('bird', 'dog') ['cat']\n('cat', 'dog') ['bird']\n('bird', 'cat', 'dog') []"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#a-helper-for-search-query-text",
+    "href": "posts/multilabel2/multilabel2.html#a-helper-for-search-query-text",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "A helper for search query text",
+    "text": "A helper for search query text\n\nimport inflect\n\np = inflect.engine()\n\n\ndef join_a_foo_and_a_bar(comb):\n    return \" and \".join(p.a(x) for x in comb)\n\n\njoin_a_foo_and_a_bar([\"banana\", \"apple\"])\n\n'a banana and an apple'"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#a-button-to-confirm-deleting-data",
+    "href": "posts/multilabel2/multilabel2.html#a-button-to-confirm-deleting-data",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "A button to confirm deleting data",
+    "text": "A button to confirm deleting data\n\nimport ipywidgets as widgets\nfrom send2trash import send2trash\n\ndef confirm_delete(del_path):\n    button = widgets.Button(description=f\"Move data to trash: {del_path}?\", layout=widgets.Layout(width='20em'))\n    # button.on_click(lambda b: shutil.rmtree(del_path, ignore_errors=True))\n    button.on_click(lambda b: send2trash(del_path))\n    display(button)\n\n\nmkdir deleteme\n\n\nconfirm_delete(\"deleteme\")"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#running-shell-commands",
+    "href": "posts/multilabel2/multilabel2.html#running-shell-commands",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "Running shell commands",
+    "text": "Running shell commands\n\nimport subprocess\n\ndef sh(command):\n    return subprocess.check_output(command).decode('utf-8').rstrip('\\n')\n\n\nPath(sh('git-root'))/\"lib\"\n\nPath('/home/sam/ai/lib')"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#logging",
+    "href": "posts/multilabel2/multilabel2.html#logging",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "Logging",
+    "text": "Logging\n\nimport logging\n\ndef setup_logging(quiet=False, debug=False):\n    if debug:\n        logging.basicConfig(level=logging.DEBUG, format=\"%(asctime)s %(levelname)s %(message)s\")\n    elif quiet:\n        logging.basicConfig(level=logging.ERROR, format=\"%(message)s\")\n    else:\n        logging.basicConfig(level=logging.INFO, format=\"%(message)s\")"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#exporting-code-with-nbdev",
+    "href": "posts/multilabel2/multilabel2.html#exporting-code-with-nbdev",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "Exporting code with nbdev",
+    "text": "Exporting code with nbdev\n\nfrom nbdev.export import nb_export\nimport ipynbname\n\ndef export(nb_file=None, lib_dir=None):\n    if nb_file is None: nb_file = ipynbname.name() + '.ipynb'\n    if lib_dir is None: lib_dir = Path(sh('git-root'))/\"lib\"\n    nb_export(nb_file, lib_dir)\n\n\nexport()"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#appendix-scripts-that-i-wrote-and-used-here",
+    "href": "posts/multilabel2/multilabel2.html#appendix-scripts-that-i-wrote-and-used-here",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "Appendix: scripts that I wrote and used here",
+    "text": "Appendix: scripts that I wrote and used here\n\ngit-root: print the root of the current git repository\nucm-tool-url: output the URLs of tools on my website\nucm-tool-link: output a markdown list with links to tools on my website, and their descriptions"
   },
   {
     "objectID": "posts/blog/blog.html",
@@ -298,6 +452,6 @@
     "href": "index.html",
     "title": "Sam’s AI Blog",
     "section": "",
-    "text": "My setup for AI work on my Debian PC\n\n\n\n\n\n\n\nsetup\n\n\nDebian\n\n\nfastai\n\n\nPython\n\n\nCUDA\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n  \n\n\n\n\nGraveyard of bad setup ideas\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n  \n\n\n\n\nKeyboard shortcuts for Jupyter Lab\n\n\n\n\n\n\n\nsetup\n\n\nJupyter\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n  \n\n\n\n\nStartup script for my Linux desktop\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\ntools\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n  \n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nsetup\n\n\nblog\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\n\n\n\n\nNo matching items"
+    "text": "A multi-label classifier, part 2: reusable functions\n\n\n\n\n\n\n\nnbdev\n\n\n\n\n\n\n\n\n\n\n\nMar 11, 2023\n\n\n\n\n\n\n  \n\n\n\n\nA multi-label classifier, part 1: collecting images\n\n\n\n\n\n\n\nfastai\n\n\n\n\n\n\n\n\n\n\n\nMar 9, 2023\n\n\n\n\n\n\n  \n\n\n\n\nMy setup for AI work on my Debian PC\n\n\n\n\n\n\n\nsetup\n\n\nDebian\n\n\nfastai\n\n\nPython\n\n\nCUDA\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n  \n\n\n\n\nGraveyard of bad setup ideas\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\n\n\n\n\n\n\n\n\n\nMar 3, 2023\n\n\n\n\n\n\n  \n\n\n\n\nKeyboard shortcuts for Jupyter Lab\n\n\n\n\n\n\n\nsetup\n\n\nJupyter\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n  \n\n\n\n\nStartup script for my Linux desktop\n\n\n\n\n\n\n\nbad\n\n\nsetup\n\n\nDebian\n\n\ntools\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2023\n\n\n\n\n\n\n  \n\n\n\n\nBlogging AI with Jupyter and Quarto\n\n\n\n\n\n\n\nsetup\n\n\nblog\n\n\nJupyter\n\n\nQuarto\n\n\n\n\n\n\n\n\n\n\n\nFeb 8, 2023\n\n\n\n\n\n\nNo matching items"
   }
 ]
