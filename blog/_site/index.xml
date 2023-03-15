@@ -238,7 +238,7 @@ background-color: null;
 font-style: inherit;">"deleteme"</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"5a916a2d1e5743f6beb87e4f7842150d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"4b87e7b45383482b8df8b2fc6aa627b9","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -287,25 +287,33 @@ font-style: inherit;">import</span> logging</span>
 <span id="cb17-2"></span>
 <span id="cb17-3"><span class="kw" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">def</span> setup_logging(quiet<span class="op" style="color: #5E5E5E;
+font-style: inherit;">def</span> setup_logging(log_level<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>logging.WARNING, log_file<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="va" style="color: #111111;
 background-color: null;
-font-style: inherit;">False</span>, debug<span class="op" style="color: #5E5E5E;
+font-style: inherit;">None</span>):</span>
+<span id="cb17-4">        <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
+font-style: inherit;">""" Set up logging. """</span></span>
+<span id="cb17-5">        fmt <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">False</span>):</span>
-<span id="cb17-4">    <span class="cf" style="color: #003B4F;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">if</span> debug:</span>
-<span id="cb17-5">        logging.basicConfig(level<span class="op" style="color: #5E5E5E;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span>logging.DEBUG, <span class="bu" style="color: null;
+font-style: inherit;">%(message)s</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">format</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">"</span></span>
+<span id="cb17-6">        <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
+font-style: inherit;">if</span> log_level <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> logging.DEBUG:</span>
+<span id="cb17-7">                fmt <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -317,41 +325,145 @@ font-style: inherit;">%(levelname)s</span><span class="st" style="color: #20794D
 background-color: null;
 font-style: inherit;"> </span><span class="sc" style="color: #5E5E5E;
 background-color: null;
+font-style: inherit;">%(name)s</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
 font-style: inherit;">%(message)s</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb17-6">    <span class="cf" style="color: #003B4F;
+font-style: inherit;">"</span></span>
+<span id="cb17-8"></span>
+<span id="cb17-9">        <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">elif</span> quiet:</span>
-<span id="cb17-7">        logging.basicConfig(level<span class="op" style="color: #5E5E5E;
+font-style: inherit;"># if a log_file was specified, use it</span></span>
+<span id="cb17-10">        log_file <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span>logging.ERROR, <span class="bu" style="color: null;
+font-style: inherit;">=</span> log_file <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">or</span> os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'CHATGPT_LOG_FILE'</span>)</span>
+<span id="cb17-11">        logging.basicConfig(level<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>log_level, <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">format</span><span class="op" style="color: #5E5E5E;
 background-color: null;
+font-style: inherit;">=</span>fmt, filename<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>log_file)</span>
+<span id="cb17-12"></span>
+<span id="cb17-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> add_logging_options(parser):</span>
+<span id="cb17-14">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">""" Add logging options to an argument parser. """</span></span>
+<span id="cb17-15">        logging_group <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> parser.add_argument_group(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Logging options'</span>)</span>
+<span id="cb17-16">        logging_group.set_defaults(log_level<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>logging.WARNING)</span>
+<span id="cb17-17">        logging_group.add_argument(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'-d'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'--debug'</span>, dest<span class="op" style="color: #5E5E5E;
+background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+font-style: inherit;">'log_level'</span>, action<span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">%(message)s</span><span class="st" style="color: #20794D;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb17-8">    <span class="cf" style="color: #003B4F;
+font-style: inherit;">'store_const'</span>, const<span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">else</span>:</span>
-<span id="cb17-9">        logging.basicConfig(level<span class="op" style="color: #5E5E5E;
+font-style: inherit;">=</span>logging.DEBUG, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">help</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"show debug messages"</span>)</span>
+<span id="cb17-18">        logging_group.add_argument(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'-v'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'--verbose'</span>, dest<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'log_level'</span>, action<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'store_const'</span>, const<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>logging.INFO, <span class="bu" style="color: null;
 background-color: null;
-font-style: inherit;">format</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">help</span><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+font-style: inherit;">"show verbose messages"</span>)</span>
+<span id="cb17-19">        logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">%(message)s</span><span class="st" style="color: #20794D;
+font-style: inherit;">'-q'</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"</span>)</span></code></pre></div>
+font-style: inherit;">'--quiet'</span>, dest<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'log_level'</span>, action<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'store_const'</span>, const<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>logging.ERROR, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">help</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"show only errors"</span>)</span>
+<span id="cb17-20">        logging_group.add_argument(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'-Q'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'--silent'</span>, dest<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'log_level'</span>, action<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'store_const'</span>, const<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>logging.CRITICAL, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">help</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"show nothing"</span>)</span>
+<span id="cb17-21">        logging_group.add_argument(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'--log'</span>, default<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">help</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"log file"</span>)</span></code></pre></div>
 </div>
 </section>
 <section id="exporting-code-with-nbdev" class="level2">
