@@ -1,0 +1,56 @@
+# chatgpt: a simple wrapper for the OpenAI ChatGPT API
+
+# features:
+# - model option
+# - input: one or more messages, from command line, stdin, or text file
+# - output: stdout, response in file, whole conversation in file, or append response to existing file
+# - output: can also rewrite the tail of the conversation file as needed to clean it up, then append the new response
+# - output: can also echo output to stdout, even when saving to a file
+# - show streaming response if that is possible
+# - interactive options:
+#   - command line prompt
+#   - use a text editor, with auto-load, detect when the file is modified, and send to the model; this would be more of a wrapper script I guess
+# - conversation file formats:
+#   - plain text, with two blank lines between messages, optional leading role indicator
+# - use as a library from other programs
+# - code using nbdev?  but copilot is very helpful
+
+
+# let's start with the basics!
+# - simple one-off usage from the command-line, without files or whatever
+
+
+# ideas for features for my advanced chat system:
+# - pluggable backends, e.g. for other APIs and local models such as LLaMA
+
+
+# ideas for file formats and storage:
+# - formats
+#   - JSON lines format
+#   - JSON
+#   - CSV, TSV
+#   - YAML
+#   - XML
+#   - key: value format, i.e. Debian package format
+#   - sqlite3
+#   - databases: MySQL, PostgreSQL, MongoDB, etc.
+#   - IDEA: also in future use these formats for a knowledge base
+#   - IDEA: virtual formats for web / search access?
+#   - RSS, Atom, JSON Feed, etc.
+#   - Mozilla bookmarks format
+#   - supabase
+#   - firebase
+#   - separate files in a directory, one per message, with optional leading role indicator; something like maildir
+#   - mailbox format, with role indicator as a header, and other metadata
+# - find or make and use a generic library to read/write/append these formats and databases
+
+
+# general fast forking loader for Python or for any program, similar to what I did for Perl before
+#   - did I already do this?
+#   - I remember I implemented a language-agnostic env file loader, and maybe an options loader
+#     - who knows where it is, though
+#   - other ideas, config file loader
+
+# Can I get chatgpt to help me document and organize all my scripts and tools?
+
+# Try also to use the codex / Copilot API.

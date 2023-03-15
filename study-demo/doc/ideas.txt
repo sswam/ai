@@ -1,0 +1,234 @@
+Main goals and ideas:
+
+- help children and adults to learn, using AI; computer assisted learning / tutoring / mentoring
+- partially automate the process of creating top-quality educational content
+
+
+Use two different whisper models and check for differences, i.e. likely transcription errors.
+
+Extract images from video, find best images:
+	- extracting images
+		- extract every frame (expensive)
+		- extract an image every second (cheap)
+		- after finding the best images, extract every frame around the best images, and find the absolute best image in that range
+	- cluster similar images
+	- find best images
+		- encode with a lossy codec such as jpeg or webp at a certain quality, and choose the largest image which should likely have more detail
+		- use a neural network to assign quality scores and find the best image
+
+
+
+Tools and uses:
+
+- ffmpeg: video to audio, video to images, resample audio, images and text to video
+- sox: resample audio
+- imagemagick: image manipulation
+- python: image manipulation, image clustering, image quality scoring, image comparison, text to speech, text to image, text to video, video manipulation, audio manipulation,
+- whisper: speech to text
+- espeak: text to speech
+- fastai: neural networks
+- Anki: flashcards
+- youtube-dl / yt-dlp: download videos
+- beautifulsoup: web scraping
+- parallel: run multiple commands in parallel
+- fastapi: web server, REST APIs
+- nginx: web server, reverse proxy
+- jq: json manipulation
+- yq: yaml manipulation
+- csvproc / tsvproc / process: csv / tsv manipulation
+	- redo not in Perl?
+- dbicsv: database interface
+- rename: rename files using regexps
+- fdupes: find duplicate files
+- findimagedupes: find duplicate images
+
+
+- article search
+- image search
+- video search
+- scraping, HTML to text
+- LLM large language models:
+	- summarization
+	- filtering search results to find likely best ones
+	- extracting key terms and concepts
+	- flashcards and quizzes
+	- answering questions / homework help
+	- rephrasing text more clearly / eloquently / cogently
+	- generating search queries
+	- generating image generation prompts
+
+- OCR
+- image to text: clip, tesseract, google vision
+- image classification
+- object detection
+- image segmentation
+- GIS / mapping
+
+- contextual UI, filtered views
+
+- graphical programming framework
+	- shell / flow-based scripting framework
+		- pipes
+		- filters
+		- tees
+		- collation
+		- map / reduce
+	- make: targets, build rules, caching intermediates, parallelism
+		- make using commands with multiple targets
+	- datagram flow-based programming
+	- sequence-based parallelism
+	- relational programming, i.e. multi-mode toolsets
+	- graph to text
+	- text to graph
+	- a2b: find a process to convert a file from one format to another
+		- use A* search
+	- jupyter notebook ideas
+	- my ucm / plan web notebook ideas
+	- text and graphical editor
+	- shorthand notation
+	- use any command-line tool, for a start
+	- use any programming language
+	- use any library
+	- use persistent language kernels for efficiency: shell, C, C++, python, javascript, rust, go, lua, Perl, etc.
+	- use a general fastcgi-style wrapper for generic efficiency
+	- IPC by passing data between processes, can possibly use mmap
+	- generic GUI wrapper generator, for library and command-line tool options: use web GUI, or light GUIs
+	- generate CLI tool from library
+	- generate library from CLI tool
+	- generate GUI from library / CLI tool
+	- generate graph-based programming modules from libraries / CLI tools
+	- pluggable components, generic wrappers
+
+	- what (other) types of programming / software components and resources do we have?
+		- libraries
+			- functions
+			- algorithms
+			- classes / objects
+		- tools	/ command-line progams / processes
+		- databases: relational, document, key-value, graph, etc.
+		- graphs / shells / pipelines / workflows
+		- configuration files
+		- data files
+		- makefiles
+		- shell scripts / pipelines / other simple scripts / hacks
+		- web services / web apps
+		- APIs
+		- neural network / AI model APIs
+		- GUI tools
+		- neural network models / parameters / architectures
+		- integration systems
+		- event logs: loggers / handlers, replay
+		- logging / monitoring / debugging / profiling / testing / validation / verification / etc.
+		- version control repositories
+		- source code
+		- linker object files
+		- executables
+		- operating systems
+		- graphics / display / windowing / input / output / etc.
+		- graphical user interfaces
+	- what sorts of hardware components do we have?
+		- computers
+		- CPUs
+		- GPUs
+		- TPUs
+		- distributed networks
+		- cloud services
+		- mobile devices: phones, tablets, watches
+		- embedded devices / IoT
+		- sensors
+		- edge devices
+		- (neuralink)
+	- what sorts of non-program resources do we have?
+		- web pages / sites
+		- plans
+		- chat and email
+	- what sorts of personal info do we have?
+		- shell history
+		- (online) profiles
+		- resume
+		- friend / social network
+		- emails
+		- bookmarks
+		- notes / work / writings / documents
+		- photos, audio, videos
+		- current location
+		- map location history
+		- preferences
+		- web history
+
+
+Processes and tools:
+- text to speech:
+	- espeak
+	- festival
+	- Google cloud text to speech
+
+
+Use cases:
+
+- capable AI assistant
+	- multi-modal, multimedia
+	- programmable
+	- scriptable: teach it how to perform tasks
+	- database of knowledge
+	- database of tasks and methods
+	- web search, generic and specialised search engines
+	- summarization process
+	- problem solving engine
+	- math engine
+	- logic engine
+	- editing engine
+		- text editing
+		- image editing
+		- video editing
+		- audio editing
+		- 3D modelling
+		- software development editing
+		- plan editing
+	- tree / graph search engine, e.g. A* on a graph of ideas
+		- other example: A* on a graph of tasks
+		- A* on a graph of tool invocations to achieve a certain task
+	- brainstorming engine, creative ideas, random ideas
+	- thesis / anti-thesis / synthesis engine
+	- language engine
+	- image engine
+	- audio engine
+	- video engine
+	- dynamic, can learn new things and modify itself
+	- supervision / human in the loop
+	- planning process
+	- writing process
+	- styles of writing / speech
+	- translation
+	- streaming and corrective preview
+	- quality judgement / ranking / rating / prioritisation engine
+	- decision engine
+
+	- access to computing: programming languages and libraries (sandboxed or not)
+	- access to data: databases, files, etc.
+	- access to hardware: computers, sensors, etc.
+	- access to web and internet
+	- access to local devices
+	- access to cloud services
+	- access to other people
+
+- capable AI assistants for:
+	- children
+	- adults
+	- elderly
+	- people with disabilities / special needs
+	- students
+	- teachers
+	- parents
+	- doctors
+	- lawyers
+	- programmers
+	- engineers
+	- scientists
+	- artists
+	- musicians
+	- entertainment
+	- adult entertainment
+	- storytelling
+	- graphic novels
+	- adventure games

@@ -3,4 +3,5 @@ old
 ref
 repos
 media
+*.log
 __pycache__

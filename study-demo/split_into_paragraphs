@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+
+# split_into_paragraphs: split a text file into paragraphs
+
+# WIP / incomplete
+
+
+import sys
+import argparse
+
+from math import ceil
+
+import split
+
+def main():
+	pass

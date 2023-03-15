@@ -1,0 +1,35 @@
+
+# Q. Do you see any obvious bugs?
+# A. No.
+
+# Q. What would you change?
+# A. - I would add a test suite.
+#    - I would add a command-line option to specify the API key.
+#    - I would add a better way to handle multi-line messages.
+#    - I would add error handling.
+#    - I would add formatting options.
+#    - I would add generation options, like temperature and top_k. I don't think I would add top_p, because it's not clear what the right value is. Does the API even support it? I would also add a way to specify the number of tokens to generate.
+#    - I would add a way to specify the number of messages to generate.
+#    - I would add handling for the "stop" token.
+#    - I would add input validation.
+#    - I would add json output.
+#    - I would add keyboard interrupt handling.
+#    - I would add logging options.
+#    - I would add more logging.
+#    - I would add nicer error messages.
+#    - I would add proper documentation;  I should use docstrings and a tool like Sphinx to generate documentation.  Or, I could use nbdev to generate documentation from a Jupyter notebook.
+#    - I would add quotes to the README.
+#    - I would add requirements.txt.
+#    - I would add support for other models.
+#    - I would add tests for other models.
+#    - I would add unit tests.
+#    - I would add versioning.
+#    - I would add ways to specify the model. There already is a way, right? I would add a way to specify the model by name, and a way to specify the model by ID.
+#    - I would add xonsh support.  What is xonsh?  I would add support for other shells, like fish and zsh.
+#    - I would add yaml support.
+#    - I would add zsh support.
+
+
+# Q. What would you do differently?
+# A. - I would have used a different language, like Python, to write the code.
+#    * but it is Python, so what are you talking about?

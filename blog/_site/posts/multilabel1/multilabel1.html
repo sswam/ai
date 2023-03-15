@@ -147,9 +147,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div class="quarto-title column-body">
       <div class="quarto-title-block"><div><h1 class="title">A multi-label classifier, part 1: collecting images</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/sswam/ai/blob/main/blog/posts/multilabel/multilabel.ipynb"><i class="bi"></i> Code</button></div></div>
                                 <div class="quarto-categories">
-                <div class="quarto-category">fastai</div>
-                <div class="quarto-category">image</div>
-                <div class="quarto-category">classifier</div>
+                <div class="quarto-category">project</div>
+                <div class="quarto-category">part 1</div>
+                <div class="quarto-category">search</div>
+                <div class="quarto-category">images</div>
               </div>
                   </div>
   </div>
@@ -188,9 +189,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#install-requirements" id="toc-install-requirements" class="nav-link" data-scroll-target="#install-requirements">Install requirements</a></li>
   <li><a href="#import-required-libs" id="toc-import-required-libs" class="nav-link" data-scroll-target="#import-required-libs">Import required libs</a></li>
   <li><a href="#general-setup" id="toc-general-setup" class="nav-link" data-scroll-target="#general-setup">General setup</a></li>
-  <li><a href="#find-images-using-duckduckgo_search" id="toc-find-images-using-duckduckgo_search" class="nav-link" data-scroll-target="#find-images-using-duckduckgo_search">Find images using duckduckgo_search</a></li>
+  <li><a href="#find-images-using-duckduckgo" id="toc-find-images-using-duckduckgo" class="nav-link" data-scroll-target="#find-images-using-duckduckgo">Find images using DuckDuckGo</a></li>
   <li><a href="#find-images-using-laion" id="toc-find-images-using-laion" class="nav-link" data-scroll-target="#find-images-using-laion">Find images using LAION</a></li>
   <li><a href="#find-images-using-google-search" id="toc-find-images-using-google-search" class="nav-link" data-scroll-target="#find-images-using-google-search">Find images using Google search</a></li>
+  <li><a href="#some-thoughts" id="toc-some-thoughts" class="nav-link" data-scroll-target="#some-thoughts">Some thoughts</a></li>
   <li><a href="#this-project-continues-in-part-2-reusable-functions" id="toc-this-project-continues-in-part-2-reusable-functions" class="nav-link" data-scroll-target="#this-project-continues-in-part-2-reusable-functions">This project continues in part 2: reusable functions</a></li>
   <li><a href="#scratch" id="toc-scratch" class="nav-link" data-scroll-target="#scratch">scratch</a></li>
   </ul>
@@ -296,8 +298,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>samples_per_query <span class="op">=</span> <span class="dv">200</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="find-images-using-duckduckgo_search" class="level2">
-<h2 class="anchored" data-anchor-id="find-images-using-duckduckgo_search">Find images using duckduckgo_search</h2>
+<section id="find-images-using-duckduckgo" class="level2">
+<h2 class="anchored" data-anchor-id="find-images-using-duckduckgo">Find images using DuckDuckGo</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> duckduckgo_search <span class="im">import</span> ddg_images</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -394,9 +396,9 @@ downloading: photo of bird, cat, dog</code></pre>
 <section id="references-for-laion-clip-retrieval" class="level3">
 <h3 class="anchored" data-anchor-id="references-for-laion-clip-retrieval">references for LAION clip retrieval</h3>
 <ul>
-<li>https://replicate.com/blog/grab-hundreds-of-images-with-clip-and-laion</li>
-<li>https://github.com/rom1504/clip-retrieval</li>
-<li>https://rom1504.github.io/clip-retrieval/</li>
+<li><a href="https://replicate.com/blog/grab-hundreds-of-images-with-clip-and-laion">Automating image collection - replicate.com blog</a></li>
+<li><a href="https://github.com/rom1504/clip-retrieval">clip-retrieval on Github</a></li>
+<li><a href="https://rom1504.github.io/clip-retrieval/">Clip front, LAION image search</a></li>
 </ul>
 </section>
 </section>
@@ -451,6 +453,11 @@ downloading: photo of a cat and a dog -bird -stock
 downloading: photo of a bird and a cat and a dog -stock</code></pre>
 </div>
 </div>
+</section>
+<section id="some-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="some-thoughts">Some thoughts</h2>
+<p>I wanted to avoid stock photos, so I used options to fetch <span title="Creative Commons is a non-profit organization that provides free licenses for creators to share their work and allow others to use and distribute it, while still retaining some control over how it is used. The licenses allow for various levels of reuse and modification, from simply allowing others to share the work with proper attribution, to permitting commercial use and derivative works. Creative Commons licenses have become popular in the digital age, especially for open access and open educational resources.">Creative Commons</span> licensed images in some cases. I noticed that these free images tend to be of better quality than other images. This is consistent with Meta AI’s finding with <span title="LLaMA is a collection of foundation language models from Meta AI, ranging from 7B to 65B
+parameters.">LLaMA</span>, that “it is possible to train state-of-the-art models using publicly available datasets exclusively”.</p>
 </section>
 <section id="this-project-continues-in-part-2-reusable-functions" class="level2">
 <h2 class="anchored" data-anchor-id="this-project-continues-in-part-2-reusable-functions">This project continues in part 2: <a href="../../posts/multilabel2/multilabel2.html">reusable functions</a></h2>
