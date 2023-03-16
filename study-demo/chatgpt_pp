@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+
+# chatgpt_pp: preprocess chatgpt conversations
+
+# example usage with input and output:
+
+"""
+Example text file:
+
+Sam:	Please improve this high-temperature AI generated story without making it longer.
+Once upon a time, there was a princess who had been cursed by a wicked witch. The curse caused her to be cursed with a powerful sleep that she could not wake up from.
+AI:	okay I'll do it...
+Summary: The princess was cursed by a wicked witch and fell into an unbreakable sleep.
+
+Any line starting with AI, assistant, ChatGPT, GPT or similar, the label is changed to "assistant:".
+Any line starting with $USER in any case is changed to start with "user:"
+
+Lines not starting with a label like that are indented with a tab.
+
+Example output:
+
+user:	Please improve this high-temperature AI generated story without making it longer.
+	Once upon a time, there was a princess who had been cursed by a wicked witch. The curse caused her to be cursed with a powerful sleep that she could not wake up from.
+assistant:	okay I'll do it...
+	Summary: The princess was cursed by a wicked witch and fell into an unbreakable sleep.
+"""
+
+import os
+
+user = os.environ.get('CHATGPT_USER', os.getlogin()).lower()
+User = user.title()
+
+for line in sys.stdin:
+	# strip leading and trailing white spaces
+	line = line.strip()
+
+	# TODO: if the first line does not have a label, add the user label
+	
+	# check if line starts with a label
+	if any(line.lower().startswith(label+':') for label in ['ai', 'assistant', 'chatgpt', 'gpt']):
+		# change label to assistant
+		line = 'assistant:' + line[2:]
+	elif line.lower().startswith(user+':'):
+		# change label to user
+		line = 'user:' + line[5:]
+	else:
+		# indent line with a tab
+		line = '\t' + line
+
+	# write modified line to standard output
+	sys.stdout.write(line + '\n')
