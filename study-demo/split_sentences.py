@@ -5,7 +5,7 @@ import sys
 import re
 import argparse
 
-def split_into_sentences(text, nlp):
+def segment_text_into_sentences(text, nlp):
 	""" Split a text into sentences using spaCy's sentence segmentation. """
 	doc = nlp(text)
 	for sent in doc.sents:
@@ -13,7 +13,7 @@ def split_into_sentences(text, nlp):
 
 dot_point_re = re.compile(r'^[-*\u2022\u25E6\u2023]\s')
 
-def collect_paragraphs(stream):
+def group_lines_into_paragraphs(stream):
 	""" Collects lines into paragraphs. """
 	paragraph = []
 	for line in stream:
@@ -28,10 +28,10 @@ def collect_paragraphs(stream):
 	if paragraph:
 		yield "".join(paragraph)
 
-def split_sentences_to_lines(inp, nlp):
+def format_sentences_as_lines(inp, nlp):
 	if isinstance(inp, str):
 		inp = StringIO(inp)
-	pgs = list(collect_paragraphs(inp))
+	pgs = list(group_lines_into_paragraphs(inp))
 	first = True
 	for pg in pgs:
 		if not first:
@@ -40,13 +40,13 @@ def split_sentences_to_lines(inp, nlp):
 		if dot_point_re.match(pg):
 			yield pg
 		else:
-			sentences = list(split_into_sentences(pg, nlp))
+			sentences = list(segment_text_into_sentences(pg, nlp))
 			if sentences:
 				yield "\n".join(sentences)
 		first = False
 
-def split_sentences(text, nlp):
-	return "\n".join(split_sentences_to_lines(text, nlp))
+def split_sentences_test(text, nlp):
+	return "\n".join(format_sentences_as_lines(text, nlp))
 
 def main():
 	parser = argparse.ArgumentParser(description='Split sentences')
@@ -55,7 +55,7 @@ def main():
 
 	nlp = spacy.load(args.model)
 
-	for line in split_sentences_to_lines(sys.stdin, nlp):
+	for line in format_sentences_as_lines(sys.stdin, nlp):
 		print(line)
 
 import pytest
@@ -67,10 +67,10 @@ def nlp():
 
 def test_edge_cases(nlp):
 	# simulate an input stream from text...
-	assert split_sentences("Hello\nworld.", nlp) == "Hello world."
-	assert split_sentences("", nlp) == ""
-	assert split_sentences("Two. Sentences.", nlp) == "Two.\nSentences."
-	assert split_sentences("- foo\n- bar", nlp) == "- foo\n- bar"
+	assert split_sentences_test("Hello\nworld.", nlp) == "Hello world."
+	assert split_sentences_test("", nlp) == ""
+	assert split_sentences_test("Two. Sentences.", nlp) == "Two.\nSentences."
+	assert split_sentences_test("- foo\n- bar", nlp) == "- foo\n- bar"
 
 if __name__ == "__main__":
 	main()
