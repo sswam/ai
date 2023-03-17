@@ -2,4 +2,4 @@
 (
 	echo "user:	$*" | sed '2,$s/^/	/'
 	sed 's/^/	/'
-) | chatgpt | cut -f2
+) | chatgpt | cut -f2 | sed 's/    /\t/g'
