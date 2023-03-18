@@ -1,20 +1,71 @@
 #!/bin/bash
-interval=2
-opts=
-# opts="-d --log chatgpt.log"
+
+# chatgpt_loop: run chatgpt on all newly modified chat files
+
+o=	# options
+i=2     # interval
+v=	# verbose
+b=	# backup
+q=	# quiet
+r=1	# reload
+
+# o="-d --log chatgpt.log"
+
+. opts
+
+# TODO move functions to separate scripts
+# TODO use inotifywait instead of find
+# TODO skip updates triggered by chatgpt_loop itself
+
+log() {
+	printf "%s: %s\n" "$(date +%F\ %T)" "$*" >&2
+}
+
+hr() {
+	printf -- "-%.0s" {1..78} >&2
+	printf "\n"
+}
+
+progname=$(progname "$0")
+progpath=$(progpath "$0")
+
+# progmtime=$(stat -c %Y.%N "$progpath")
+prog_mtime_human=$(stat -c %y "$progpath")
+
+if [ -n "$v" ]; then v=v; fi
+if [ "$b" = 1 ]; then b="arcs"; fi
+
+if [ -z "$q" ]; then
+	log "$progname $progmtime"
+fi
+
 while true; do
-	v find . -name '*.chat' -newermt "-$interval seconds" | (
+	$v find . -name '*.chat' -newermt "-$i seconds" | (
 		count=0
 		while read file; do
-			echo "$file"
-			<"$file" chatgpt $opts | tee -a "$file" &
+			printf "\n\n"
+			hr
+			log "$file"
+			<"$file" chatgpt $o | tee -a "$file" &
+			printf "\n"
 			count=$[count+1]
 		done
- 		wait
+		wait
+		$v $b
 		if [ $count -gt 0 ]; then
-			v sleep $[$interval + 1]
+			$v sleep $[$i + 1]
 		else
-			v sleep $[$interval - 1]
+			$v sleep $[$i - 1]
+		fi
+		if [ -z "$q" ]; then
+			printf "." >&2
 		fi
 	)
+
+	prog_mtime_human_new=$(stat -c %y "$progpath")
+
+	if [ "$prog_mtime_human_new" != "$prog_mtime_human" ]; then
+		echo
+		exec "$0" "$@"
+	fi
 done

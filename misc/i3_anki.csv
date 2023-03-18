@@ -1,0 +1,20 @@
+Open new terminal,Modkey + Enter
+Move focus between windows,Modkey + arrow keys
+Open the dmenu,Modkey + d
+Kill a window,Modkey + Shift + q
+Toggle fullscreen,Modkey + f
+Split a window vertically,Modkey + v
+Split a window horizontally,Modkey + h
+Change container layout to default,Modkey + e
+Change container layout to stacking,Modkey + s
+Change container layout to tabbed,Modkey + w
+Toggle floating,Modkey + Shift + Space
+Drag floating window,Left-click
+Switch to another workspace,Modkey + 0-9
+Move a window to another workspace,Modkey + Shift + 0-9
+Reload configuration file,Shift + Modkey + c
+Restart i3 inplace,Shift + Modkey + r
+Exit i3,Shift + Modkey + e
+Move tab left in tabs list,Shift + Modkey + Left Arrow
+Move tab right in tabs list,Shift + Modkey + Right Arrow
+Remove nested tiling setup,Shift + Modkey + Space

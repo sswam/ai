@@ -1,2 +1,2 @@
 #!/bin/bash
-chatgpt_process "Please summarize the following, in the same tense and person as the original. Only give the summary."
+chatgpt_process "Please replace this text with a very short cogent summary. Only give the summary."

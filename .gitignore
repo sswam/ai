@@ -3,5 +3,6 @@ old
 ref
 repos
 media
+chats
 *.log
 __pycache__

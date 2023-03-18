@@ -1,0 +1,6 @@
+# get options using getopt(1)
+
+verbose="no"
+
+TEMP=$(getopt -o v --long verbose -n "$0" -- "$@")
+eval set -- "$TEMP"
