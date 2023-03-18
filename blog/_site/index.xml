@@ -26,40 +26,43 @@
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>In this blog post, I am collecting some reusable functions that I am using for my multi-label classifier project. So far, they are mainly related to the image search queries. I’m exporting this stuff to a mini library called <code>ucm.py</code> using <span title="nbdev is a Python library that allows users to create Python packages and libraries directly from Jupyter notebooks. It provides tools for testing, documentation, and packaging code, making it easier for users to develop and share their work.">nbdev</span>.</p>
 </section>
+<section id="useful-imports" class="level2">
+<h2 class="anchored" data-anchor-id="useful-imports">Useful imports</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> sys</span>
+<span id="cb1-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> os</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastcore.foundation <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> L</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span>
+<span id="cb1-5"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastcore.xtras <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span></code></pre></div>
+</div>
+</section>
 <section id="avoid-warnings-from-tensorflow" class="level2">
 <h2 class="anchored" data-anchor-id="avoid-warnings-from-tensorflow">Avoid warnings from tensorflow</h2>
 <p>I also added this to my <code>ai.env</code> environment file.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> os</span>
-<span id="cb1-2">os.environ[<span class="st" style="color: #20794D;
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1">os.environ[<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'TF_CPP_MIN_LOG_LEVEL'</span>] <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'1'</span></span></code></pre></div>
-</div>
-</section>
-<section id="useful-imports" class="level2">
-<h2 class="anchored" data-anchor-id="useful-imports">Useful imports</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">from</span> fastcore.foundation <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> L</span>
-<span id="cb2-2"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> Path</span>
-<span id="cb2-3"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">from</span> fastcore.xtras <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> Path</span></code></pre></div>
 </div>
 </section>
 <section id="collections" class="level2">
@@ -238,7 +241,7 @@ background-color: null;
 font-style: inherit;">"deleteme"</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"4b87e7b45383482b8df8b2fc6aa627b9","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"70750246fc6246ca8cf50534291a7cb5","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -287,17 +290,34 @@ font-style: inherit;">import</span> logging</span>
 <span id="cb17-2"></span>
 <span id="cb17-3"><span class="kw" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">def</span> setup_logging(log_level<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>logging.WARNING, log_file<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">None</span>):</span>
-<span id="cb17-4">        <span class="co" style="color: #5E5E5E;
+font-style: inherit;">def</span> setup_logging(args):</span>
+<span id="cb17-4">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">""" Set up logging. """</span></span>
-<span id="cb17-5">        fmt <span class="op" style="color: #5E5E5E;
+<span id="cb17-5"></span>
+<span id="cb17-6">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># get basename of program in upper case</span></span>
+<span id="cb17-7">    prog_name_uc <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.path.basename(sys.argv[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]).upper()</span>
+<span id="cb17-8"></span>
+<span id="cb17-9">    log_file <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> args.log <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">or</span> os.environ.get(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>prog_name_uc<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">_LOG'</span>)</span>
+<span id="cb17-10">    fmt <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -306,12 +326,12 @@ background-color: null;
 font-style: inherit;">%(message)s</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span></span>
-<span id="cb17-6">        <span class="cf" style="color: #003B4F;
+<span id="cb17-11">    <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">if</span> log_level <span class="op" style="color: #5E5E5E;
+font-style: inherit;">if</span> args.log_level <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> logging.DEBUG:</span>
-<span id="cb17-7">                fmt <span class="op" style="color: #5E5E5E;
+<span id="cb17-12">        fmt <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -332,42 +352,42 @@ background-color: null;
 font-style: inherit;">%(message)s</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span></span>
-<span id="cb17-8"></span>
-<span id="cb17-9">        <span class="co" style="color: #5E5E5E;
+<span id="cb17-13"></span>
+<span id="cb17-14">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># if a log_file was specified, use it</span></span>
-<span id="cb17-10">        log_file <span class="op" style="color: #5E5E5E;
+<span id="cb17-15">    log_file <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> log_file <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">or</span> os.environ.get(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'CHATGPT_LOG_FILE'</span>)</span>
-<span id="cb17-11">        logging.basicConfig(level<span class="op" style="color: #5E5E5E;
+<span id="cb17-16">    logging.basicConfig(level<span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span>log_level, <span class="bu" style="color: null;
+font-style: inherit;">=</span>args.log_level, <span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">format</span><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>fmt, filename<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>log_file)</span>
-<span id="cb17-12"></span>
-<span id="cb17-13"><span class="kw" style="color: #003B4F;
+<span id="cb17-17"></span>
+<span id="cb17-18"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> add_logging_options(parser):</span>
-<span id="cb17-14">        <span class="co" style="color: #5E5E5E;
+<span id="cb17-19">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">""" Add logging options to an argument parser. """</span></span>
-<span id="cb17-15">        logging_group <span class="op" style="color: #5E5E5E;
+<span id="cb17-20">    logging_group <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> parser.add_argument_group(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'Logging options'</span>)</span>
-<span id="cb17-16">        logging_group.set_defaults(log_level<span class="op" style="color: #5E5E5E;
+<span id="cb17-21">    logging_group.set_defaults(log_level<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>logging.WARNING)</span>
-<span id="cb17-17">        logging_group.add_argument(<span class="st" style="color: #20794D;
+<span id="cb17-22">    logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'-d'</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -388,7 +408,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"show debug messages"</span>)</span>
-<span id="cb17-18">        logging_group.add_argument(<span class="st" style="color: #20794D;
+<span id="cb17-23">    logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'-v'</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -409,7 +429,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"show verbose messages"</span>)</span>
-<span id="cb17-19">        logging_group.add_argument(<span class="st" style="color: #20794D;
+<span id="cb17-24">    logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'-q'</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -430,7 +450,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"show only errors"</span>)</span>
-<span id="cb17-20">        logging_group.add_argument(<span class="st" style="color: #20794D;
+<span id="cb17-25">    logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'-Q'</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -451,7 +471,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"show nothing"</span>)</span>
-<span id="cb17-21">        logging_group.add_argument(<span class="st" style="color: #20794D;
+<span id="cb17-26">    logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'--log'</span>, default<span class="op" style="color: #5E5E5E;
 background-color: null;

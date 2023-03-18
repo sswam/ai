@@ -184,8 +184,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#this-project-continues-on-from-part-1-collecting-images" id="toc-this-project-continues-on-from-part-1-collecting-images" class="nav-link active" data-scroll-target="#this-project-continues-on-from-part-1-collecting-images">This project continues on from part 1: collecting images</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#avoid-warnings-from-tensorflow" id="toc-avoid-warnings-from-tensorflow" class="nav-link" data-scroll-target="#avoid-warnings-from-tensorflow">Avoid warnings from tensorflow</a></li>
   <li><a href="#useful-imports" id="toc-useful-imports" class="nav-link" data-scroll-target="#useful-imports">Useful imports</a></li>
+  <li><a href="#avoid-warnings-from-tensorflow" id="toc-avoid-warnings-from-tensorflow" class="nav-link" data-scroll-target="#avoid-warnings-from-tensorflow">Avoid warnings from tensorflow</a></li>
   <li><a href="#collections" id="toc-collections" class="nav-link" data-scroll-target="#collections">Collections</a></li>
   <li><a href="#a-helper-for-search-query-text" id="toc-a-helper-for-search-query-text" class="nav-link" data-scroll-target="#a-helper-for-search-query-text">A helper for search query text</a></li>
   <li><a href="#a-button-to-confirm-deleting-data" id="toc-a-button-to-confirm-deleting-data" class="nav-link" data-scroll-target="#a-button-to-confirm-deleting-data">A button to confirm deleting data</a></li>
@@ -209,20 +209,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>In this blog post, I am collecting some reusable functions that I am using for my multi-label classifier project. So far, they are mainly related to the image search queries. I’m exporting this stuff to a mini library called <code>ucm.py</code> using <span title="nbdev is a Python library that allows users to create Python packages and libraries directly from Jupyter notebooks. It provides tools for testing, documentation, and packaging code, making it easier for users to develop and share their work.">nbdev</span>.</p>
 </section>
+<section id="useful-imports" class="level2">
+<h2 class="anchored" data-anchor-id="useful-imports">Useful imports</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.foundation <span class="im">import</span> L</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.xtras <span class="im">import</span> Path</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 <section id="avoid-warnings-from-tensorflow" class="level2">
 <h2 class="anchored" data-anchor-id="avoid-warnings-from-tensorflow">Avoid warnings from tensorflow</h2>
 <p>I also added this to my <code>ai.env</code> environment file.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">'TF_CPP_MIN_LOG_LEVEL'</span>] <span class="op">=</span> <span class="st">'1'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="useful-imports" class="level2">
-<h2 class="anchored" data-anchor-id="useful-imports">Useful imports</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.foundation <span class="im">import</span> L</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.xtras <span class="im">import</span> Path</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">'TF_CPP_MIN_LOG_LEVEL'</span>] <span class="op">=</span> <span class="st">'1'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="collections" class="level2">
@@ -295,7 +296,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>confirm_delete(<span class="st">"deleteme"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"4b87e7b45383482b8df8b2fc6aa627b9","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"70750246fc6246ca8cf50534291a7cb5","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -320,25 +321,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> setup_logging(log_level<span class="op">=</span>logging.WARNING, log_file<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">""" Set up logging. """</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>        fmt <span class="op">=</span> <span class="st">"</span><span class="sc">%(message)s</span><span class="st">"</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> log_level <span class="op">==</span> logging.DEBUG:</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                fmt <span class="op">=</span> <span class="st">"</span><span class="sc">%(asctime)s</span><span class="st"> </span><span class="sc">%(levelname)s</span><span class="st"> </span><span class="sc">%(name)s</span><span class="st"> </span><span class="sc">%(message)s</span><span class="st">"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> setup_logging(args):</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">""" Set up logging. """</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get basename of program in upper case</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    prog_name_uc <span class="op">=</span> os.path.basename(sys.argv[<span class="dv">0</span>]).upper()</span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if a log_file was specified, use it</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>        log_file <span class="op">=</span> log_file <span class="kw">or</span> os.environ.get(<span class="st">'CHATGPT_LOG_FILE'</span>)</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>        logging.basicConfig(level<span class="op">=</span>log_level, <span class="bu">format</span><span class="op">=</span>fmt, filename<span class="op">=</span>log_file)</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_logging_options(parser):</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">""" Add logging options to an argument parser. """</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>        logging_group <span class="op">=</span> parser.add_argument_group(<span class="st">'Logging options'</span>)</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        logging_group.set_defaults(log_level<span class="op">=</span>logging.WARNING)</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        logging_group.add_argument(<span class="st">'-d'</span>, <span class="st">'--debug'</span>, dest<span class="op">=</span><span class="st">'log_level'</span>, action<span class="op">=</span><span class="st">'store_const'</span>, const<span class="op">=</span>logging.DEBUG, <span class="bu">help</span><span class="op">=</span><span class="st">"show debug messages"</span>)</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>        logging_group.add_argument(<span class="st">'-v'</span>, <span class="st">'--verbose'</span>, dest<span class="op">=</span><span class="st">'log_level'</span>, action<span class="op">=</span><span class="st">'store_const'</span>, const<span class="op">=</span>logging.INFO, <span class="bu">help</span><span class="op">=</span><span class="st">"show verbose messages"</span>)</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>        logging_group.add_argument(<span class="st">'-q'</span>, <span class="st">'--quiet'</span>, dest<span class="op">=</span><span class="st">'log_level'</span>, action<span class="op">=</span><span class="st">'store_const'</span>, const<span class="op">=</span>logging.ERROR, <span class="bu">help</span><span class="op">=</span><span class="st">"show only errors"</span>)</span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>        logging_group.add_argument(<span class="st">'-Q'</span>, <span class="st">'--silent'</span>, dest<span class="op">=</span><span class="st">'log_level'</span>, action<span class="op">=</span><span class="st">'store_const'</span>, const<span class="op">=</span>logging.CRITICAL, <span class="bu">help</span><span class="op">=</span><span class="st">"show nothing"</span>)</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>        logging_group.add_argument(<span class="st">'--log'</span>, default<span class="op">=</span><span class="va">None</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"log file"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    log_file <span class="op">=</span> args.log <span class="kw">or</span> os.environ.get(<span class="ss">f'</span><span class="sc">{</span>prog_name_uc<span class="sc">}</span><span class="ss">_LOG'</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    fmt <span class="op">=</span> <span class="st">"</span><span class="sc">%(message)s</span><span class="st">"</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> args.log_level <span class="op">==</span> logging.DEBUG:</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        fmt <span class="op">=</span> <span class="st">"</span><span class="sc">%(asctime)s</span><span class="st"> </span><span class="sc">%(levelname)s</span><span class="st"> </span><span class="sc">%(name)s</span><span class="st"> </span><span class="sc">%(message)s</span><span class="st">"</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># if a log_file was specified, use it</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    log_file <span class="op">=</span> log_file <span class="kw">or</span> os.environ.get(<span class="st">'CHATGPT_LOG_FILE'</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    logging.basicConfig(level<span class="op">=</span>args.log_level, <span class="bu">format</span><span class="op">=</span>fmt, filename<span class="op">=</span>log_file)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_logging_options(parser):</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">""" Add logging options to an argument parser. """</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    logging_group <span class="op">=</span> parser.add_argument_group(<span class="st">'Logging options'</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    logging_group.set_defaults(log_level<span class="op">=</span>logging.WARNING)</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    logging_group.add_argument(<span class="st">'-d'</span>, <span class="st">'--debug'</span>, dest<span class="op">=</span><span class="st">'log_level'</span>, action<span class="op">=</span><span class="st">'store_const'</span>, const<span class="op">=</span>logging.DEBUG, <span class="bu">help</span><span class="op">=</span><span class="st">"show debug messages"</span>)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    logging_group.add_argument(<span class="st">'-v'</span>, <span class="st">'--verbose'</span>, dest<span class="op">=</span><span class="st">'log_level'</span>, action<span class="op">=</span><span class="st">'store_const'</span>, const<span class="op">=</span>logging.INFO, <span class="bu">help</span><span class="op">=</span><span class="st">"show verbose messages"</span>)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    logging_group.add_argument(<span class="st">'-q'</span>, <span class="st">'--quiet'</span>, dest<span class="op">=</span><span class="st">'log_level'</span>, action<span class="op">=</span><span class="st">'store_const'</span>, const<span class="op">=</span>logging.ERROR, <span class="bu">help</span><span class="op">=</span><span class="st">"show only errors"</span>)</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    logging_group.add_argument(<span class="st">'-Q'</span>, <span class="st">'--silent'</span>, dest<span class="op">=</span><span class="st">'log_level'</span>, action<span class="op">=</span><span class="st">'store_const'</span>, const<span class="op">=</span>logging.CRITICAL, <span class="bu">help</span><span class="op">=</span><span class="st">"show nothing"</span>)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    logging_group.add_argument(<span class="st">'--log'</span>, default<span class="op">=</span><span class="va">None</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"log file"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exporting-code-with-nbdev" class="level2">

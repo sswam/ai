@@ -4,15 +4,15 @@
 __all__ = ['p', 'powerset', 'seq_diff', 'join_a_foo_and_a_bar', 'confirm_delete', 'sh', 'setup_logging', 'add_logging_options',
            'export']
 
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 6
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 5
 import sys
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
-
-# %% ../blog/posts/multilabel2/multilabel2.ipynb 8
 from fastcore.foundation import L
 from pathlib import Path
 from fastcore.xtras import Path
+
+# %% ../blog/posts/multilabel2/multilabel2.ipynb 8
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
 # %% ../blog/posts/multilabel2/multilabel2.ipynb 10
 from itertools import chain, combinations

@@ -175,18 +175,18 @@
     "text": "Introduction\nIn this blog post, I am collecting some reusable functions that I am using for my multi-label classifier project. So far, they are mainly related to the image search queries. I’m exporting this stuff to a mini library called ucm.py using nbdev."
   },
   {
-    "objectID": "posts/multilabel2/multilabel2.html#avoid-warnings-from-tensorflow",
-    "href": "posts/multilabel2/multilabel2.html#avoid-warnings-from-tensorflow",
-    "title": "A multi-label classifier, part 2: reusable functions",
-    "section": "Avoid warnings from tensorflow",
-    "text": "Avoid warnings from tensorflow\nI also added this to my ai.env environment file.\n\nimport os\nos.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'"
-  },
-  {
     "objectID": "posts/multilabel2/multilabel2.html#useful-imports",
     "href": "posts/multilabel2/multilabel2.html#useful-imports",
     "title": "A multi-label classifier, part 2: reusable functions",
     "section": "Useful imports",
-    "text": "Useful imports\n\nfrom fastcore.foundation import L\nfrom pathlib import Path\nfrom fastcore.xtras import Path"
+    "text": "Useful imports\n\nimport sys\nimport os\nfrom fastcore.foundation import L\nfrom pathlib import Path\nfrom fastcore.xtras import Path"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#avoid-warnings-from-tensorflow",
+    "href": "posts/multilabel2/multilabel2.html#avoid-warnings-from-tensorflow",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "Avoid warnings from tensorflow",
+    "text": "Avoid warnings from tensorflow\nI also added this to my ai.env environment file.\n\nos.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'"
   },
   {
     "objectID": "posts/multilabel2/multilabel2.html#collections",
@@ -221,7 +221,7 @@
     "href": "posts/multilabel2/multilabel2.html#logging",
     "title": "A multi-label classifier, part 2: reusable functions",
     "section": "Logging",
-    "text": "Logging\n\nimport logging\n\ndef setup_logging(log_level=logging.WARNING, log_file=None):\n        \"\"\" Set up logging. \"\"\"\n        fmt = \"%(message)s\"\n        if log_level == logging.DEBUG:\n                fmt = \"%(asctime)s %(levelname)s %(name)s %(message)s\"\n\n        # if a log_file was specified, use it\n        log_file = log_file or os.environ.get('CHATGPT_LOG_FILE')\n        logging.basicConfig(level=log_level, format=fmt, filename=log_file)\n\ndef add_logging_options(parser):\n        \"\"\" Add logging options to an argument parser. \"\"\"\n        logging_group = parser.add_argument_group('Logging options')\n        logging_group.set_defaults(log_level=logging.WARNING)\n        logging_group.add_argument('-d', '--debug', dest='log_level', action='store_const', const=logging.DEBUG, help=\"show debug messages\")\n        logging_group.add_argument('-v', '--verbose', dest='log_level', action='store_const', const=logging.INFO, help=\"show verbose messages\")\n        logging_group.add_argument('-q', '--quiet', dest='log_level', action='store_const', const=logging.ERROR, help=\"show only errors\")\n        logging_group.add_argument('-Q', '--silent', dest='log_level', action='store_const', const=logging.CRITICAL, help=\"show nothing\")\n        logging_group.add_argument('--log', default=None, help=\"log file\")"
+    "text": "Logging\n\nimport logging\n\ndef setup_logging(args):\n    \"\"\" Set up logging. \"\"\"\n\n    # get basename of program in upper case\n    prog_name_uc = os.path.basename(sys.argv[0]).upper()\n\n    log_file = args.log or os.environ.get(f'{prog_name_uc}_LOG')\n    fmt = \"%(message)s\"\n    if args.log_level == logging.DEBUG:\n        fmt = \"%(asctime)s %(levelname)s %(name)s %(message)s\"\n\n    # if a log_file was specified, use it\n    log_file = log_file or os.environ.get('CHATGPT_LOG_FILE')\n    logging.basicConfig(level=args.log_level, format=fmt, filename=log_file)\n\ndef add_logging_options(parser):\n    \"\"\" Add logging options to an argument parser. \"\"\"\n    logging_group = parser.add_argument_group('Logging options')\n    logging_group.set_defaults(log_level=logging.WARNING)\n    logging_group.add_argument('-d', '--debug', dest='log_level', action='store_const', const=logging.DEBUG, help=\"show debug messages\")\n    logging_group.add_argument('-v', '--verbose', dest='log_level', action='store_const', const=logging.INFO, help=\"show verbose messages\")\n    logging_group.add_argument('-q', '--quiet', dest='log_level', action='store_const', const=logging.ERROR, help=\"show only errors\")\n    logging_group.add_argument('-Q', '--silent', dest='log_level', action='store_const', const=logging.CRITICAL, help=\"show nothing\")\n    logging_group.add_argument('--log', default=None, help=\"log file\")"
   },
   {
     "objectID": "posts/multilabel2/multilabel2.html#exporting-code-with-nbdev",
