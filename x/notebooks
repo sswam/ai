@@ -1,2 +1,11 @@
 #!/bin/bash
+# find notebook files
 find "${1:-.}" -name '*.ipynb'
+
+# doesn't spark joy, would be better to make a generic version like a find that is slightly easier to use
+# e.g. f .ipynb
+
+# Copilot: also, it would be nice to have a way to do this in python, e.g. a function that returns a list of paths to notebook files
+#   - q. I guess it's better to write something in python and call it from bash, rather than the other way around?
+#   - a. I think so, because it's easier to write a python function that does what you want, than to write a bash script that does what you want.
+#   Python seems to have a bit of boilerplate, can I get around that somehow?
