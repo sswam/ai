@@ -5,4 +5,5 @@ repos
 media
 chats
 *.log
+venv
 __pycache__
