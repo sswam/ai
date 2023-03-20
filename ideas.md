@@ -194,3 +194,10 @@ try using sam or acme editors?  or emacs again?
 
 random:
 	- Copilot prefers tabs!  or not, seems to depend, it's not a consistent persona, probably for the best!
+	- use home directory for current work, then file it away later
+		- move all
+		- move needed back
+		- could change home
+		- could use multiple user accounts for different projects
+			- good to test deps / requirements
+			- docker good to test deps too
