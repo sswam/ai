@@ -1,0 +1,16 @@
+
+[00:00:00.000 --> 00:00:04.040]   Um, so in this activity we were
+[00:00:04.040 --> 00:00:09.300]   Learning to convert a
+[00:00:09.300 --> 00:00:12.960]   Different base
+[00:00:12.960 --> 00:00:15.320]   In three other face
+[00:00:15.320 --> 00:00:20.960]   For example base three to base seven
+[00:00:20.960 --> 00:00:24.320]   You start off by taking
+[00:00:24.320 --> 00:00:27.400]   the left-most
+[00:00:27.880 --> 00:00:34.340]   digit and timesing that by the base stumper and then you add the
+[00:00:34.340 --> 00:00:41.020]   Digit next to that and then you repeat this process until you have no digits left
+[00:00:41.020 --> 00:00:43.600]   but if you want to convert
+[00:00:43.600 --> 00:00:46.680]   Into a different base you have to do that in
+[00:00:46.680 --> 00:00:50.120]   that base
+[00:00:50.120 --> 00:00:53.120]   (keyboard clicking)
+[00:00:53.120 --> 00:00:56.120]   (keyboard clicking)
+
