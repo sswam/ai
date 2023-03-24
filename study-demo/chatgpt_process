@@ -1,5 +1,12 @@
 #!/bin/bash
+m=
+d=
+. opts
+if [ -n "$d" ]; then debug="tee /dev/stderr"; else debug="cat"; fi
 (
-	echo "user:	$*" | sed '2,$s/^/	/'
-	sed 's/^/	/'
-) | chatgpt | cut -f2 | sed 's/    /\t/g'
+	printf "%s\n\n" "user:	$1" | sed '2,$s/^/	/'
+	sed 's/^/		/'
+	if [ -n "$2" ]; then
+		printf "\n%s\n" "$2" | sed 's/^/	/'
+	fi
+) | $debug | chatgpt -m "$m" | cut -f2 | sed 's/    /\t/g'
