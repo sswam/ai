@@ -1,2 +1,4 @@
 #!/bin/bash
-chatgpt_process "Please replace this text with a very short cogent summary. Only give the summary."
+m=
+. opts
+chatgpt_process -m="$m" "Please replace this text with a very short cogent summary. Only give the summary."

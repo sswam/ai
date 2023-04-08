@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # chatgpt: a simple wrapper for the OpenAI ChatGPT API
+# and possibly other APIs in future
 
 import sys
 import os

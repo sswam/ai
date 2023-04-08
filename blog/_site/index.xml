@@ -10,7 +10,781 @@
 <atom:link href="https://sam.ucm.dev/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>recording my AI studies</description>
 <generator>quarto-99.9.9</generator>
-<lastBuildDate>Fri, 10 Mar 2023 13:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 28 Mar 2023 13:00:00 GMT</lastBuildDate>
+<item>
+  <title>An AI toolkit</title>
+  <link>https://sam.ucm.dev/blog/posts/toolkit/toolkit.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In recent weeks there has been rapid progress in AI, with the widespread availability of powerful Large Language Models such as OpenAI GPT3.5 and GPT4. We have also seen the release of LLMs that we can run at home, such as LLaMA, Point Alpaca, fine-tuned Galactica, OpenAssistant Pythia, and Cerebras GPT.</p>
+<p>Software development is being greatly accelerated by tools such a Github Copilot and OpenAI GPT. Copilot is able to complete code as the programmer types, saving a huge amount of time. GPT4 is able to write whole programs to spec in a matter of minutes, with relatively few bugs. We are, I think, at the start of an AI renaissance. Now is the time to have fun and achieve great things, before they’ve all been done by someone else, and before the robots and AI’s completely eclipse us!</p>
+<p>I am admittedly more expert at toolkit programming than I am at AI model training, however I think that there is a place for the software-tools programmer in modern AI, and I intend to demonstrate that in this blog post.</p>
+</section>
+<section id="the-toolkit-approach" class="level2">
+<h2 class="anchored" data-anchor-id="the-toolkit-approach">The Toolkit Approach</h2>
+<p>Two very expressive programming languages are the shell, and make. Most people don’t use the shell for programming, and even fewer use make to execute programs. Those people might be missing out!</p>
+<p>The shell enables to create pipelines of processes, which can solve problems much more concisely and in a modular fashion.</p>
+<p>Make enables to set up relations between objects, then try to build any requested object. This is particularly good for exploratory programming or for systems that might be flaky, as we can correct a part of the program than re-run just the steps that remain rather than starting from scratch.</p>
+<p>Both the shell and make are held back by fairly crufty and obscure syntax, but we can handle that. If a program seems better suited to Python, C, or some other language, we can use that language.</p>
+<p>Here are two main ideas from the software toolbox approach:</p>
+<ol type="1">
+<li><em>The Unix philosophy</em> is documented by Doug McIlroy in the Bell System Technical Journal from 1978:
+<ul>
+<li>Make each program do one thing well.</li>
+<li>To do a new job, build afresh rather than complicate old programs by adding new “features”.</li>
+<li>Expect the output of every program to become the input to another, as yet unknown, program.</li>
+</ul></li>
+<li><em>The Practice of Programming</em>, as described by Brian W. Kernighan and Rob Pike:
+<ul>
+<li>Simplicity, which keeps programs short and manageable;</li>
+<li>clarity, which makes sure they are easy to understand, for people as well as machines;</li>
+<li>generality, which means they work well in a broad range of situations and adapt well as new situations arise; and</li>
+<li>automation, which lets the machine do the work for us, freeing us from mundane tasks.</li>
+</ul></li>
+</ol>
+</section>
+<section id="what-types-of-entities-do-we-deal-with-in-the-digital-world" class="level2">
+<h2 class="anchored" data-anchor-id="what-types-of-entities-do-we-deal-with-in-the-digital-world">What types of entities do we deal with in the digital world?</h2>
+<ul>
+<li>Simple Media
+<ul>
+<li>Data: Structured and unstructured data, including tabular, time-series, and geospatial data.</li>
+<li>Text: Written content in various formats and styles.</li>
+<li>Images: Visual content in various formats, such as photos, artwork, and diagrams; including bitmap and vector formats.</li>
+<li>Audio: Sound content, including music, speech, and environmental sounds.</li>
+<li>Video: Moving visual content, ranging from short clips to full-length films and animations.</li>
+</ul></li>
+<li>Complex Media
+<ul>
+<li>Multi-Media: Content that combines multiple formats, such as web pages, presentations, and graphic novels.</li>
+<li>Interactive Media: Content that requires user interaction, such as virtual reality experiences, simulations, data visualizations, and video games.</li>
+</ul></li>
+<li>Active Agents
+<ul>
+<li>Software: Operating systems, applications, and tools used to create, manage, and interact with digital content.</li>
+<li>AI Models: Artificial intelligence systems that generate, analyze, and enhance digital content.</li>
+<li>Humans: Users who create, consume, and interact with digital content.</li>
+</ul></li>
+<li>Infrastructure
+<ul>
+<li>Computers: Devices that store, process, and display digital content.</li>
+<li>Networks: Systems that enable the sharing, distribution, and communication of digital content.</li>
+</ul></li>
+</ul>
+</section>
+<section id="how-can-we-connect-these-different-types-of-entities" class="level2">
+<h2 class="anchored" data-anchor-id="how-can-we-connect-these-different-types-of-entities">How can we connect these different types of entities?</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<div>
+<svg width="672" height="480" viewbox="0.00 0.00 179.16 155.68" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 151.68)">
+<title>
+G
+</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-151.68 175.16,-151.68 175.16,4 -4,4"></polygon> <!-- text --> <g id="node1" class="node">
+<title>
+text
+</title>
+<ellipse fill="none" stroke="black" cx="27" cy="-52.26" rx="27" ry="18"></ellipse> <text text-anchor="middle" x="27" y="-48.06" font-family="Times,serif" font-size="14.00">text</text> </g> <!-- data --> <g id="node2" class="node">
+<title>
+data
+</title>
+<ellipse fill="none" stroke="black" cx="83.13" cy="-73.81" rx="27.24" ry="18"></ellipse> <text text-anchor="middle" x="83.13" y="-69.61" font-family="Times,serif" font-size="14.00">data</text> </g> <!-- text&#45;&#45;data --> <g id="edge3" class="edge">
+<title>
+text–data
+</title>
+<path fill="none" stroke="black" d="M50.48,-61.27C53.48,-62.42 56.56,-63.6 59.57,-64.76"></path> </g> <!-- image --> <g id="node3" class="node">
+<title>
+image
+</title>
+<ellipse fill="none" stroke="black" cx="104.54" cy="-18" rx="34.76" ry="18"></ellipse> <text text-anchor="middle" x="104.54" y="-13.8" font-family="Times,serif" font-size="14.00">image</text> </g> <!-- text&#45;&#45;image --> <g id="edge1" class="edge">
+<title>
+text–image
+</title>
+<path fill="none" stroke="black" d="M49.85,-42.16C58.69,-38.26 68.87,-33.76 78.04,-29.71"></path> </g> <!-- audio --> <g id="node4" class="node">
+<title>
+audio
+</title>
+<ellipse fill="none" stroke="black" cx="60.92" cy="-129.68" rx="32.48" ry="18"></ellipse> <text text-anchor="middle" x="60.92" y="-125.48" font-family="Times,serif" font-size="14.00">audio</text> </g> <!-- text&#45;&#45;audio --> <g id="edge2" class="edge">
+<title>
+text–audio
+</title>
+<path fill="none" stroke="black" d="M34.7,-69.83C40.25,-82.5 47.71,-99.53 53.25,-112.18"></path> </g> <!-- data&#45;&#45;image --> <g id="edge4" class="edge">
+<title>
+data–image
+</title>
+<path fill="none" stroke="black" d="M89.91,-56.15C92.4,-49.63 95.24,-42.25 97.74,-35.73"></path> </g> <!-- data&#45;&#45;audio --> <g id="edge5" class="edge">
+<title>
+data–audio
+</title>
+<path fill="none" stroke="black" d="M76.1,-91.48C73.51,-98.01 70.57,-105.4 67.98,-111.92"></path> </g> <!-- video --> <g id="node5" class="node">
+<title>
+video
+</title>
+<ellipse fill="none" stroke="black" cx="138.67" cy="-95.91" rx="32.48" ry="18"></ellipse> <text text-anchor="middle" x="138.67" y="-91.71" font-family="Times,serif" font-size="14.00">video</text> </g> <!-- data&#45;&#45;video --> <g id="edge6" class="edge">
+<title>
+data–video
+</title>
+<path fill="none" stroke="black" d="M106.68,-83.18C108.46,-83.89 110.26,-84.6 112.05,-85.31"></path> </g> <!-- image&#45;&#45;video --> <g id="edge7" class="edge">
+<title>
+image–video
+</title>
+<path fill="none" stroke="black" d="M112.29,-35.68C117.87,-48.43 125.38,-65.57 130.96,-78.3"></path> </g> <!-- audio&#45;&#45;video --> <g id="edge8" class="edge">
+<title>
+audio–video
+</title>
+<path fill="none" stroke="black" d="M86.81,-118.43C95.2,-114.79 104.51,-110.75 112.89,-107.11"></path> </g> </g>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>data is connected to all sorts of media
+<ul>
+<li>data→media
+<ul>
+<li>presenting and elucidating data in media</li>
+<li>creating media from data</li>
+</ul></li>
+<li>media→data
+<ul>
+<li>measuring and analysing media</li>
+<li>encoding media in files</li>
+</ul></li>
+</ul></li>
+<li>text is connected to audio and images
+<ul>
+<li>text→image
+<ul>
+<li>rendering</li>
+<li>image generation</li>
+</ul></li>
+<li>text→audio
+<ul>
+<li>speech synthesis</li>
+<li>music synthesis</li>
+</ul></li>
+<li>image→text
+<ul>
+<li>OCR</li>
+<li>classification</li>
+<li>description</li>
+</ul></li>
+<li>audio-&gt;text
+<ul>
+<li>speech recognition</li>
+<li>music analysis</li>
+<li>classification</li>
+</ul></li>
+</ul></li>
+<li>video consists of moving images with audio
+<ul>
+<li>images+audio🡘video</li>
+<li>selecting best images</li>
+<li>can also have text
+<ul>
+<li>subtitles, related to audio</li>
+<li>content, related to images</li>
+</ul></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<div>
+<svg width="672" height="480" viewbox="0.00 0.00 311.44 285.49" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 281.49)">
+<title>
+G
+</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-281.49 307.44,-281.49 307.44,4 -4,4"></polygon> <!-- text --> <g id="node1" class="node">
+<title>
+text
+</title>
+<ellipse fill="none" stroke="black" cx="136.84" cy="-132.02" rx="27" ry="18"></ellipse> <text text-anchor="middle" x="136.84" y="-127.82" font-family="Times,serif" font-size="14.00">text</text> </g> <!-- multimedia --> <g id="node2" class="node">
+<title>
+multimedia
+</title>
+<ellipse fill="none" stroke="black" cx="185.38" cy="-179.38" rx="55.04" ry="18"></ellipse> <text text-anchor="middle" x="185.38" y="-175.18" font-family="Times,serif" font-size="14.00">multimedia</text> </g> <!-- text&#45;&#45;multimedia --> <g id="edge1" class="edge">
+<title>
+text–multimedia
+</title>
+<path fill="none" stroke="black" d="M152.2,-147C157.09,-151.77 162.54,-157.09 167.58,-162.01"></path> </g> <!-- interactive --> <g id="node7" class="node">
+<title>
+interactive
+</title>
+<ellipse fill="none" stroke="black" cx="193.58" cy="-89.34" rx="51.57" ry="18"></ellipse> <text text-anchor="middle" x="193.58" y="-85.14" font-family="Times,serif" font-size="14.00">interactive</text> </g> <!-- multimedia&#45;&#45;interactive --> <g id="edge6" class="edge">
+<title>
+multimedia–interactive
+</title>
+<path fill="none" stroke="black" d="M187.04,-161.16C188.46,-145.54 190.5,-123.15 191.92,-107.54"></path> </g> <!-- image --> <g id="node3" class="node">
+<title>
+image
+</title>
+<ellipse fill="none" stroke="black" cx="268.8" cy="-164.18" rx="34.76" ry="18"></ellipse> <text text-anchor="middle" x="268.8" y="-159.98" font-family="Times,serif" font-size="14.00">image</text> </g> <!-- image&#45;&#45;multimedia --> <g id="edge2" class="edge">
+<title>
+image–multimedia
+</title>
+<path fill="none" stroke="black" d="M235.83,-170.19C235.1,-170.32 234.37,-170.46 233.64,-170.59"></path> </g> <!-- audio --> <g id="node4" class="node">
+<title>
+audio
+</title>
+<ellipse fill="none" stroke="black" cx="137.58" cy="-250.73" rx="32.48" ry="18"></ellipse> <text text-anchor="middle" x="137.58" y="-246.53" font-family="Times,serif" font-size="14.00">audio</text> </g> <!-- audio&#45;&#45;multimedia --> <g id="edge3" class="edge">
+<title>
+audio–multimedia
+</title>
+<path fill="none" stroke="black" d="M148.91,-233.82C156.31,-222.78 165.95,-208.38 173.47,-197.16"></path> </g> <!-- video --> <g id="node5" class="node">
+<title>
+video
+</title>
+<ellipse fill="none" stroke="black" cx="254.74" cy="-223.49" rx="32.48" ry="18"></ellipse> <text text-anchor="middle" x="254.74" y="-219.29" font-family="Times,serif" font-size="14.00">video</text> </g> <!-- video&#45;&#45;multimedia --> <g id="edge4" class="edge">
+<title>
+video–multimedia
+</title>
+<path fill="none" stroke="black" d="M233.17,-209.78C226.01,-205.22 217.98,-200.12 210.58,-195.41"></path> </g> <!-- data --> <g id="node6" class="node">
+<title>
+data
+</title>
+<ellipse fill="none" stroke="black" cx="200.52" cy="-259.49" rx="27.24" ry="18"></ellipse> <text text-anchor="middle" x="200.52" y="-255.29" font-family="Times,serif" font-size="14.00">data</text> </g> <!-- data&#45;&#45;multimedia --> <g id="edge5" class="edge">
+<title>
+data–multimedia
+</title>
+<path fill="none" stroke="black" d="M197.08,-241.31C194.61,-228.2 191.28,-210.58 188.8,-197.49"></path> </g> <!-- software --> <g id="node8" class="node">
+<title>
+software
+</title>
+<ellipse fill="none" stroke="black" cx="114.75" cy="-61.03" rx="44.07" ry="18"></ellipse> <text text-anchor="middle" x="114.75" y="-56.83" font-family="Times,serif" font-size="14.00">software</text> </g> <!-- software&#45;&#45;text --> <g id="edge12" class="edge">
+<title>
+software–text
+</title>
+<path fill="none" stroke="black" d="M120.32,-78.94C123.7,-89.78 127.98,-103.56 131.34,-114.35"></path> </g> <!-- software&#45;&#45;interactive --> <g id="edge7" class="edge">
+<title>
+software–interactive
+</title>
+<path fill="none" stroke="black" d="M148.18,-73.04C151.28,-74.15 154.44,-75.28 157.57,-76.41"></path> </g> <!-- humans --> <g id="node9" class="node">
+<title>
+humans
+</title>
+<ellipse fill="none" stroke="black" cx="241.52" cy="-25.04" rx="41.16" ry="18"></ellipse> <text text-anchor="middle" x="241.52" y="-20.84" font-family="Times,serif" font-size="14.00">humans</text> </g> <!-- humans&#45;&#45;interactive --> <g id="edge8" class="edge">
+<title>
+humans–interactive
+</title>
+<path fill="none" stroke="black" d="M228.67,-42.27C221.91,-51.35 213.62,-62.46 206.8,-71.62"></path> </g> <!-- models --> <g id="node10" class="node">
+<title>
+models
+</title>
+<ellipse fill="none" stroke="black" cx="171.52" cy="-18" rx="38.86" ry="18"></ellipse> <text text-anchor="middle" x="171.52" y="-13.8" font-family="Times,serif" font-size="14.00">models</text> </g> <!-- models&#45;&#45;interactive --> <g id="edge9" class="edge">
+<title>
+models–interactive
+</title>
+<path fill="none" stroke="black" d="M177.09,-36C180.41,-46.74 184.61,-60.32 187.94,-71.1"></path> </g> <!-- models&#45;&#45;software --> <g id="edge11" class="edge">
+<title>
+models–software
+</title>
+<path fill="none" stroke="black" d="M151.03,-33.53C146.07,-37.29 140.77,-41.31 135.79,-45.08"></path> </g> <!-- models&#45;&#45;humans --> <g id="edge10" class="edge">
+<title>
+models–humans
+</title>
+<path fill="none" stroke="black" d="M209.8,-21.85C209.93,-21.86 210.05,-21.87 210.18,-21.89"></path> </g> <!-- computers --> <g id="node11" class="node">
+<title>
+computers
+</title>
+<ellipse fill="none" stroke="black" cx="51.26" cy="-107.26" rx="51.03" ry="18"></ellipse> <text text-anchor="middle" x="51.26" y="-103.06" font-family="Times,serif" font-size="14.00">computers</text> </g> <!-- computers&#45;&#45;software --> <g id="edge13" class="edge">
+<title>
+computers–software
+</title>
+<path fill="none" stroke="black" d="M73.82,-90.83C80.1,-86.26 86.89,-81.31 93.11,-76.78"></path> </g> <!-- networks --> <g id="node12" class="node">
+<title>
+networks
+</title>
+<ellipse fill="none" stroke="black" cx="93.09" cy="-180.74" rx="46.38" ry="18"></ellipse> <text text-anchor="middle" x="93.09" y="-176.54" font-family="Times,serif" font-size="14.00">networks</text> </g> <!-- networks&#45;&#45;multimedia --> <g id="edge15" class="edge">
+<title>
+networks–multimedia
+</title>
+<path fill="none" stroke="black" d="M139.51,-180.06C139.6,-180.05 139.69,-180.05 139.78,-180.05"></path> </g> <!-- networks&#45;&#45;computers --> <g id="edge14" class="edge">
+<title>
+networks–computers
+</title>
+<path fill="none" stroke="black" d="M82.97,-162.95C76.44,-151.48 67.98,-136.63 61.44,-125.14"></path> </g> </g>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>multimedia = text + data + image + audio + video
+<ul>
+<li>or some of the above</li>
+<li>hyperlinks</li>
+<li>some interactivity</li>
+</ul></li>
+<li>interactive = multimedia + software + humans
+<ul>
+<li>forms</li>
+<li>apps</li>
+<li>dynamic content
+<ul>
+<li>random</li>
+<li>customized</li>
+</ul></li>
+</ul></li>
+<li>software
+<ul>
+<li>tools</li>
+<li>apps</li>
+<li>web apps</li>
+<li>dynamic web pages</li>
+<li>services / APIs</li>
+<li>free vs proprietary</li>
+</ul></li>
+<li>humans create and use media
+<ul>
+<li>editors, browsers</li>
+<li>spreadsheets, forms, tables</li>
+<li>cameras, displays</li>
+<li>microphones, speakers</li>
+<li>video cameras, displays</li>
+</ul></li>
+<li>models can imitate human intelligence
+<ul>
+<li>can input and output all forms of media</li>
+<li>can perform processing tasks</li>
+<li>general intelligence</li>
+<li>can plan</li>
+<li>can solve problems</li>
+<li>can discover things</li>
+<li>can play games</li>
+<li>can interface with software</li>
+<li>can drive robots, cars, drones</li>
+</ul></li>
+<li>computers store media, run software and models
+<ul>
+<li>can calculate much more rapidly than an human</li>
+<li>includes phones, game consoles, and other devices</li>
+<li>includes servers, cloud services</li>
+</ul></li>
+<li>networks connect computers
+<ul>
+<li>connect humans, models and software via computers</li>
+<li>transport media, software, and models; not humans, computers or networks</li>
+<li>security and privacy become major concerns</li>
+</ul></li>
+</ul>
+<p>It’s useful in a software project to consider what data types and data structures may be involved, before we get into the program code and algorithms.</p>
+<section id="texttext" class="level3">
+<h3 class="anchored" data-anchor-id="texttext">text🡘text</h3>
+<ul>
+<li>format conversion
+<ul>
+<li>pandoc</li>
+<li>w3m -dump</li>
+<li>html scraping</li>
+</ul></li>
+<li>manipulation
+<ul>
+<li>splitting / joining</li>
+<li>paginating</li>
+<li>formatting</li>
+</ul></li>
+<li>LLM AI Processing
+<ul>
+<li>summary</li>
+<li>correct</li>
+<li>re-express</li>
+<li>dot points</li>
+<li>analyse / respond / criticise / assess / suggestions / feedback</li>
+<li>expansion</li>
+<li>narrative</li>
+<li>ideas</li>
+</ul></li>
+</ul>
+</section>
+<section id="textimage" class="level3">
+<h3 class="anchored" data-anchor-id="textimage">text🡘image</h3>
+<ul>
+<li>Text to Image:
+<ul>
+<li>Stable Diffusion &amp;c
+<ul>
+<li>txt2img: prompts for image generation</li>
+<li>img2img: image + text -&gt; image</li>
+<li>embeddings, etc.</li>
+<li>controlnet</li>
+</ul></li>
+</ul></li>
+<li>Image to Text:
+<ul>
+<li>Clip Interrogation &amp;c
+<ul>
+<li>image to prompt</li>
+<li>image + words to weights</li>
+</ul></li>
+</ul></li>
+<li>Text to Image: Rendering
+<ul>
+<li>e.g PDF to Image
+<ul>
+<li>ghostscript</li>
+</ul></li>
+<li>word art
+<ul>
+<li>gimp or imagemagick?</li>
+<li>???</li>
+</ul></li>
+</ul></li>
+<li>Image to Text: Optical Character Recognition
+<ul>
+<li>Tesseract
+<ul>
+<li>correct using LLM</li>
+<li>need to adjust black and white levels in the input images</li>
+<li>pre-process to extract columns</li>
+</ul></li>
+<li>Number plates, signs, book covers and spines, displays</li>
+<li>Handwriting recognition
+<ul>
+<li>MNIST: Digits and Post Codes</li>
+<li>???</li>
+<li>Pen Entry (easier)</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="imageimage" class="level3">
+<h3 class="anchored" data-anchor-id="imageimage">image🡘image</h3>
+<ul>
+<li>enhancement, processing, and format conversion
+<ul>
+<li>imagemagick, netpbm</li>
+<li>gimp</li>
+<li>super-resolution</li>
+<li>PIL</li>
+<li>OpenCV</li>
+</ul></li>
+<li>AI tools
+<ul>
+<li>segmentation</li>
+<li>deoldify</li>
+<li>colouring</li>
+</ul></li>
+<li>Image to Image
+<ul>
+<li>Stable Diffusion &amp;c
+<ul>
+<li>img2img: image + text -&gt; image</li>
+<li>controlnet</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="textaudio" class="level3">
+<h3 class="anchored" data-anchor-id="textaudio">text🡘audio</h3>
+<ul>
+<li>Text to Audio: Speech Synthesis
+<ul>
+<li>coqui-ai TTS
+<ul>
+<li>needs help with some phonetics</li>
+</ul></li>
+<li>gtts-cli
+<ul>
+<li>not open source</li>
+</ul></li>
+</ul></li>
+<li>Audio to Text: Speech Recognition, Transcription
+<ul>
+<li>whisper</li>
+</ul></li>
+<li>Music Notation to Audio
+<ul>
+<li>midi synthesis</li>
+</ul></li>
+<li>Audio to Music Notation
+<ul>
+<li>music analysis</li>
+</ul></li>
+<li>Sound Effects (under Data?)</li>
+</ul>
+</section>
+<section id="imageaudio" class="level3">
+<h3 class="anchored" data-anchor-id="imageaudio">image🡘audio ?</h3>
+<ul>
+<li>Image to Audio
+<ul>
+<li>colors to notes?</li>
+<li>sign language?</li>
+</ul></li>
+<li>Audio to Image
+<ul>
+<li>spectrogram
+<ul>
+<li>useful as input to CNN models / classifiers</li>
+</ul></li>
+<li>waveform, more like data</li>
+</ul></li>
+</ul>
+</section>
+<section id="audioaudio" class="level3">
+<h3 class="anchored" data-anchor-id="audioaudio">audio🡘audio</h3>
+<ul>
+<li>enhancement
+<ul>
+<li>noise reduction</li>
+<li>volume normalisation</li>
+<li>equaliser</li>
+<li>stereo / mono</li>
+<li>pitch</li>
+<li>speed</li>
+</ul></li>
+<li>effects</li>
+<li>tools
+<ul>
+<li>ffmpeg</li>
+<li>sox</li>
+<li>audacity</li>
+</ul></li>
+<li>split / join
+<ul>
+<li>detect and crop silence / sound</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="appendix-1-more-examples-of-eeach-entity-type" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-1-more-examples-of-eeach-entity-type">Appendix 1: More Examples of Eeach Entity Type</h2>
+<section id="text" class="level3">
+<h3 class="anchored" data-anchor-id="text">Text</h3>
+<ul>
+<li><em>plain text</em>, preferably utf-8 with UNIX line endings</li>
+<li><em>markdown</em>, for rich text</li>
+<li><em>HTML</em>, for the web</li>
+<li><em>LaTeX</em>, for math notation</li>
+<li><em>program code</em>, preferably Python</li>
+<li>PDFs, presentation format</li>
+<li>books, e-books, manuals, papers</li>
+<li>articles and online content</li>
+<li>news</li>
+<li>text chat, email, etc</li>
+<li>recipes</li>
+<li>blogs, home pages</li>
+<li>keyboard input</li>
+<li>terminal output</li>
+<li>text in an editor</li>
+<li>forms</li>
+</ul>
+</section>
+<section id="data" class="level3">
+<h3 class="anchored" data-anchor-id="data">Data</h3>
+<ul>
+<li>tabular / relational data</li>
+<li>spreadsheets</li>
+<li>time-series data</li>
+<li>spectrograms</li>
+<li>personal data</li>
+<li>population statistics</li>
+<li>scientific data</li>
+<li>organisational data</li>
+</ul>
+</section>
+<section id="images" class="level3">
+<h3 class="anchored" data-anchor-id="images">Images</h3>
+<ul>
+<li>various formats: png, jpeg, webp, etc.</li>
+<li>photos: portraits, landscapes, nature</li>
+<li>artworks: drawings, paintings, manga</li>
+<li>scans or photos of documents</li>
+<li>screenshots</li>
+<li>graphs, charts, diagrams and figures</li>
+<li>infographics</li>
+<li>maps</li>
+<li>camera input</li>
+</ul>
+</section>
+<section id="audio" class="level3">
+<h3 class="anchored" data-anchor-id="audio">Audio</h3>
+<ul>
+<li>various formats: flac, wav, ogg, mp3, etc.</li>
+<li>speech, including sythnetic</li>
+<li>audio tracks from a video</li>
+<li>music</li>
+<li>microphone input, e.g.&nbsp;from the user</li>
+<li>natural or environmental sounds</li>
+<li>telephony / voice chat</li>
+<li>podcasts and interviews</li>
+<li>audio books</li>
+</ul>
+</section>
+<section id="video" class="level3">
+<h3 class="anchored" data-anchor-id="video">Video</h3>
+<ul>
+<li>various formats: webm, mkv, mp4, etc.</li>
+<li>web videos: youtube, etc</li>
+<li>short films, movies, TV series</li>
+<li>news and documentaries</li>
+<li>promotional videos</li>
+<li>security footage</li>
+<li>video calls / chat / meetings</li>
+<li>animation, anime, demos</li>
+<li>webinars</li>
+<li>camera input</li>
+</ul>
+</section>
+<section id="multimedia" class="level3">
+<h3 class="anchored" data-anchor-id="multimedia">Multimedia</h3>
+<ul>
+<li>web pages</li>
+<li>presentations</li>
+<li>graphic novels</li>
+<li>social media content</li>
+<li>online courses</li>
+</ul>
+</section>
+<section id="interactive-media" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-media">Interactive Media:</h3>
+<ul>
+<li>Virtual and augmented reality experiences</li>
+<li>Interactive simulations and models (e.g., scientific simulations, architectural models)</li>
+<li>Data visualizations and dashboards (e.g., interactive dashboards, heatmaps)</li>
+<li>Virtual assistants, chatbots, and voice assistants</li>
+<li>Educational games and quizzes</li>
+<li>Interactive storytelling and narratives</li>
+<li>Editors</li>
+<li>flashcard decks</li>
+<li>interactive resources</li>
+<li>interactive fiction, adventure games</li>
+<li>computer games</li>
+</ul>
+</section>
+<section id="software-and-applications" class="level3">
+<h3 class="anchored" data-anchor-id="software-and-applications">Software and Applications</h3>
+<ul>
+<li>Operating systems</li>
+<li>Web applications</li>
+<li>Mobile applications</li>
+<li>Desktop applications</li>
+</ul>
+</section>
+<section id="ai-apps" class="level3">
+<h3 class="anchored" data-anchor-id="ai-apps">AI apps</h3>
+<ul>
+<li>AI-generated content and recommendations</li>
+<li>Personalization and adaptive learning systems</li>
+<li>Conversational interfaces and natural language processing</li>
+<li>AI-driven content analysis and summarization</li>
+<li>Collaborative filtering and recommender systems</li>
+</ul>
+</section>
+</section>
+<section id="what-tools-do-we-have" class="level2">
+<h2 class="anchored" data-anchor-id="what-tools-do-we-have">What tools do we have?</h2>
+</section>
+<section id="appendix-2-some-additional-entity-types" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-2-some-additional-entity-types">Appendix 2: Some Additional Entity Types</h2>
+<section id="security-and-privacy" class="level3">
+<h3 class="anchored" data-anchor-id="security-and-privacy">Security and Privacy</h3>
+<p>This category addresses the protection of digital content, user information, and systems from unauthorized access, manipulation, or damage. It also considers user privacy, data confidentiality, and compliance with relevant regulations. Including this category highlights the importance of safeguarding digital assets, personal information, and trust in the digital world.</p>
+<ul>
+<li>Firewalls</li>
+<li>Cryptosystems</li>
+<li>Public and private keys</li>
+<li>Passwords</li>
+<li>Two-factor authentication (2FA) methods</li>
+<li>2FA devices (e.g., security tokens)</li>
+<li>Digital wallets</li>
+<li>Virtual private networks (VPNs)</li>
+<li>Secure Sockets Layer/Transport Layer Security (SSL/TLS) certificates</li>
+<li>Intrusion detection/prevention systems (IDS/IPS)</li>
+<li>Biometrics (e.g., fingerprint, facial recognition)</li>
+<li>End-to-end encryption (E2EE)</li>
+<li>Data anonymization techniques</li>
+<li>Security policies and protocols</li>
+<li>Antivirus and anti-malware software</li>
+<li>Access control systems</li>
+<li>Secure file storage and sharing (e.g., encrypted cloud storage)</li>
+<li>Secure messaging applications</li>
+<li>Security audits and assessments</li>
+<li>Data breach detection and response tools</li>
+</ul>
+</section>
+<section id="d" class="level3">
+<h3 class="anchored" data-anchor-id="d">3D</h3>
+<ul>
+<li>3D video</li>
+<li>3D game worlds</li>
+<li>virtual reality</li>
+<li>augmented reality</li>
+</ul>
+</section>
+<section id="other-senses" class="level3">
+<h3 class="anchored" data-anchor-id="other-senses">Other Senses</h3>
+<ul>
+<li>touch</li>
+<li>smell</li>
+<li>taste</li>
+<li>balance</li>
+<li>echo-location</li>
+</ul>
+</section>
+<section id="extra-sensory" class="level3">
+<h3 class="anchored" data-anchor-id="extra-sensory">Extra-Sensory</h3>
+<ul>
+<li>brain waves</li>
+<li>internet</li>
+<li>radio</li>
+<li>GPS</li>
+<li>radar, sonar, lidar</li>
+</ul>
+</section>
+<section id="geospatial-data" class="level3">
+<h3 class="anchored" data-anchor-id="geospatial-data">Geospatial Data</h3>
+<ul>
+<li>Geographical Information Systems (GIS) data</li>
+<li>Satellite imagery</li>
+<li>Geo-referenced data</li>
+<li>Maps</li>
+<li>Routing</li>
+</ul>
+</section>
+<section id="ephemeral-content" class="level3">
+<h3 class="anchored" data-anchor-id="ephemeral-content">Ephemeral Content</h3>
+<ul>
+<li>Social media stories (e.g., Instagram Stories, Snapchat Stories)</li>
+<li>Live streaming (e.g., Twitch, YouTube Live)</li>
+<li>Live event coverage (e.g., sports, concerts)</li>
+</ul>
+</section>
+<section id="metadata" class="level3">
+<h3 class="anchored" data-anchor-id="metadata">Metadata</h3>
+<ul>
+<li>Tags, keywords, and descriptors for various types of content</li>
+<li>EXIF data for images</li>
+<li>ID3 tags for audio files</li>
+</ul>
+</section>
+<section id="internet-of-things-iot-data" class="level3">
+<h3 class="anchored" data-anchor-id="internet-of-things-iot-data">Internet of Things (IoT) Data</h3>
+<ul>
+<li>Smart home devices (e.g., thermostats, lighting systems)</li>
+<li>Wearable technology (e.g., smartwatches, fitness trackers)</li>
+<li>Industrial sensors and systems</li>
+</ul>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <guid>https://sam.ucm.dev/blog/posts/toolkit/toolkit.html</guid>
+  <pubDate>Tue, 28 Mar 2023 13:00:00 GMT</pubDate>
+</item>
 <item>
   <title>A multi-label classifier, part 2: reusable functions</title>
   <link>https://sam.ucm.dev/blog/posts/multilabel2/multilabel2.html</link>
