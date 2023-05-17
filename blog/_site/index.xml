@@ -1015,70 +1015,35 @@ background-color: null;
 font-style: inherit;">"deleteme"</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"70750246fc6246ca8cf50534291a7cb5","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"567b19934d0d4aba9e3511f28d5476f7","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
-</div>
-</div>
-</section>
-<section id="running-shell-commands" class="level2">
-<h2 class="anchored" data-anchor-id="running-shell-commands">Running shell commands</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> subprocess</span>
-<span id="cb14-2"></span>
-<span id="cb14-3"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> sh(command):</span>
-<span id="cb14-4">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> subprocess.check_output(command).decode(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'utf-8'</span>).rstrip(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'</span><span class="ch" style="color: #20794D;
-background-color: null;
-font-style: inherit;">\n</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'</span>)</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1">Path(sh(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'git-root'</span>))<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"lib"</span></span></code></pre></div>
-<div class="cell-output cell-output-display">
-<pre><code>Path('/home/sam/ai/lib')</code></pre>
 </div>
 </div>
 </section>
 <section id="logging" class="level2">
 <h2 class="anchored" data-anchor-id="logging">Logging</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><span class="im" style="color: #00769E;
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> logging</span>
-<span id="cb17-2"></span>
-<span id="cb17-3"><span class="kw" style="color: #003B4F;
+<span id="cb14-2"></span>
+<span id="cb14-3"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> setup_logging(args):</span>
-<span id="cb17-4">    <span class="co" style="color: #5E5E5E;
+<span id="cb14-4">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">""" Set up logging. """</span></span>
-<span id="cb17-5"></span>
-<span id="cb17-6">    <span class="co" style="color: #5E5E5E;
+<span id="cb14-5"></span>
+<span id="cb14-6">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># get basename of program in upper case</span></span>
-<span id="cb17-7">    prog_name_uc <span class="op" style="color: #5E5E5E;
+<span id="cb14-7">    prog_name_uc <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> os.path.basename(sys.argv[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span>]).upper()</span>
-<span id="cb17-8"></span>
-<span id="cb17-9">    log_file <span class="op" style="color: #5E5E5E;
+<span id="cb14-8"></span>
+<span id="cb14-9">    log_file <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> args.log <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -1091,7 +1056,7 @@ background-color: null;
 font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">_LOG'</span>)</span>
-<span id="cb17-10">    fmt <span class="op" style="color: #5E5E5E;
+<span id="cb14-10">    fmt <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -1100,12 +1065,12 @@ background-color: null;
 font-style: inherit;">%(message)s</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span></span>
-<span id="cb17-11">    <span class="cf" style="color: #003B4F;
+<span id="cb14-11">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> args.log_level <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> logging.DEBUG:</span>
-<span id="cb17-12">        fmt <span class="op" style="color: #5E5E5E;
+<span id="cb14-12">        fmt <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -1126,18 +1091,18 @@ background-color: null;
 font-style: inherit;">%(message)s</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span></span>
-<span id="cb17-13"></span>
-<span id="cb17-14">    <span class="co" style="color: #5E5E5E;
+<span id="cb14-13"></span>
+<span id="cb14-14">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># if a log_file was specified, use it</span></span>
-<span id="cb17-15">    log_file <span class="op" style="color: #5E5E5E;
+<span id="cb14-15">    log_file <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> log_file <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">or</span> os.environ.get(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'CHATGPT_LOG_FILE'</span>)</span>
-<span id="cb17-16">    logging.basicConfig(level<span class="op" style="color: #5E5E5E;
+<span id="cb14-16">    logging.basicConfig(level<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>args.log_level, <span class="bu" style="color: null;
 background-color: null;
@@ -1146,22 +1111,22 @@ background-color: null;
 font-style: inherit;">=</span>fmt, filename<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>log_file)</span>
-<span id="cb17-17"></span>
-<span id="cb17-18"><span class="kw" style="color: #003B4F;
+<span id="cb14-17"></span>
+<span id="cb14-18"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> add_logging_options(parser):</span>
-<span id="cb17-19">    <span class="co" style="color: #5E5E5E;
+<span id="cb14-19">    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">""" Add logging options to an argument parser. """</span></span>
-<span id="cb17-20">    logging_group <span class="op" style="color: #5E5E5E;
+<span id="cb14-20">    logging_group <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> parser.add_argument_group(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'Logging options'</span>)</span>
-<span id="cb17-21">    logging_group.set_defaults(log_level<span class="op" style="color: #5E5E5E;
+<span id="cb14-21">    logging_group.set_defaults(log_level<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>logging.WARNING)</span>
-<span id="cb17-22">    logging_group.add_argument(<span class="st" style="color: #20794D;
+<span id="cb14-22">    logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'-d'</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -1182,7 +1147,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"show debug messages"</span>)</span>
-<span id="cb17-23">    logging_group.add_argument(<span class="st" style="color: #20794D;
+<span id="cb14-23">    logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'-v'</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -1203,7 +1168,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"show verbose messages"</span>)</span>
-<span id="cb17-24">    logging_group.add_argument(<span class="st" style="color: #20794D;
+<span id="cb14-24">    logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'-q'</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -1224,7 +1189,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"show only errors"</span>)</span>
-<span id="cb17-25">    logging_group.add_argument(<span class="st" style="color: #20794D;
+<span id="cb14-25">    logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'-Q'</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -1245,7 +1210,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"show nothing"</span>)</span>
-<span id="cb17-26">    logging_group.add_argument(<span class="st" style="color: #20794D;
+<span id="cb14-26">    logging_group.add_argument(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'--log'</span>, default<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -1260,19 +1225,319 @@ background-color: null;
 font-style: inherit;">"log file"</span>)</span></code></pre></div>
 </div>
 </section>
+<section id="redirecting-file-handles-such-as-stderr-to-devnull" class="level2">
+<h2 class="anchored" data-anchor-id="redirecting-file-handles-such-as-stderr-to-devnull">Redirecting file handles, such as stderr to /dev/null</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> sys</span>
+<span id="cb15-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> os</span>
+<span id="cb15-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> contextlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> contextmanager</span>
+<span id="cb15-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> functools <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> partial</span>
+<span id="cb15-5"></span>
+<span id="cb15-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@contextmanager</span></span>
+<span id="cb15-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> redirect(fileno, target):</span>
+<span id="cb15-8">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">""" Redirect a file descriptor temporarily """</span></span>
+<span id="cb15-9">    target_fd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(target, os.O_WRONLY)</span>
+<span id="cb15-10">    saved_fd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.dup(fileno)</span>
+<span id="cb15-11">    os.dup2(target_fd, fileno)</span>
+<span id="cb15-12">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">try</span>:</span>
+<span id="cb15-13">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">yield</span></span>
+<span id="cb15-14">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">finally</span>:</span>
+<span id="cb15-15">        os.dup2(saved_fd, fileno)</span>
+<span id="cb15-16">        os.close(saved_fd)</span>
+<span id="cb15-17">        os.close(target_fd)</span>
+<span id="cb15-18"></span>
+<span id="cb15-19">redirect_stderr_to_dev_null <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> partial(redirect, sys.stderr.fileno(), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/dev/null"</span>)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># apparently this doesn't work in Jupyter :/</span></span>
+<span id="cb16-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hello"</span>, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>sys.stderr)</span>
+<span id="cb16-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">with</span> redirect_stderr_to_dev_null():</span>
+<span id="cb16-4">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"this should not appear!"</span>, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>sys.stderr)</span>
+<span id="cb16-5"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"world"</span>, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>sys.stderr)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Hello
+this should not appear!
+world</code></pre>
+</div>
+</div>
+</section>
+<section id="run-an-async-coroutine-and-exit-immediately-when-the-user-presses-ctrl-c" class="level2">
+<h2 class="anchored" data-anchor-id="run-an-async-coroutine-and-exit-immediately-when-the-user-presses-ctrl-c">Run an async coroutine, and exit immediately when the user presses ctrl-c</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> os</span>
+<span id="cb18-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> asyncio</span>
+<span id="cb18-3"></span>
+<span id="cb18-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> run_async(coro):</span>
+<span id="cb18-5">    loop <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> asyncio.get_event_loop()</span>
+<span id="cb18-6">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">try</span>:</span>
+<span id="cb18-7">        loop.run_until_complete(coro)</span>
+<span id="cb18-8">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">except</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">KeyboardInterrupt</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> e:</span>
+<span id="cb18-9">        loop.close()</span>
+<span id="cb18-10">        os._exit(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">130</span>)</span>
+<span id="cb18-11">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">finally</span>:</span>
+<span id="cb18-12">        loop.close()</span></code></pre></div>
+</div>
+</section>
+<section id="file-based-mutex" class="level2">
+<h2 class="anchored" data-anchor-id="file-based-mutex">File-based Mutex</h2>
+<p>If lock_file is None / “” / False, it will be a no-op.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> os</span>
+<span id="cb19-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> fcntl</span>
+<span id="cb19-3"></span>
+<span id="cb19-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> FileMutex:</span>
+<span id="cb19-5">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, lock_file, mode<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="bn" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0o600</span>):</span>
+<span id="cb19-6">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.lock_file <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> lock_file</span>
+<span id="cb19-7">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.fd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span>
+<span id="cb19-8">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.mode <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> mode</span>
+<span id="cb19-9"></span>
+<span id="cb19-10">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> acquire(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb19-11">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.lock_file:</span>
+<span id="cb19-12">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span></span>
+<span id="cb19-13">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.fd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.lock_file, os.O_CREAT, <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.mode)</span>
+<span id="cb19-14">        fcntl.flock(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.fd, fcntl.LOCK_EX)</span>
+<span id="cb19-15"></span>
+<span id="cb19-16">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> release(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb19-17">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.fd:</span>
+<span id="cb19-18">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span></span>
+<span id="cb19-19">        fcntl.flock(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.fd, fcntl.LOCK_UN)</span>
+<span id="cb19-20">        os.close(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.fd)</span>
+<span id="cb19-21">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.fd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span>
+<span id="cb19-22"></span>
+<span id="cb19-23">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__enter__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb19-24">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.acquire()</span>
+<span id="cb19-25"></span>
+<span id="cb19-26">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__exit__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, exc_type, exc_val, exc_tb):</span>
+<span id="cb19-27">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.release()</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># not exactly a thorough test...</span></span>
+<span id="cb20-2"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">with</span> FileMutex(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/tmp/lock"</span>):</span>
+<span id="cb20-3">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hi"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>hi</code></pre>
+</div>
+</div>
+</section>
 <section id="exporting-code-with-nbdev" class="level2">
 <h2 class="anchored" data-anchor-id="exporting-code-with-nbdev">Exporting code with nbdev</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="im" style="color: #00769E;
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> nbdev.export <span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> nb_export</span>
-<span id="cb18-2"><span class="im" style="color: #00769E;
+<span id="cb22-2"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> ipynbname</span>
-<span id="cb18-3"></span>
-<span id="cb18-4"><span class="kw" style="color: #003B4F;
+<span id="cb22-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span>
+<span id="cb22-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> sh</span>
+<span id="cb22-5"></span>
+<span id="cb22-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> git_root():</span>
+<span id="cb22-7">    root <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> sh.git(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'rev-parse'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'--show-toplevel'</span>).rstrip()</span>
+<span id="cb22-8">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> root</span>
+<span id="cb22-9"></span>
+<span id="cb22-10"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> export(nb_file<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -1283,7 +1548,7 @@ background-color: null;
 font-style: inherit;">=</span><span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">None</span>):</span>
-<span id="cb18-5">    <span class="cf" style="color: #003B4F;
+<span id="cb22-11">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> nb_file <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -1296,7 +1561,7 @@ background-color: null;
 font-style: inherit;">+</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'.ipynb'</span></span>
-<span id="cb18-6">    <span class="cf" style="color: #003B4F;
+<span id="cb22-12">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> lib_dir <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -1304,26 +1569,16 @@ font-style: inherit;">is</span> <span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">None</span>: lib_dir <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span> Path(sh(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'git-root'</span>))<span class="op" style="color: #5E5E5E;
+font-style: inherit;">=</span> Path(git_root())<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"lib"</span></span>
-<span id="cb18-7">    nb_export(nb_file, lib_dir)</span></code></pre></div>
+<span id="cb22-13">    nb_export(nb_file, lib_dir)</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1">export()</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1">export()</span></code></pre></div>
 </div>
-</section>
-<section id="appendix-scripts-that-i-wrote-and-used-here" class="level2">
-<h2 class="anchored" data-anchor-id="appendix-scripts-that-i-wrote-and-used-here">Appendix: scripts that I wrote and used here</h2>
-<ul>
-<li><a href="https://ucm.dev/t/bin.git/git-root">git-root</a>: print the root of the current git repository</li>
-<li><a href="https://ucm.dev/b/ucm-tool-url">ucm-tool-url</a>: output the URLs of tools on my website</li>
-<li><a href="https://ucm.dev/b/ucm-tool-link">ucm-tool-link</a>: output a markdown list with links to tools on my website, and their descriptions</li>
-</ul>
 
 
 </section>

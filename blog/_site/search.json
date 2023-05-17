@@ -210,13 +210,6 @@
     "text": "A button to confirm deleting data\n\nimport ipywidgets as widgets\nfrom send2trash import send2trash\n\ndef confirm_delete(del_path):\n    button = widgets.Button(description=f\"Move data to trash: {del_path}?\", layout=widgets.Layout(width='20em'))\n    # button.on_click(lambda b: shutil.rmtree(del_path, ignore_errors=True))\n    button.on_click(lambda b: send2trash(del_path))\n    display(button)\n\n\nmkdir deleteme\n\n\nconfirm_delete(\"deleteme\")"
   },
   {
-    "objectID": "posts/multilabel2/multilabel2.html#running-shell-commands",
-    "href": "posts/multilabel2/multilabel2.html#running-shell-commands",
-    "title": "A multi-label classifier, part 2: reusable functions",
-    "section": "Running shell commands",
-    "text": "Running shell commands\n\nimport subprocess\n\ndef sh(command):\n    return subprocess.check_output(command).decode('utf-8').rstrip('\\n')\n\n\nPath(sh('git-root'))/\"lib\"\n\nPath('/home/sam/ai/lib')"
-  },
-  {
     "objectID": "posts/multilabel2/multilabel2.html#logging",
     "href": "posts/multilabel2/multilabel2.html#logging",
     "title": "A multi-label classifier, part 2: reusable functions",
@@ -224,18 +217,32 @@
     "text": "Logging\n\nimport logging\n\ndef setup_logging(args):\n    \"\"\" Set up logging. \"\"\"\n\n    # get basename of program in upper case\n    prog_name_uc = os.path.basename(sys.argv[0]).upper()\n\n    log_file = args.log or os.environ.get(f'{prog_name_uc}_LOG')\n    fmt = \"%(message)s\"\n    if args.log_level == logging.DEBUG:\n        fmt = \"%(asctime)s %(levelname)s %(name)s %(message)s\"\n\n    # if a log_file was specified, use it\n    log_file = log_file or os.environ.get('CHATGPT_LOG_FILE')\n    logging.basicConfig(level=args.log_level, format=fmt, filename=log_file)\n\ndef add_logging_options(parser):\n    \"\"\" Add logging options to an argument parser. \"\"\"\n    logging_group = parser.add_argument_group('Logging options')\n    logging_group.set_defaults(log_level=logging.WARNING)\n    logging_group.add_argument('-d', '--debug', dest='log_level', action='store_const', const=logging.DEBUG, help=\"show debug messages\")\n    logging_group.add_argument('-v', '--verbose', dest='log_level', action='store_const', const=logging.INFO, help=\"show verbose messages\")\n    logging_group.add_argument('-q', '--quiet', dest='log_level', action='store_const', const=logging.ERROR, help=\"show only errors\")\n    logging_group.add_argument('-Q', '--silent', dest='log_level', action='store_const', const=logging.CRITICAL, help=\"show nothing\")\n    logging_group.add_argument('--log', default=None, help=\"log file\")"
   },
   {
+    "objectID": "posts/multilabel2/multilabel2.html#redirecting-file-handles-such-as-stderr-to-devnull",
+    "href": "posts/multilabel2/multilabel2.html#redirecting-file-handles-such-as-stderr-to-devnull",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "Redirecting file handles, such as stderr to /dev/null",
+    "text": "Redirecting file handles, such as stderr to /dev/null\n\nimport sys\nimport os\nfrom contextlib import contextmanager\nfrom functools import partial\n\n@contextmanager\ndef redirect(fileno, target):\n    \"\"\" Redirect a file descriptor temporarily \"\"\"\n    target_fd = os.open(target, os.O_WRONLY)\n    saved_fd = os.dup(fileno)\n    os.dup2(target_fd, fileno)\n    try:\n        yield\n    finally:\n        os.dup2(saved_fd, fileno)\n        os.close(saved_fd)\n        os.close(target_fd)\n\nredirect_stderr_to_dev_null = partial(redirect, sys.stderr.fileno(), \"/dev/null\")\n\n\n# apparently this doesn't work in Jupyter :/\nprint(\"Hello\", file=sys.stderr)\nwith redirect_stderr_to_dev_null():\n    print(\"this should not appear!\", file=sys.stderr)\nprint(\"world\", file=sys.stderr)\n\nHello\nthis should not appear!\nworld"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#run-an-async-coroutine-and-exit-immediately-when-the-user-presses-ctrl-c",
+    "href": "posts/multilabel2/multilabel2.html#run-an-async-coroutine-and-exit-immediately-when-the-user-presses-ctrl-c",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "Run an async coroutine, and exit immediately when the user presses ctrl-c",
+    "text": "Run an async coroutine, and exit immediately when the user presses ctrl-c\n\nimport os\nimport asyncio\n\ndef run_async(coro):\n    loop = asyncio.get_event_loop()\n    try:\n        loop.run_until_complete(coro)\n    except KeyboardInterrupt as e:\n        loop.close()\n        os._exit(130)\n    finally:\n        loop.close()"
+  },
+  {
+    "objectID": "posts/multilabel2/multilabel2.html#file-based-mutex",
+    "href": "posts/multilabel2/multilabel2.html#file-based-mutex",
+    "title": "A multi-label classifier, part 2: reusable functions",
+    "section": "File-based Mutex",
+    "text": "File-based Mutex\nIf lock_file is None / “” / False, it will be a no-op.\n\nimport os\nimport fcntl\n\nclass FileMutex:\n    def __init__(self, lock_file, mode=0o600):\n        self.lock_file = lock_file\n        self.fd = None\n        self.mode = mode\n\n    def acquire(self):\n        if not self.lock_file:\n            return\n        self.fd = os.open(self.lock_file, os.O_CREAT, self.mode)\n        fcntl.flock(self.fd, fcntl.LOCK_EX)\n\n    def release(self):\n        if not self.fd:\n            return\n        fcntl.flock(self.fd, fcntl.LOCK_UN)\n        os.close(self.fd)\n        self.fd = None\n\n    def __enter__(self):\n        self.acquire()\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        self.release()\n\n\n# not exactly a thorough test...\nwith FileMutex(\"/tmp/lock\"):\n    print(\"hi\")\n\nhi"
+  },
+  {
     "objectID": "posts/multilabel2/multilabel2.html#exporting-code-with-nbdev",
     "href": "posts/multilabel2/multilabel2.html#exporting-code-with-nbdev",
     "title": "A multi-label classifier, part 2: reusable functions",
     "section": "Exporting code with nbdev",
-    "text": "Exporting code with nbdev\n\nfrom nbdev.export import nb_export\nimport ipynbname\n\ndef export(nb_file=None, lib_dir=None):\n    if nb_file is None: nb_file = ipynbname.name() + '.ipynb'\n    if lib_dir is None: lib_dir = Path(sh('git-root'))/\"lib\"\n    nb_export(nb_file, lib_dir)\n\n\nexport()"
-  },
-  {
-    "objectID": "posts/multilabel2/multilabel2.html#appendix-scripts-that-i-wrote-and-used-here",
-    "href": "posts/multilabel2/multilabel2.html#appendix-scripts-that-i-wrote-and-used-here",
-    "title": "A multi-label classifier, part 2: reusable functions",
-    "section": "Appendix: scripts that I wrote and used here",
-    "text": "Appendix: scripts that I wrote and used here\n\ngit-root: print the root of the current git repository\nucm-tool-url: output the URLs of tools on my website\nucm-tool-link: output a markdown list with links to tools on my website, and their descriptions"
+    "text": "Exporting code with nbdev\n\nfrom nbdev.export import nb_export\nimport ipynbname\nfrom pathlib import Path\nimport sh\n\ndef git_root():\n    root = sh.git('rev-parse', '--show-toplevel').rstrip()\n    return root\n\ndef export(nb_file=None, lib_dir=None):\n    if nb_file is None: nb_file = ipynbname.name() + '.ipynb'\n    if lib_dir is None: lib_dir = Path(git_root())/\"lib\"\n    nb_export(nb_file, lib_dir)\n\n\nexport()"
   },
   {
     "objectID": "posts/blog/blog.html",
