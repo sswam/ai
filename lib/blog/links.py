@@ -20,10 +20,10 @@ def update_links_in_cwd(digits=3, dry_run=False, verbose=False, debug=False):
 	_params = caller_locals()
 
 	# get list of blog symlinks
-	blog_links = sorted(filter(islink, glob('*.ipynb')))
+	blog_links = sorted(filter(islink, glob('*.ipynb') + glob('*.md')))
 
 	# get list of blog posts under posts/foo/foo.ipynb
-	posts = glob('posts/*/*.ipynb')
+	posts = glob('posts/*/*.ipynb') + glob('posts/*/*.md')
 
 	# get link targets for each blog symlink
 	link_targets = [os.readlink(link) for link in blog_links]
