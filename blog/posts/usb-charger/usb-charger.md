@@ -1,8 +1,8 @@
 ---
-title: 'The Saga of the USB Charger'
-date: '2023-05-17'
-categories: ['bash', 'linux']
-description: 'A tale of how a humble Linux user, with the help of two AIs, navigated the treacherous waters of bash scripting, regex parsing, and power management to charge a phone."
+title: "The Saga of the USB Charger"
+date: "2023-05-17"
+categories: ["bash", "linux"]
+description: "A tale of how a humble Linux user, with the help of two AIs, navigated the treacherous waters of bash scripting, regex parsing, and power management to charge a phone."
 ---
 
 # Once Upon a Time...
